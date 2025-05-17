@@ -1,0 +1,17 @@
+#appointment input[type="text"] {
+    background-color: var(--seasalt);
+    padding: 2px 20px;
+    border-radius: 35px;
+}
+
+#appointment label {
+    color: var(--turquoise);
+}
+
+#appointment button[type="submit"] {
+    background-color: var(--outer_space);
+    padding: 2px 20px;
+    border-radius: 35px;
+    color: var(--seasalt);
+    margin: 15px;
+}

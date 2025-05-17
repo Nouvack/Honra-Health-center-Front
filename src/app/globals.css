@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #FCFAF9;
   --foreground: #171717;
 }
 
@@ -14,13 +14,28 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #FCFAF9;
+    --foreground: #0a0a0a;
+    --tea_rose: #FFC9C2;
+    --mint_green: #DAFBF7;
+    --seasalt: #FCFAF9;
+    --turquoise: #36DBD2;
+    --outer_space: #415257;
   }
+}
+
+@font-face {
+  font-family: 'font';
+  src: url('/fonts/font.ttf') format('opentype');
+  font-display: swap;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'font', Arial, Helvetica, sans-serif;
+}
+
+button:hover{
+  cursor: pointer;
 }

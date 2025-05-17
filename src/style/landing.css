@@ -1,0 +1,26 @@
+#hero {
+    background-image: url("/images/hero_bg.png");
+    background-size: cover;
+}
+
+#specialties {
+    background-image: url("/images/specialties_bg.png");
+    background-size: cover;
+    background-position: bottom;
+}
+
+#doctors {
+    background-image: url("/images/doctors_bg.png");
+    background-size: cover;
+}
+
+button[type="filter"] {
+    background-color: var(--mint_green);
+    padding: 2px 20px;
+    border-radius: 35px;
+    transition: all 300 ease-in-out;
+}
+
+button[type="filter"]:hover{
+    background-color: var(--turquoise);
+}
