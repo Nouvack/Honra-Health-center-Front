@@ -15,7 +15,7 @@ export default function Header() {
                 <a href="#doctors">Our doctors</a>
                 <a href="#appointment">Make an appointment</a>
                 <a href="#contact">Location</a>
-                <Link href={"/"}>Login/Register</Link>
+                <Link href={"/login_register"}>Login/Register</Link>
             </div>
         </section>
     )
