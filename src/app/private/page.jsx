@@ -16,38 +16,106 @@ export default function Private() {
         initialValues: {
             email: "",
             password: ""
-        }, validationSchema: Yup.object({
-            email: Yup.string().email(),
-            password: Yup.string()
-        }), onSubmit: async (values) => {
-            //const response = await 
+        },
+        validationSchema: Yup.object({
+            email: Yup.string().email("Invalid email format").required("Email is required"),
+            password: Yup.string().required("Password is required")
+        }),
+        onSubmit: async (values) => {
+            console.log(values)
+            // Handle auth here
         }
-    })
-    return(
-        <section className="w-full h-screen flex flex-col justify-center items-center"> 
-            <Image src={"/images/logo.png"} alt="logo" width={150} height={50}/>
-            <p className="font-bold p-8">Employee Log In</p>
-            <div className="flex gap-4">
-                <button className={`border-2 border-[var(--outer_space)] p-1 px-3 rounded-3xl ${userType === "admin" ? 'bg-[var(--mint_green)]' : 'bg-[var(--seasalt)]'}`}
-                        onClick={() => changeUser("admin")}>ADMIN</button>
-                <button className={`border-2 border-[var(--outer_space)] p-1 px-3 rounded-3xl ${userType === "doctor" ? 'bg-[var(--mint_green)]' : 'bg-[var(--seasalt)]'}`}
-                        onClick={() => changeUser("doctor")}>DOCTOR</button>
-            </div>
-            <div className="flex flex-col pt-4">
-                <label htmlFor="email" className='text-xs'>EMAIL</label>
-                <input type="text" name="email" id="email" 
-                        className="p-2 bg-[var(--mint_green)] rounded-3xl"
-                        onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.email}/>
-                {formik.touched.email && formik.errors.email ? (<p className='hidden peer-invalid:block'>{formik.errors.email}</p>) : null}
-            </div>
-            <div className="flex flex-col pt-2 pb-4">
-                <label htmlFor="password" className='text-xs'>PASSWORD</label>
-                <input type="password" name="password" id="password" 
-                        className="p-2 bg-[var(--mint_green)] rounded-3xl"
-                        onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.password}/>
-                {formik.touched.password && formik.errors.password ? (<p className='hidden peer-invalid:block'>{formik.errors.password}</p>) : null}
-            </div>
-            <button type="submit" className="p-2 px-8 border-2 border-[var(--outer_space)] rounded-3xl bg-[var(--turquoise)]">ENTER</button>
+    });
+
+    return (
+        <section className="flex items-center justify-center h-screen bg-white">
+            <form
+                onSubmit={formik.handleSubmit}
+                className="w-full max-w-sm px-6 text-center"
+            >
+                {/* Logo */}
+                <div id="logo" className="mb-12">
+                    <Image
+                        src="/images/logo.png"
+                        alt="logo"
+                        width={120}
+                        height={50}
+                        className="mx-auto"
+                    />
+                    <p className="text-gray-700 text-sm tracking-wider mt-1">EMPLOYEE LOGIN</p>
+                </div>
+
+                {/* User Type Buttons */}
+                <div className="flex gap-4 justify-center mb-6">
+                    <button
+                        type="button"
+                        id="admin-button"
+                        className={`border px-4 py-1 rounded-3xl text-sm transition ${
+                            userType === "admin"
+                                ? "bg-green-100 border-gray-600"
+                                : "bg-gray-100 border-gray-300"
+                        }`}
+                        onClick={() => changeUser("admin")}
+                    >
+                        ADMIN
+                    </button>
+                    <button
+                        type="button"
+                        id="doctor-button"
+                        className={`border px-4 py-1 rounded-3xl text-sm transition ${
+                            userType === "doctor"
+                                ? "bg-green-100 border-gray-600"
+                                : "bg-gray-100 border-gray-300"
+                        }`}
+                        onClick={() => changeUser("doctor")}
+                    >
+                        DOCTOR
+                    </button>
+                </div>
+
+                {/* Email Field */}
+                <div className="text-left mb-4">
+                    <label htmlFor="email" className="text-xs text-gray-700 block mb-1">EMAIL</label>
+                    <input
+                        id="email"
+                        name="email"
+                        type="text"
+                        className="w-full px-4 py-2 bg-green-50 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-teal-400"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.email}
+                    />
+                    {formik.touched.email && formik.errors.email && (
+                        <p className="text-red-500 text-xs mt-1">{formik.errors.email}</p>
+                    )}
+                </div>
+
+                {/* Password Field */}
+                <div className="text-left mb-6">
+                    <label htmlFor="password" className="text-xs text-gray-700 block mb-1">PASSWORD</label>
+                    <input
+                        id="password"
+                        name="password"
+                        type="password"
+                        className="w-full px-4 py-2 bg-green-50 border border-gray-300 rounded-3xl focus:outline-none focus:ring-2 focus:ring-teal-400"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.password}
+                    />
+                    {formik.touched.password && formik.errors.password && (
+                        <p className="text-red-500 text-xs mt-1">{formik.errors.password}</p>
+                    )}
+                </div>
+
+                {/* Submit Button */}
+                <button
+                    type="submit"
+                    id="submit-button"
+                    className="w-full bg-cyan-400 hover:bg-cyan-500 text-white font-medium py-2 rounded-3xl transition"
+                >
+                    ENTER
+                </button>
+            </form>
         </section>
     )
 }

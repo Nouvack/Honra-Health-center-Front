@@ -21,7 +21,6 @@ export default function Home() {
                 <Appointment/>
                 <Contact/>
             <Footer/>
-            
         </section>
     )
 }
