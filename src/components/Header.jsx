@@ -11,11 +11,11 @@ export default function Header() {
                 <Image src={"/images/logo.png"} alt="logo" width={100} height={50}>
                 </Image></Link>
             <div className="flex-end ml-auto space-x-4 pr-4">
-                <a href="#specialties">Medical speecialties</a>
-                <a href="#doctors">Our doctors</a>
-                <a href="#appointment">Make an appointment</a>
-                <a href="#contact">Location</a>
-                <Link href={"/login_register"}>Login/Register</Link>
+                <a href="/#specialties">Medical speecialties</a>
+                <a href="/#doctors">Our doctors</a>
+                <a href="/#appointment">Make an appointment</a>
+                <a href="/#contact">Location</a>
+                <Link href="/login_register">Login/Register</Link>
             </div>
         </section>
     )

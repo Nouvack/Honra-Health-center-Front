@@ -1,10 +1,26 @@
 "use client"
 
 import '@/style/landing.css'
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { getDoctors } from '../functions'
+import Card from './DoctorCard'
 
 export default function Doctors() {
     const [filter, setFilter] = useState("all")
+    const [doctors, setDoctors] = useState([])
+    const [error, setError] = useState("")
+
+    useEffect(() => {
+        const fetchData = async() => {
+            const response = await getDoctors()
+            if (!response || response.lenght === 0) {
+                setError("Doctors data not found :(")
+            } else {
+                setDoctors(response)
+            }
+        }
+        fetchData()
+    }, [])
 
     return (
         <section id="doctors" className="w-full h-max flex flex-col items-center">
@@ -18,7 +34,9 @@ export default function Doctors() {
                 <button type="filter" onClick={() => setFilter("neurology")}>Neurology</button>
                 <button type="filter" onClick={() => setFilter("space")}>Space Medicine</button>
             </div>
-            <div className="flex flex-wrap relative w-full h-150 justify-center"></div>
+            <div className="flex flex-wrap relative w-full h-150 justify-center">
+                {error ? <p>{error}</p> : doctors.map(doctor => <Card doctor={doctor} key={doctor}/>)}
+            </div>
         </section>
     )
 }
