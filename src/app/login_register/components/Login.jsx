@@ -1,5 +1,5 @@
 "use client"
-//import "@/style/login_register.css"
+import "./style.css"
 import { useFormik } from "formik";
 import * as Yup from "Yup";
 import { useRouter } from "next/router";

@@ -1,5 +1,5 @@
 "use client"
-//import "@/style/login_register.css"
+import "./style.css"
 import Login from "./Login"
 import { useFormik } from "formik";
 import * as Yup from "Yup";

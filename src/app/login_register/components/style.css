@@ -1,0 +1,40 @@
+:root {
+  --primary-color: #A9FFFB;
+  --secondary-color: #edf0f0;
+  --turquoise: #34538d;
+  --button: #2C2C2C;
+  --border-color: #9b9b9b;
+}
+
+#background {
+  background-color: #DDF8F7;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#componentR {
+  background-color: #edf0f0;
+  width: 400px;
+  height: 650px;
+  border-radius: 20px;
+  border:1px solid #9b9b9b;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+}
+#componentL {
+  background-color: #edf0f0;
+  width: 400px;
+  height: 400px;
+  border-radius: 20px;
+  border:1px solid #9b9b9b;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+}
+
+#border{
+  border:1px solid #9b9b9b;
+  border-radius: 8px;
+  padding: 10px;
+  margin : 1px;
+  width: 320px;
+}
