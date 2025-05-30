@@ -1,6 +1,7 @@
 "use server"
-const path = process.env.API_PATH
+
 import { cookies } from 'next/headers'
+const path = process.env.API_PATH
 
 export async function logInDoctor(values) {
     try {
@@ -12,11 +13,22 @@ export async function logInDoctor(values) {
         if (response.ok) {
             const res = await response.json()
             const cookieStore = await cookies()
+            cookieStore.set("userToken", res.token)
             return true
         } else {
             return false
         }
     } catch (err) {
         console.log("error")
+    }
+}
+
+export async function logOut() {
+    try {
+        const cookieStore = await cookies()
+        cookieStore.delete("userToken")
+        return true
+    } catch (err) {
+        return false
     }
 }

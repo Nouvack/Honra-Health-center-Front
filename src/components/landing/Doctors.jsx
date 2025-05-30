@@ -2,25 +2,26 @@
 
 import '@/style/landing.css'
 import { useEffect, useState } from "react"
-import { getDoctors } from '../functions'
+import { filterData } from '../functions'
 import Card from './DoctorCard'
 
-export default function Doctors() {
-    const [filter, setFilter] = useState("all")
-    const [doctors, setDoctors] = useState([])
+export default function Doctors({doctors}) {
+    const [filteredDoctors, setFilteredDoctors] = useState([])
     const [error, setError] = useState("")
 
     useEffect(() => {
-        const fetchData = async() => {
-            const response = await getDoctors()
-            if (!response || response.lenght === 0) {
-                setError("Doctors data not found :(")
-            } else {
-                setDoctors(response)
-            }
+        if (doctors && doctors.length > 0) {
+            setFilteredDoctors(doctors)
         }
-        fetchData()
-    }, [])
+    }, [doctors])
+
+    const updateFilter = async (filter, data = doctors) => {
+        if (doctors.length === 0 || !doctors) {
+            setError("Could not load doctors data :(")
+        }
+        const result = await filterData(data, filter)
+        setFilteredDoctors(result)
+    } 
 
     return (
         <section id="doctors" className="w-full h-max flex flex-col items-center">
@@ -28,14 +29,14 @@ export default function Doctors() {
             {/** FILTERS */}
             <div className='flex flex-wrap gap-2 m-4'>
                 <p>Filter: </p>
-                <button type="filter" onClick={() => setFilter("all")}>All</button>
-                <button type="filter" onClick={() => setFilter("cosmetic")}>Cosmetic Surgery</button>
-                <button type="filter" onClick={() => setFilter("forensic")}>Forensic Pathology</button>
-                <button type="filter" onClick={() => setFilter("neurology")}>Neurology</button>
-                <button type="filter" onClick={() => setFilter("space")}>Space Medicine</button>
+                <button type="filter" onClick={() => updateFilter("All")}>All</button>
+                <button type="filter" onClick={() => updateFilter("Cosmetic Surgery")}>Cosmetic Surgery</button>
+                <button type="filter" onClick={() => updateFilter("Forensic Pathology")}>Forensic Pathology</button>
+                <button type="filter" onClick={() => updateFilter("Neurology")}>Neurology</button>
+                <button type="filter" onClick={() => updateFilter("Space Medicine")}>Space Medicine</button>
             </div>
-            <div className="flex flex-wrap relative w-full h-150 justify-center">
-                {error ? <p>{error}</p> : doctors.map(doctor => <Card doctor={doctor} key={doctor}/>)}
+            <div className="flex flex-wrap relative w-full h-150 justify-center gap-2">
+                {error ? <p>{error}</p> : filteredDoctors.map(doctor => <Card doctor={doctor} key={doctor._id}/>)}
             </div>
         </section>
     )

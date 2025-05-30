@@ -2,9 +2,14 @@
 
 import '@/style/appointments.css'
 import { useFormik } from 'formik';
+import { useState, useEffect } from 'react';
+import { filterData } from './functions'
 import * as Yup from 'Yup';
 
-export default function Appointment() {
+export default function Appointment({doctors}) {
+    const [filteredDoctors, setFilteredDoctors] = useState([])
+    const [error, setError] = useState("")
+
     const formik = useFormik({
         initialValues: {
             nombre: "",
@@ -28,6 +33,18 @@ export default function Appointment() {
             // falta por completar pero me da pereza
         })
     })
+
+    useEffect(() => {
+        if (doctors && doctors.length > 0) {
+            updateFilter(formik.values.especialidad)
+        }
+    }, [doctors])
+    
+    const updateFilter = async (filter, data = doctors) => {
+        const result = await filterData(data, filter)
+        setFilteredDoctors(result)
+    } 
+
     return (
         <section id="appointment" className="w-full h-max flex flex-col items-center mt-24">
             <div className="bg-[var(--mint_green)] w-5/6 items-center flex flex-col rounded-3xl">
@@ -55,8 +72,8 @@ export default function Appointment() {
                         <div className='flex flex-col'>
                             <label htmlFor="specialty"
                                 className='text-xs'>SPECIALTY</label>
-                            <select name="specialty" id="specialty" onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.specialty}>
-                                {["Cosmetic surgery", "Forensic pathology", "Neurology", "Space medicine"].map(specialty => (
+                            <select name="specialty" id="specialty" onBlur={formik.handleBlur} onChange={(e) => {formik.handleChange(e); updateFilter(e.target.value)}} value={formik.values.specialty}>
+                                {["Cosmetic Surgery", "Forensic Pathology", "Neurology", "Space Medicine"].map(specialty => (
                                     <option key={specialty} value={specialty}>{specialty}</option>
                                 ))}
                             </select>
@@ -66,8 +83,8 @@ export default function Appointment() {
                             <label htmlFor="doctor"
                                 className='text-xs'>DOCTOR</label>
                             <select name="doctor" id="doctor" onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.doctor}>
-                                {["Pedro Jr Leon III", "Forensic pathology", "Neurology", "Space medicine"].map(doctor => (
-                                    <option key={doctor} value={doctor}>{doctor}</option>
+                                {filteredDoctors.map(doctor => (
+                                    <option key={doctor._id} value={doctor._id}>{doctor.firstname} {doctor.lastname} </option>
                                 ))}
                             </select>
                             {formik.touched.specialty && formik.errors.specialty ? (<p className='hidden peer-invalid:block'>{formik.errors.specialty}</p>) : null}

@@ -18,3 +18,9 @@ export async function getDoctors() {
     }
 }
 
+export async function filterData( doctorsList, filter ) {
+    if (filter === "All") {
+        return doctorsList
+    }
+    return doctorsList.filter(doctor => doctor.specialty === filter)
+}
