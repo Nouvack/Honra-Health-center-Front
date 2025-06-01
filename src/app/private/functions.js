@@ -12,9 +12,9 @@ export async function logInDoctor(values) {
         });
         if (response.ok) {
             const res = await response.json()
-            const cookieStore = await cookies()
-            cookieStore.set("userToken", res.token)
-            return true
+            //const cookieStore = await cookies()
+            //cookieStore.set("userToken", res.token)
+            return res
         } else {
             return false
         }
