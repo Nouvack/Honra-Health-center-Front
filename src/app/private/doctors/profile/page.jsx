@@ -1,10 +1,17 @@
 "use client"
 
-import { useParams } from "next/navigation"
+import { useEffect, useState } from "react"
 
 export default function Profile() {
-    const params = useParams()
-    const doctorId = params.id
+    const [doctor, setDoctor] = useState()
+
+    const getDoctor = async() => {
+        
+    }
+
+    useEffect(() => {
+         
+    })
 
     return (
         <section>{doctorId}</section>
