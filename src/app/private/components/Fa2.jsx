@@ -1,10 +1,14 @@
 "use client"
 
 import { useRef, useState } from "react";
+import { verify2Fa } from "../functions";
+import { useRouter }  from "next/navigation"
 
 export default function Fa2({ data }) {
+    const router = useRouter(); 
     const [code, setCode] = useState(new Array(6).fill(''));
     const inputsRef = useRef([])
+    const [error, setError] = useState()
 
     const handleChange = (e, index) => {
         const value = e.target.value.replace(/\D/, '')
@@ -42,7 +46,15 @@ export default function Fa2({ data }) {
     };
 
     const verifyCode = async(fullCode) => {
-
+        setError()
+        const response = await verify2Fa(data.token, fullCode)
+        if (!response) {
+            setError("Invalid code.")
+            setCode(new Array(6).fill(''))
+            inputsRef.current[0].focus()
+        } else {
+            router.push(`/private/doctors`)
+        }
     }
 
     return (
@@ -63,6 +75,8 @@ export default function Fa2({ data }) {
                     />
                 ))}
             </div>
+
+            <p className="text-red-500">{error}</p>
              
         </section>
     )

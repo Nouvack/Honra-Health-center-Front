@@ -11,10 +11,28 @@ export async function logInDoctor(values) {
             body: JSON.stringify(values)
         });
         if (response.ok) {
+            return await response.json()
+        } else {
+            return false
+        }
+    } catch (err) {
+        console.log("error")
+    }
+}
+
+export async function verify2Fa(token, code) {
+    try {
+        const response = await fetch(`${path}/doctors/verify`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}` },
+            body: JSON.stringify({code})
+        })
+        if (response.ok) {
             const res = await response.json()
-            //const cookieStore = await cookies()
-            //cookieStore.set("userToken", res.token)
-            return res
+            const cookieStore = await cookies()
+            cookieStore.set("userToken", res.token)
+            return true
         } else {
             return false
         }
