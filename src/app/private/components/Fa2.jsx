@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { verify2Fa } from "../functions";
 import { useRouter }  from "next/navigation"
 
-export default function Fa2({ data }) {
+export default function Fa2({ data, role }) {
     const router = useRouter(); 
     const [code, setCode] = useState(new Array(6).fill(''));
     const inputsRef = useRef([])
@@ -53,7 +53,11 @@ export default function Fa2({ data }) {
             setCode(new Array(6).fill(''))
             inputsRef.current[0].focus()
         } else {
-            router.push(`/private/doctors`)
+            if (role === "doctor") {
+                router.push(`/private/doctors`)
+            } else if (role === "admin") {
+                router.push(`/private/admin`)
+            }
         }
     }
 

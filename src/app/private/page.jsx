@@ -47,7 +47,7 @@ export default function Private() {
             </div>
 
             {
-                auth ? <Fa2 data={auth} /> :
+                auth ? <Fa2 data={auth} role={userType} /> :
                 <form onSubmit={formik.handleSubmit}
                     className="w-full max-w-sm px-6 text-center">
 
