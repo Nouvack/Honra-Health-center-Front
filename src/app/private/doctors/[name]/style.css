@@ -1,0 +1,17 @@
+form input[type="text"] {
+    padding: 2px 20px;
+    border-radius: 35px;
+    border: solid 1px var(--turquoise);
+}
+
+form label {
+    color: var(--turquoise);
+}
+
+form button[type="submit"] {
+    background-color: var(--outer_space);
+    padding: 2px 20px;
+    border-radius: 35px;
+    color: var(--seasalt);
+    margin: 15px;
+}
