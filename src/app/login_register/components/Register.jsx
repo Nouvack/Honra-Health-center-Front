@@ -2,7 +2,7 @@
 import "./style.css"
 import Login from "./Login"
 import { useFormik } from "formik";
-import * as Yup from "Yup";
+import * as Yup from "yup";
 import { useState } from "react";
 
 export default function Register({ onSwitch }) {

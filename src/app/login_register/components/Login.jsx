@@ -1,7 +1,7 @@
 "use client"
 import "./style.css"
 import { useFormik } from "formik";
-import * as Yup from "Yup";
+import * as Yup from "yup";
 import { useRouter } from "next/router";
 
 

@@ -2,7 +2,7 @@
 "use client";
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "Yup"; 
+import * as Yup from "yup";
 import "@/style/medicStuff.css";
 
 export default function AppointmentFormModal({ date, onSubmit, onClose }) {

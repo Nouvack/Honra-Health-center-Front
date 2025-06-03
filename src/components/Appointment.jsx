@@ -4,7 +4,7 @@ import '@/style/appointments.css'
 import { useFormik } from 'formik';
 import { useState, useEffect } from 'react';
 import { filterData } from './functions'
-import * as Yup from 'Yup';
+import * as Yup from "yup";
 
 export default function Appointment({doctors}) {
     const [filteredDoctors, setFilteredDoctors] = useState([])

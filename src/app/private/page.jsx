@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import { useFormik } from 'formik';
-import * as Yup from 'Yup';
+import * as Yup from "yup";
 import { useState } from "react";
 import { logInDoctor } from "./functions";
 import Fa2 from "./components/Fa2";
