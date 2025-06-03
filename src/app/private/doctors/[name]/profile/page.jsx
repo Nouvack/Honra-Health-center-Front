@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { getDoctor } from "../../../functions"
 import Image from "next/image"
 import { useFormik } from 'formik';
-import * as Yup from 'Yup';
+import * as Yup from 'yup';
 import '../style.css'
 
 export default function Profile() {
