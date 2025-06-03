@@ -54,7 +54,7 @@ export default function Fa2({ data, role }) {
             inputsRef.current[0].focus()
         } else {
             if (role === "doctor") {
-                router.push(`/private/doctors`)
+                router.push(`/private/doctors/${response}`)
             } else if (role === "admin") {
                 router.push(`/private/admin`)
             }

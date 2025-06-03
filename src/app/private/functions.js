@@ -32,7 +32,7 @@ export async function verify2Fa(token, code) {
             const res = await response.json()
             const cookieStore = await cookies()
             cookieStore.set("userToken", res.token)
-            return true
+            return res.name
         } else {
             return false
         }
