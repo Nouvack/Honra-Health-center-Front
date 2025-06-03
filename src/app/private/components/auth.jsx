@@ -1,6 +1,6 @@
 // components/AuthAction.jsx
 import { useFormik } from "formik";
-import * as Yup from "Yup";
+import * as Yup from "yup";
 
 export default function AuthAction({ onSubmit, onCancel }) {
   const formik = useFormik({

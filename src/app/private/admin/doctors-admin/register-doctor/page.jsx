@@ -1,7 +1,7 @@
 "use client";
 
 import { Formik, Form, useFormikContext } from "formik";
-import * as Yup from "Yup";
+import * as Yup from "yup";
 import { useState } from "react";
 import '@/style/medicStuff.css';
 import AuthAction from '@/app/private/components/auth';
