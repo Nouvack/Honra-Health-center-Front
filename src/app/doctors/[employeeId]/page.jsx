@@ -8,6 +8,7 @@ import Image from "next/image"
 import { useParams } from 'next/navigation';
 import TreatmentCards from "../components/TratmentCards"
 import Calendar from "@/components/Calendar"
+import Appointment from "@/components/Appointment"
 
 export default function Doctors() {
     const params = useParams();
@@ -45,6 +46,7 @@ export default function Doctors() {
             <Header/>
             {doctor? (
             <section>
+
                 {/** TOP SECTION */}
                 <div className="w-full flex items-center justify-between px-10 h-65 bg-cover text-[var(--seasalt)]"
                     style={{ backgroundImage: `url(${bgUrl})` }}>
@@ -81,7 +83,7 @@ export default function Doctors() {
                     </div>
                     <div className="flex-1 flex flex-col items-center">
                         <Calendar doctor={doctor} />
-                        <button className="bg-[var(--outer_space)] text-[var(--seasalt)] p-2 rounded-3xl mt-2">MAKE AN APPOINTMENT</button>
+                        <Appointment doctors={[doctor]}/>
                     </div>
                 </section>
                 

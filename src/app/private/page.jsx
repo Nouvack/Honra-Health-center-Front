@@ -4,7 +4,7 @@ import Image from "next/image"
 import { useFormik } from 'formik';
 import * as Yup from "yup";
 import { useState } from "react";
-import { logInDoctor } from "./functions";
+import { logInAdmin, logInDoctor } from "./functions";
 import Fa2 from "./components/Fa2";
 
 export default function Private() {
@@ -26,14 +26,13 @@ export default function Private() {
             password: Yup.string().required("Password is required")
         }), onSubmit: async (values) => {
             setError("")
+            let response
             if (userType === "doctor") {
-                const response = await logInDoctor(values)
-                if (response === false || undefined) {
-                    setError("Invalid credentials.")
-                } else {
-                    setAuth(response)
-                }
+                response = await logInDoctor(values)
+            } else if (userType === "admin") {
+                response = await logInAdmin(values)
             }
+            response? setAuth(response) : setError("Invalid credentials.")
         }
     });
 
