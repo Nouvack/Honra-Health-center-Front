@@ -1,60 +1,60 @@
 "use client"
 
-import React, { useState } from "react"
+import FullCalendar from "@fullcalendar/react";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import { useEffect, useState } from "react";
+import { calculateSchedule, getDoctorAppointments } from "./functions";
 
-const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-const hours = Array.from({ length: 12 }, (_, i) => `${i + 9}:00`)
-
-export default function Calendar() {
-
-    const getMonday = (date) => {
-        const d = new Date(date)
-        const day = d.getDay()
-        const diff = d.getDate() - day + (day === 0 ? -6 : 1)
-        return new Date(d.setDate(diff))
-    }
-
-    const [weekStart, setWeekStart] = useState(getMonday(new Date()))
-    const [schedule, setSchedule] = useState({})
-
-    
-    const formattedWeek = weekdays.map((_, i) => {
-        const date = new Date(weekStart);
-        date.setDate(weekStart.getDate() + i);
-        return date.toISOString().split("T")[0];
+export default function Calendar({doctor}) {
+    const [schedule, setSchedule] = useState({
+        businessHours: [],
+        minTime: '00:00:00',
+        maxTime: '23:00:00'
     });
+    const [appointments, setAppointments] = useState([])
+
+    useEffect(() => {
+        if(doctor) {
+            const getSchedule = async () => {
+                const scheduleData = await calculateSchedule(doctor);
+                setSchedule(scheduleData)
+            }
+            getSchedule()
+            
+            const getAppointments = async () => {
+                console.log(doctor)
+                const response = await getDoctorAppointments(doctor._id)
+                if (!response) {
+                    console.log(response) // BORRAR ESTA LINEA
+                } else {
+                    setAppointments(response)
+                    console.log(response)
+                }
+            }
+            getAppointments()
+        }
+    }, [doctor])
 
     return (
-        <section>
-            <div className="grid grid-cols-[80px_repeat(7,1fr)]">
-                {/** HEADER */}
-                <div className="bg-white"></div>
-                {weekdays.map((day, i) => (
-                    <div key={day}>{day}<br/>
-                        <span className="text-xs text-gray-500">
-                            {formattedWeek[i]}
-                        </span>
-                    </div>
-                ))}
-                {/** ROWS */}
-                {hours.map((hour) => (
-                    <React.Fragment key={hour}>
-                        {/** TIME */}
-                        <div>{hour}</div>
-                        {weekdays.map((day, i) => {
-                            const dateKey = formattedWeek[i]
-                            const cellKey = `${dateKey}-${hour}`
-                            const status = "status"
-                            const bgColor = "bg-[var(--turquoise)]"
-
-                            return (
-                                <div key={cellKey} 
-                                    className={`border-1 m-1 h-12 ${bgColor}`}></div>
-                            )
-                        })}
-                    </React.Fragment>
-                ))}
-            </div>
+        <section className="w-full">
+            <FullCalendar
+                slotLabelFormat={{ hour: '2-digit', minute: '2-digit', hour12: false }}
+                eventTimeFormat={{ hour: '2-digit', minute: '2-digit', hour12: false }}
+                headerToolbar={{left: 'prev', center: 'title', right: 'today next'}}
+                plugins={[timeGridPlugin]}
+                initialView="timeGridWeek"
+                dayHeaderFormat={{weekday: 'short', day: '2-digit'}}
+                allDaySlot={false}
+                firstDay={1}
+                slotDuration={"01:00:00"}
+                businessHours={schedule.businessHours}
+                slotMinTime={schedule.startTime || "00:00:00"}
+                slotMaxTime={schedule.endTime || "23:00:00"}
+                height='auto'
+                nowIndicator={true}
+                events={[]}
+            />
         </section>
     )
 }
+

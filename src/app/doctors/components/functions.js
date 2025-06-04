@@ -10,7 +10,21 @@ export async function getDoctor(employeeId) {
         if (response.ok) {
             return await response.json()
         } else {
-            console.log(response)
+            return false
+        }
+    } catch (err) {
+        console.log("error")
+    }
+}
+
+export async function getTreatments(specialty) {
+    try {
+        const response = await fetch(`${path}/treatments/byspecialty/${specialty}`, {
+            method: "GET"
+        })
+        if (response.ok) {
+            return await response.json()
+        } else {
             return false
         }
     } catch (err) {

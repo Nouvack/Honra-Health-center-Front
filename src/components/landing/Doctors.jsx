@@ -40,7 +40,7 @@ export default function Doctors({doctors}) {
                 <div className="flex flex-wrap gap-4 px-4 py-2 justify-center" >
                     {error ? (
                         <p>{error}</p> ) : (
-                        filteredDoctors.map((doctor) => ( <Card doctor={doctor} key={doctor._id} /> ))
+                        filteredDoctors?.map((doctor) => ( <Card doctor={doctor} key={doctor._id} /> ))
                     )}
                 </div>
             </div>
