@@ -22,6 +22,7 @@ export default function Home() {
     return(
         <section className='w-full min-h-auto flex flex-col'>
             <Header/>
+            <div className='w-100 h-100 bg-red-200'></div>
                 <Hero/>
                 <Specialties/>
                 <Doctors doctors={doctors} />
