@@ -54,7 +54,7 @@ export async function verify2Fa(token, code, role) {
             const res = await response.json()
             const cookieStore = await cookies()
             cookieStore.set("userToken", res.token)
-            return res.name || res.employeeId
+            return role === "doctor" ? {doctorId:res.doctorId, employeeId:res.employeeId} : res.employeeId
         } else {
             return false
         }
@@ -78,6 +78,29 @@ export async function getDoctor() {
         return false
     } catch (err) {
         console.log("Error", err)
+    }
+}
+
+export async function updatePassword(newpassword, id) {
+    try {
+        const cookieStore = await cookies()
+        const token = cookieStore.get("userToken")?.value
+        const response = await fetch(`${path}/doctors/update/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}` },
+            body: JSON.stringify({password: newpassword})
+        })
+        if (response.ok) {
+            const res = await response.json()
+            console.log(res)
+            return res.employeeId
+        } else if (response.status === 400) {
+            return "Error 400"
+        } 
+        return false
+    } catch (err) {
+        return false
     }
 }
 
