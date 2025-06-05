@@ -24,3 +24,14 @@ export async function filterData( doctorsList, filter ) {
     }
     return doctorsList.filter(doctor => doctor.specialty === filter)
 }
+
+export async function getAvailableHours(doctorId, date) {
+    try {
+        const response = await fetch(`${path}/appointments/getAvailableHours/${doctorId}?date=${date.toISOString()}`, {
+            method: "GET"
+        })
+        return response.ok? response.json() : []
+    } catch (err) {
+        return false
+    }
+}

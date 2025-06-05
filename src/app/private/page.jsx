@@ -4,7 +4,7 @@ import Image from "next/image"
 import { useFormik } from 'formik';
 import * as Yup from "yup";
 import { useState } from "react";
-import { logInDoctor, logInAdmin } from "./functions";
+import { logInAdmin, logInDoctor } from "./functions";
 import Fa2 from "./components/Fa2";
 
 export default function Private() {
@@ -28,32 +28,13 @@ export default function Private() {
         }),
         onSubmit: async (values) => {
             setError("")
-
-            if (!userType) {
-                setError("Please select a user type.");
-                return;
+            let response
+            if (userType === "doctor") {
+                response = await logInDoctor(values)
+            } else if (userType === "admin") {
+                response = await logInAdmin(values)
             }
-
-            // Sanitize input
-            const sanitizedValues = {
-                email: values.email.trim(),
-                password: values.password.trim()
-            }
-
-            console.log("Submitting sanitized values:", sanitizedValues);
-
-            let response = null;
-            if (userType === "admin") {
-                response = await logInAdmin(sanitizedValues);
-            } else if (userType === "doctor") {
-                response = await logInDoctor(sanitizedValues);
-            }
-
-            if (!response) {
-                setError("Invalid credentials.");
-            } else {
-                setAuth(response);
-            }
+            response? setAuth(response) : setError("Invalid credentials.")
         }
     });
 

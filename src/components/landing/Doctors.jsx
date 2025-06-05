@@ -35,8 +35,14 @@ export default function Doctors({doctors}) {
                 <button type="filter" onClick={() => updateFilter("Neurology")}>Neurology</button>
                 <button type="filter" onClick={() => updateFilter("Space Medicine")}>Space Medicine</button>
             </div>
-            <div className="flex flex-wrap relative w-full h-150 justify-center gap-2">
-                {error ? <p>{error}</p> : filteredDoctors.map(doctor => <Card doctor={doctor} key={doctor._id}/>)}
+            {/** DOCTOR CARDS */}
+            <div className="w-full h-150 flex justify-center items-center" >
+                <div className="flex flex-wrap gap-4 px-4 py-2 justify-center" >
+                    {error ? (
+                        <p>{error}</p> ) : (
+                        filteredDoctors?.map((doctor) => ( <Card doctor={doctor} key={doctor._id} /> ))
+                    )}
+                </div>
             </div>
         </section>
     )

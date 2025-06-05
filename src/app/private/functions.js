@@ -26,21 +26,25 @@ export async function logInAdmin(values) {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(values)
-        });
+        })
         if (response.ok) {
             return await response.json()
-        } else {
-            return false
-        }
+        } 
+        return false
     } catch (err) {
         console.log("error")
     }
 }
 
-
-export async function verify2Fa(token, code) {
+export async function verify2Fa(token, code, role) {
     try {
-        const response = await fetch(`${path}/doctors/verify`, {
+        let thisPath
+        if (role === "doctor") {
+            thisPath = `${path}/doctors/verify`
+        } else if (role === "admin") {
+            thisPath = `${path}/admin/verify`
+        }
+        const response = await fetch(thisPath, {
             method: "POST",
             headers: { "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}` },
@@ -50,7 +54,7 @@ export async function verify2Fa(token, code) {
             const res = await response.json()
             const cookieStore = await cookies()
             cookieStore.set("userToken", res.token)
-            return res.name
+            return res.name || res.employeeId
         } else {
             return false
         }

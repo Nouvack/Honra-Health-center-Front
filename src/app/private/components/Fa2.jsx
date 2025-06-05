@@ -47,7 +47,7 @@ export default function Fa2({ data, role }) {
 
     const verifyCode = async(fullCode) => {
         setError("")
-        const response = await verify2Fa(data.token, fullCode)
+        const response = await verify2Fa(data.token, fullCode, role)
         if (!response) {
             setError("Invalid code.")
             setCode(new Array(6).fill(''))
