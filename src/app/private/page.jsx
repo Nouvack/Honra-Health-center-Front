@@ -4,16 +4,17 @@ import Image from "next/image"
 import { useFormik } from 'formik';
 import * as Yup from "yup";
 import { useState } from "react";
-import { logInDoctor } from "./functions";
+import { logInDoctor, logInAdmin } from "./functions";
 import Fa2 from "./components/Fa2";
 
 export default function Private() {
     const [userType, setUserType] = useState("")
     const [error, setError] = useState("")
-    const [auth, setAuth] = useState()
+    const [auth, setAuth] = useState(null)
 
     const changeUser = (type) => {
         setUserType(type)
+        setError("") // Clear error when switching user types
     }
 
     const formik = useFormik({
@@ -24,52 +25,71 @@ export default function Private() {
         validationSchema: Yup.object({
             email: Yup.string().email("Invalid email format").required("Email is required"),
             password: Yup.string().required("Password is required")
-        }), onSubmit: async (values) => {
+        }),
+        onSubmit: async (values) => {
             setError("")
-            if (userType === "doctor") {
-                const response = await logInDoctor(values)
-                if (response === false || undefined) {
-                    setError("Invalid credentials.")
-                } else {
-                    setAuth(response)
-                }
+
+            if (!userType) {
+                setError("Please select a user type.");
+                return;
+            }
+
+            // Sanitize input
+            const sanitizedValues = {
+                email: values.email.trim(),
+                password: values.password.trim()
+            }
+
+            console.log("Submitting sanitized values:", sanitizedValues);
+
+            let response = null;
+            if (userType === "admin") {
+                response = await logInAdmin(sanitizedValues);
+            } else if (userType === "doctor") {
+                response = await logInDoctor(sanitizedValues);
+            }
+
+            if (!response) {
+                setError("Invalid credentials.");
+            } else {
+                setAuth(response);
             }
         }
     });
 
     return (
-        <section className="flex flex-col items-center justify-center h-screen bg-white ">
+        <section className="flex flex-col items-center justify-center h-screen bg-white">
             {/* Logo */}
             <div id="logo" className="mb-12">
-                <Image src="/images/logo.png" alt="logo" width={120} height={50}
-                    className="mx-auto" />
+                <Image src="/images/logo.png" alt="logo" width={120} height={50} className="mx-auto" />
                 <p className="text-gray-700 text-sm tracking-wider mt-1">EMPLOYEE LOGIN</p>
             </div>
 
             {
                 auth ? <Fa2 data={auth} role={userType} /> :
-                <form onSubmit={formik.handleSubmit}
-                    className="w-full max-w-sm px-6 text-center">
+                <form onSubmit={formik.handleSubmit} className="w-full max-w-sm px-6 text-center">
 
                     {/* User Type Buttons */}
                     <div className="flex gap-4 justify-center mb-6">
-                        <button type="button" id="admin-button"
+                        <button
+                            type="button"
+                            id="admin-button"
                             className={`border px-4 py-1 rounded-3xl text-sm transition ${
-                                userType === "admin"
-                                    ? "bg-green-100 border-gray-600"
-                                    : "bg-gray-100 border-gray-300"
+                                userType === "admin" ? "bg-green-100 border-gray-600" : "bg-gray-100 border-gray-300"
                             }`}
                             onClick={() => changeUser("admin")}
-                        > ADMIN
+                        >
+                            ADMIN
                         </button>
-                        <button type="button" id="doctor-button"
+                        <button
+                            type="button"
+                            id="doctor-button"
                             className={`border px-4 py-1 rounded-3xl text-sm transition ${
-                                userType === "doctor"
-                                    ? "bg-green-100 border-gray-600"
-                                    : "bg-gray-100 border-gray-300"
+                                userType === "doctor" ? "bg-green-100 border-gray-600" : "bg-gray-100 border-gray-300"
                             }`}
                             onClick={() => changeUser("doctor")}
-                        > DOCTOR
+                        >
+                            DOCTOR
                         </button>
                     </div>
 
@@ -111,13 +131,18 @@ export default function Private() {
                     <button
                         type="submit"
                         id="submit-button"
-                        className="w-full bg-cyan-400 hover:bg-cyan-500 text-white font-medium py-2 rounded-3xl transition"
-                    > ENTER
+                        className={`w-full ${
+                            !userType ? "opacity-50 cursor-not-allowed" : ""
+                        } bg-cyan-400 hover:bg-cyan-500 text-white font-medium py-2 rounded-3xl transition`}
+                        disabled={!userType}
+                    >
+                        ENTER
                     </button>
-                    <p className="text-red-500">{error}</p>
+
+                    {/* Error Message */}
+                    <p className="text-red-500 text-sm mt-2">{error}</p>
                 </form>
             }
-
         </section>
     )
 }

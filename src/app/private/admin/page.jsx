@@ -3,8 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import AuthAction from "@/app/private/components/auth";
-
+ 
 export default function Admin({ id }) {
     const router = useRouter();
 
@@ -68,13 +67,7 @@ export default function Admin({ id }) {
                 </button>
             </div>
 
-            {/* Render Auth Modal if needed */}
-            {authModalFor && (
-                <AuthAction
-                    onSubmit={handleAuthSubmit}
-                    onCancel={() => setAuthModalFor(null)}
-                />
-            )}
+        
         </section>
     );
 }

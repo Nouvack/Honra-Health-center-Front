@@ -20,6 +20,25 @@ export async function logInDoctor(values) {
     }
 }
 
+export async function logInAdmin(values) {
+    try {
+        const response = await fetch(`${path}/admin/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(values)
+        });
+        if (response.ok) {
+            return await response.json()
+        } else {
+            return false
+        }
+    } catch (err) {
+        console.log("error")
+    }
+}
+
+
+
 export async function verify2Fa(token, code) {
     try {
         const response = await fetch(`${path}/doctors/verify`, {
