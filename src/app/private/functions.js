@@ -38,7 +38,6 @@ export async function logInAdmin(values) {
 }
 
 
-
 export async function verify2Fa(token, code) {
     try {
         const response = await fetch(`${path}/doctors/verify`, {
