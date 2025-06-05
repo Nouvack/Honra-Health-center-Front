@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
+import "@/style/medicStuff.css";
 
-export default function DoctorCard({ doctor, onEdit, onDelete }) {
+export default function DoctorCard({ doctor, onEdit, onClick }) {
   return (
     <div className="doctor-card">
       <img
@@ -22,18 +23,13 @@ export default function DoctorCard({ doctor, onEdit, onDelete }) {
         {doctor.description && (
           <p className="doctor-detail"><strong>Description:</strong> {doctor.description}</p>
         )}
-
-        {doctor.shifts?.length > 0 && (
-          <p className="doctor-detail"><strong>Shifts:</strong> {doctor.shifts.join(", ")}</p>
-        )}
-
-        {doctor.workingDays?.length > 0 && (
-          <p className="doctor-detail"><strong>Working Days:</strong> {doctor.workingDays.join(", ")}</p>
-        )}
       </div>
 
       <div className="doctor-actions">
-        <button onClick={() => onDelete(doctor.id)} className="action-btn delete-btn">Delete</button>
+        <button className="action-btn" onClick={() => onClick(doctor.id)}>
+          Details
+        </button>
+       
       </div>
     </div>
   );

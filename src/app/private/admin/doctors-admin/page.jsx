@@ -1,60 +1,54 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import "@/style/medicStuff.css";
 import DoctorCard from "@/app/private/components/DoctorCard";
-import AuthAction from "@/app/private/components/auth";
+import DoctorDetails from "@/app/private/components/DoctorDetails"; // import modal
+import { getDoctors } from "../functions";
 
 export default function DoctorManagement() {
-  const [doctors, setDoctors] = useState([
-    {
-      id: 1,
-      firstName: "Alice",
-      lastName: "Smith",
-      email: "alice@example.com",
-      specialty: "Cardiology",
-      description: "10 years experience in cardiac care.",
-      shifts: ["Morning"],
-      workingDays: ["Monday", "Wednesday", "Friday"],
-      photoUrl: "/images/doctor1.jpg",
-    },
-    {
-      id: 2,
-      firstName: "John",
-      lastName: "Doe",
-      email: "john@example.com",
-      specialty: "Neurology",
-      description: "5 years experience in neurology.",
-      shifts: ["Night"],
-      workingDays: ["Monday","Tuesday", "Wednesday", "Friday"],
-      photoUrl: "/images/doctor2.jpg",
-    },
-  ]);
-
-  const [showAuth, setShowAuth] = useState(false);
+  const [doctors, setDoctors] = useState([]);
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [pendingDeleteId, setPendingDeleteId] = useState(null);
   const router = useRouter();
 
-  // Triggered when Delete is clicked
-  const handleDeleteRequest = (id) => {
-    setPendingDeleteId(id);
-    setShowAuth(true);
+  useEffect(() => {
+    async function fetchDoctors() {
+      const data = await getDoctors();
+
+      const transformed = data.map((doc) => ({
+        id: doc._id,
+        firstName: doc.firstname,
+        lastName: doc.lastname,
+        email: doc.email,
+        specialty: doc.specialty,
+        description: doc.description,
+        shifts: doc.shift,
+        workingDays: doc.workdays,
+        photoUrl: doc.img || "/images/default-doctor.png",
+      }));
+
+      setDoctors(transformed);
+    }
+
+    fetchDoctors();
+  }, []);
+
+  const handleDetails = (id) => {
+    const doc = doctors.find((d) => d.id === id);
+    if (doc) setSelectedDoctor(doc);
   };
 
-  // Auth successful
-  const handleAuthSubmit = ({ email, password }) => {
-    if (email === "admin@example.com" && password === "password123") {
-      setDoctors(doctors.filter((doc) => doc.id !== pendingDeleteId));
-      setShowAuth(false);
-      setPendingDeleteId(null);
-    } else {
-      alert("Authentication failed. Please try again.");
-    }
+  const handleCloseModal = () => setSelectedDoctor(null);
+
+  const handleDelete = (id) => {
+    setDoctors((prev) => prev.filter((doc) => doc.id !== id));
+    setSelectedDoctor(null);
   };
 
   const handleEdit = (doctor) => {
-    alert(`Edit doctor: ${doctor.firstName}`);
+     router.push(`/private/admin/doctors-admin/edit-doctor/${doctor.id}`);
   };
 
   const handleRegisterDoctor = () => {
@@ -74,18 +68,20 @@ export default function DoctorManagement() {
           <DoctorCard
             key={doc.id}
             doctor={doc}
-            onDelete={handleDeleteRequest} // use secure delete
+            onClick={handleDetails}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
           />
         ))}
       </div>
 
-      {showAuth && (
-        <AuthAction
-          onSubmit={handleAuthSubmit}
-          onCancel={() => {
-            setShowAuth(false);
-            setPendingDeleteId(null);
-          }}
+      {/* Show doctor details modal if selected */}
+      {selectedDoctor && (
+        <DoctorDetails
+          doctor={selectedDoctor}
+          onDelete={handleDelete}
+          onClose={handleCloseModal}
+          onEdit={handleEdit}
         />
       )}
     </div>
