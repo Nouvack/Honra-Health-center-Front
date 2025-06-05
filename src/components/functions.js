@@ -57,9 +57,22 @@ export async function calculateSchedule (doctor) {
 
 export async function getDoctorAppointments(id) {
     try {
-        const response = await fetch(`${path}/appointments/doctorAppointmentsForEveryone/${id}`)
+        const response = await fetch(`${path}/appointments/doctorAppointmentsForEveryone/${id}`, {
+            method: "GET"
+        })
         console.log(response)
         return response.ok? response.json() : false
+    } catch (err) {
+        return false
+    }
+}
+
+export async function getAvailableHours(doctorId, date) {
+    try {
+        const response = await fetch(`${path}/appointments/getAvailableHours/${doctorId}?date=${date.toISOString()}`, {
+            method: "GET"
+        })
+        return response.ok? response.json() : []
     } catch (err) {
         return false
     }

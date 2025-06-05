@@ -3,35 +3,31 @@
 import '@/style/appointments.css'
 import { useFormik } from 'formik';
 import { useState, useEffect } from 'react';
-import { filterData } from './functions'
+import { filterData, getAvailableHours } from './functions'
 import * as Yup from "yup";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 export default function Appointment({doctors}) {
     const [filteredDoctors, setFilteredDoctors] = useState([])
+    const [selectedDate, setSelectedDate] = useState(null)
+    const [availableHours, setAvailableHours] = useState([])
     const [error, setError] = useState("")
+
+    const getDayColor = (date) => {
+        const doctor = filteredDoctors.find(doc => doc._id === formik.values.doctor);
+        const day = date.getDay()
+        const allowedDays = doctor.workdays?.map(day => weekdayMap[day])
+        return allowedDays?.includes(day) ? 'bg-[var(--mint_green)] rounded-full' : ''
+    }
 
     const formik = useFormik({
         initialValues: {
-            nombre: "",
-            apellidos: "",
-            telefono: "",
-            dni: "",
-            especialidad: "",
+            specialty: "",
             doctor: "",
-            fecha: "",
-            hora: "",
-            primeraVisita: false,
-            razonVisita: ""
-        },
-        validationSchema: Yup.object({
-            nombre: Yup.string().required(),
-            apellidos: Yup.string().required(),
-            telefono: Yup.string().required().length(9),
-            dni: Yup.string().required(),
-            especialidad: Yup.string().required(),
-            doctor: Yup.string().required(),
-            // falta por completar pero me da pereza
-        })
+            date: "",
+            hour: ""
+        }
     })
 
     useEffect(() => {
@@ -44,6 +40,19 @@ export default function Appointment({doctors}) {
         const result = await filterData(data, filter)
         setFilteredDoctors(result)
     } 
+
+    useEffect(() => {
+        const getHours = async() => {
+            if (!formik.values.doctor || !selectedDate) return;
+            const response = await getAvailableHours(formik.values.doctor, selectedDate)
+            if (!response) {
+                setError("no data")
+            } else {
+                setAvailableHours(response)
+            }
+        }
+        getHours()
+    }, [formik.values.doctor, selectedDate])
 
     return (
         <section id="appointment" className="w-full h-max flex flex-col items-center mt-24">
@@ -59,14 +68,14 @@ export default function Appointment({doctors}) {
                                 className='flex flex-col'>
                                 <label htmlFor={field}
                                     className='text-xs'>{field.toUpperCase()}</label>
-                                <input type='text' name={field} id={field} onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.field} />
-                                {formik.touched.field && formik.errors.field ? (<p className='hidden peer-invalid:block'>{formik.errors.field}</p>) : null}
+                                <p className='bg-[var(--seasalt)] py-1 w-40 rounded-3xl text-center'>{"hey"} </p>
                             </div>
                         ))}
                     </div>
+                    <p className='text-xs'>*This data is only for preview, you can change it from your profile.</p>
 
                     {/** SPECIALTY */}
-                    <p className="text-sm text-[var(--turquoise)]">SPECIALTY</p>
+                    <p className="text-sm text-[var(--turquoise)] pt-4">SPECIALTY</p>
                     <hr className="w-5/6 border-[var(--turquoise)]" />
                     <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 p-4'>
                         <div className='flex flex-col'>
@@ -87,17 +96,27 @@ export default function Appointment({doctors}) {
                                     <option key={doctor._id} value={doctor._id}>{doctor.firstname} {doctor.lastname} </option>
                                 ))}
                             </select>
-                            {formik.touched.specialty && formik.errors.specialty ? (<p className='hidden peer-invalid:block'>{formik.errors.specialty}</p>) : null}
+                            {formik.touched.doctor && formik.errors.doctor ? (<p className='hidden peer-invalid:block'>{formik.errors.doctor}</p>) : null}
                         </div>
 
+                        <div className='flex flex-col'>
+                            <label htmlFor='date' className='text-xs'>DATE</label>
+                            <DatePicker
+                                selected={selectedDate}
+                                onChange={(date) => setSelectedDate(date)}
+                                dayClassName={getDayColor}
+                                placeholderText='Choose a date'/>
+                        </div>
 
-                        <label>
-                            <input type='checkbox' name='firstVisit' value={formik.values.firstVisit} className='mr-2'/>First visit
-                        </label>
-
-                        {formik.values.firstVisit == true ? <div>
-                            <label htmlFor="reason" className='text-xs'>REASON OF VISIT</label>
-                        </div> : null}
+                        <div className='flex flex-col'>
+                            <label htmlFor='hour' className='text-xs'>HOUR</label>
+                            <select name='hour' id='hour' onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.hour}>
+                                {availableHours?.map((slot) => (
+                                    <option key={slot} value={slot}>{slot}</option>
+                                ))}
+                                {formik.touched.hour && formik.errors.hour ? (<p className='hidden peer-invalid:block'>{formik.errors.hour}</p>) : null}
+                            </select>
+                        </div>
 
                         <label className='col-span-2'>
                             <input type='checkbox' name='policy' className='mr-2'/>I accept the policy
@@ -113,3 +132,5 @@ export default function Appointment({doctors}) {
         </section>
     )
 }
+
+const weekdayMap = { sunday: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6, };
