@@ -7,7 +7,7 @@ import { getDoctor, getTreatments } from "../components/functions"
 import Image from "next/image"
 import { useParams } from 'next/navigation';
 import TreatmentCards from "../components/TratmentCards"
-import Calendar from "@/components/Calendar"
+import Calendar from "@/app/doctors/components/Calendar"
 import Appointment from "@/components/Appointment"
 
 export default function Doctors() {

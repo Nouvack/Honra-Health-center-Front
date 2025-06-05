@@ -3,7 +3,7 @@
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { useEffect, useState } from "react";
-import { calculateSchedule, getDoctorAppointments } from "./functions";
+import { calculateSchedule, getDoctorAppointments } from "./components/functions";
 
 export default function Calendar({doctor}) {
     const [schedule, setSchedule] = useState({
