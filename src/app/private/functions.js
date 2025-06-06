@@ -54,7 +54,10 @@ export async function verify2Fa(token, code, role) {
             const res = await response.json()
             const cookieStore = await cookies()
             cookieStore.set("userToken", res.token)
-            return role === "doctor" ? {doctorId:res.doctorId, employeeId:res.employeeId} : res.employeeId
+            return {
+                doctorId: res.doctorId ?? null,
+                employeeId: res.employeeId
+            };        
         } else {
             return false
         }
