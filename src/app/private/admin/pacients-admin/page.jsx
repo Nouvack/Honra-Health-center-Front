@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getAllpacients, deletePacient } from "@private/functions";
+import { getAllPacients, deletePacient } from "@private/functions";
 
 export default function PatientManager() {
   const [patients, setPatients] = useState([]);
@@ -10,7 +10,7 @@ export default function PatientManager() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getAllpacients();
+      const data = await getAllPacients();
       setPatients(data);
     };
     fetchData();

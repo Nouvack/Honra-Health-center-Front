@@ -4,7 +4,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "@private/components/*": ["./src/app/private/components/*"],
-      "@private/functions": ["./src/app/private/functions.js"]
+      "@private/functions": ["./src/app/private/functions"]
     }
   }
 }

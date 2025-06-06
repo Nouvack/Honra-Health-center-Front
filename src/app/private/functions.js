@@ -107,6 +107,41 @@ export async function updatePassword(newpassword, id) {
     }
 }
 
+export async function getAllPacients(){
+    try {
+        const cookieStore = await cookies()
+        const token = cookieStore.get("userToken")?.value
+        const response = await fetch(`${path}/patients/all`, {
+            method: "GET",
+            headers: { "Authorization": `Bearer ${token}` }
+        })
+        if (response.ok) {
+            return await response.json()
+        } else {
+            return false
+        }
+    } catch (err) {
+        console.log("Error", err)
+    }
+}
+
+export async function deletePacient(id) {
+    try {
+        const cookieStore = await cookies()
+        const token = cookieStore.get("userToken")?.value
+        const response = await fetch(`${path}/patients/delete/${id}`, {
+            method: "DELETE",
+            headers: { "Authorization": `Bearer ${token}` }
+        })
+        if (response.ok) {
+            return true
+        } else {
+            return false
+        }
+    } catch (err) {
+        console.log("Error", err)
+    }}
+
 export async function logOut() {
     try {
         const cookieStore = await cookies()
