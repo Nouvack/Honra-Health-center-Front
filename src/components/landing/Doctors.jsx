@@ -24,7 +24,7 @@ export default function Doctors({doctors}) {
     } 
 
     return (
-        <section id="doctors" className="w-full h-max flex flex-col items-center">
+        <section id="doctors" className="w-full h-170 flex flex-col items-center justify-center">
             <p className="text-xl font-bold">Our Doctors</p>
             {/** FILTERS */}
             <div className='flex flex-wrap gap-2 m-4'>
@@ -36,13 +36,11 @@ export default function Doctors({doctors}) {
                 <button type="filter" onClick={() => updateFilter("Space Medicine")}>Space Medicine</button>
             </div>
             {/** DOCTOR CARDS */}
-            <div className="w-full h-150 flex justify-center items-center" >
-                <div className="flex flex-wrap gap-4 px-4 py-2 justify-center" >
-                    {error ? (
-                        <p>{error}</p> ) : (
-                        filteredDoctors?.map((doctor) => ( <Card doctor={doctor} key={doctor._id} /> ))
-                    )}
-                </div>
+            <div className="w-full flex flex-wrap gap-x-15 gap-y-4 py-2 justify-center overflow-y-scroll" >
+                {error ? (
+                    <p>{error}</p> ) : (
+                    filteredDoctors?.map((doctor) => ( <Card doctor={doctor} key={doctor._id} /> ))
+                )}
             </div>
         </section>
     )

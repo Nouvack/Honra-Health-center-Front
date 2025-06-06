@@ -29,7 +29,7 @@ export default function Specialties() {
         }
     },[hovered])
     return (
-        <section id="specialties" className="w-full h-max flex flex-col items-center pb-24">
+        <section id="specialties" className="w-full h-max flex flex-col items-center pt-24">
             <p className="text-xl font-bold">Medical Specialties</p>
             <div className="flex flex-wrap relative w-full min-h-120 justify-center">
                 {/** IMAGES SIDE */}

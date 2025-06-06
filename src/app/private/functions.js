@@ -107,6 +107,22 @@ export async function updatePassword(newpassword, id) {
     }
 }
 
+export async function submitObservation(values, id) {
+    try {
+        const cookieStore = await cookies()
+        const token = cookieStore.get("userToken")?.value
+        const response = await fetch (`${path}/appointments/${id}/observation`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}` },
+            body: JSON.stringify(values)
+        })
+        return response.ok? true : false
+    } catch (err) {
+        return false
+    }
+}
+
 export async function getAllPatients(){
     try {
         const cookieStore = await cookies()
