@@ -3,38 +3,62 @@
 import '@/style/appointments.css'
 import { useFormik } from 'formik';
 import { useState, useEffect } from 'react';
-import { filterData, getAvailableHours } from './functions'
+import { filterData, getAvailableHours, getTreatments, sendAppointment } from './functions'
 import * as Yup from "yup";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 export default function Appointment({doctors}) {
     const [filteredDoctors, setFilteredDoctors] = useState([])
-    const [selectedDate, setSelectedDate] = useState(null)
+    const [filteredTreatments, setFilteredTreatments] = useState([])
     const [availableHours, setAvailableHours] = useState([])
     const [error, setError] = useState("")
+    const [message, setMessage] = useState("")
 
-    const getDayColor = (date) => {
+    const getDayStatus = (date) => {
         const doctor = filteredDoctors.find(doc => doc._id === formik.values.doctor);
         const day = date.getDay()
-        const allowedDays = doctor.workdays?.map(day => weekdayMap[day])
-        return allowedDays?.includes(day) ? 'bg-[var(--mint_green)] rounded-full' : ''
+        const allowedDays = doctor?.workdays?.map(day => weekdayMap[day]) || []
+        return allowedDays?.includes(day) ? true : false
     }
 
     const formik = useFormik({
         initialValues: {
-            specialty: "",
-            doctor: "",
-            date: "",
-            hour: ""
+            name: "queso", surname: "podrido", phone: "", dni: "",
+            specialty: "", doctor: "", treatment: "",
+            date: "", hour: "", policy: false
+        }, validationSchema: Yup.object({
+            doctor: Yup.string().required("Select a doctor."),
+            treatment: Yup.string().required("Select a treatment."),
+            date: Yup.date().required("Select a date.").min(new Date(new Date().setHours(0, 0, 0, 0)), "Date cannot be in the past."),
+            hour: Yup.string().required("Select an hour."),
+            policy: Yup.bool().oneOf([true], "Accept the privacy policy.")
+        }), onSubmit: async (values) => {
+            const response = await sendAppointment(values)
+            if (response) {
+                setMessage("Appointment confirmed. Don't forget it. 🎉")
+                formik.specialty.setFieldValue("")
+                formik.date.setFieldValue("")
+                formik.gour.setFieldValue("")
+            } else {
+                setMessage("Something went wrong. Please try again later.")
+            }
         }
     })
 
     useEffect(() => {
         if (doctors && doctors.length > 0) {
-            updateFilter(formik.values.especialidad)
+            updateFilter(formik.values.specialty)
         }
     }, [doctors])
+
+    useEffect(() => {
+        const getData = async () => {
+            const result = await getTreatments(formik.values.specialty)
+            setFilteredTreatments(result || [])
+        }
+        getData()
+    }, [formik.values.specialty])
     
     const updateFilter = async (filter, data = doctors) => {
         const result = await filterData(data, filter)
@@ -43,8 +67,8 @@ export default function Appointment({doctors}) {
 
     useEffect(() => {
         const getHours = async() => {
-            if (!formik.values.doctor || !selectedDate) return;
-            const response = await getAvailableHours(formik.values.doctor, selectedDate)
+            if (!formik.values.doctor || !formik.values.date) return;
+            const response = await getAvailableHours(formik.values.doctor, formik.values.date)
             if (!response) {
                 setError("no data")
             } else {
@@ -52,13 +76,13 @@ export default function Appointment({doctors}) {
             }
         }
         getHours()
-    }, [formik.values.doctor, selectedDate])
+    }, [formik.values.doctor, formik.values.date])
 
     return (
         <section id="appointment" className="w-full h-max flex flex-col items-center mt-24">
             <div className="bg-[var(--mint_green)] w-5/6 items-center flex flex-col rounded-3xl">
                 <p className="text-xl font-bold p-4">Make an Appointment</p>
-                <div className="flex flex-col relative w-full h-max items-center">
+                <form onSubmit={formik.handleSubmit} className="flex flex-col relative w-full h-max items-center">
                     {/** PATIENT DATA */}
                     <p className="text-sm text-[var(--turquoise)]">PATIENT DATA</p>
                     <hr className="w-5/6 border-[var(--turquoise)]" />
@@ -68,7 +92,8 @@ export default function Appointment({doctors}) {
                                 className='flex flex-col'>
                                 <label htmlFor={field}
                                     className='text-xs'>{field.toUpperCase()}</label>
-                                <p className='bg-[var(--seasalt)] py-1 w-40 rounded-3xl text-center'>{"hey"} </p>
+                                <input name={field} id={field} disabled={true} value={formik.values[field]}
+                                     className='bg-[var(--seasalt)] py-1 w-40 rounded-3xl text-center' />
                             </div>
                         ))}
                     </div>
@@ -79,54 +104,67 @@ export default function Appointment({doctors}) {
                     <hr className="w-5/6 border-[var(--turquoise)]" />
                     <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 p-4'>
                         <div className='flex flex-col'>
-                            <label htmlFor="specialty"
-                                className='text-xs'>SPECIALTY</label>
+                            <label htmlFor="specialty" className='text-xs'>SPECIALTY</label>
                             <select name="specialty" id="specialty" onBlur={formik.handleBlur} onChange={(e) => {formik.handleChange(e); updateFilter(e.target.value)}} value={formik.values.specialty}>
+                                <option value="">---Select a specialty---</option>
                                 {["Cosmetic Surgery", "Forensic Pathology", "Neurology", "Space Medicine"].map(specialty => (
                                     <option key={specialty} value={specialty}>{specialty}</option>
                                 ))}
                             </select>
-                            {formik.touched.specialty && formik.errors.specialty ? (<p className='hidden peer-invalid:block'>{formik.errors.specialty}</p>) : null}
+                            {formik.touched.specialty && formik.errors.specialty && ( <p className='text-red-500 text-xs'>{formik.errors.specialty}</p> )}
                         </div>
                         <div className='flex flex-col'>
-                            <label htmlFor="doctor"
-                                className='text-xs'>DOCTOR</label>
+                            <label htmlFor="doctor" className='text-xs'>DOCTOR</label>
                             <select name="doctor" id="doctor" onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.doctor}>
-                                {filteredDoctors.map(doctor => (
+                                <option value="">---Select a doctor---</option>
+                                {filteredDoctors?.map(doctor => (  
                                     <option key={doctor._id} value={doctor._id}>{doctor.firstname} {doctor.lastname} </option>
                                 ))}
                             </select>
-                            {formik.touched.doctor && formik.errors.doctor ? (<p className='hidden peer-invalid:block'>{formik.errors.doctor}</p>) : null}
+                            {formik.touched.doctor && formik.errors.doctor && ( <p className='text-red-500 text-xs'>{formik.errors.doctor}</p> )}
+                        </div>
+                        <div className='flex flex-col col-span-2'>
+                            <label htmlFor='treatment' className='text-xs'>TREATMENT</label>
+                            <select name='treatment' id='treatment' onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.treatment}>
+                                <option value="">---Select a treatment---</option>
+                                {filteredTreatments?.map(treatment => (
+                                    <option key={treatment._id} value={treatment._id}>{treatment.name}</option>
+                                ))}
+                            </select>
+                            {formik.touched.treatment && formik.errors.treatment && ( <p className='text-red-500 text-xs'>{formik.errors.treatment}</p> )}
                         </div>
 
                         <div className='flex flex-col'>
                             <label htmlFor='date' className='text-xs'>DATE</label>
                             <DatePicker
-                                selected={selectedDate}
-                                onChange={(date) => setSelectedDate(date)}
-                                dayClassName={getDayColor}
-                                placeholderText='Choose a date'/>
+                                selected={formik.values.date}
+                                onChange={(date) => formik.setFieldValue("date", date)}
+                                placeholderText='---Select a date---'
+                                minDate={new Date()}
+                                filterDate={getDayStatus} />
                         </div>
 
                         <div className='flex flex-col'>
                             <label htmlFor='hour' className='text-xs'>HOUR</label>
                             <select name='hour' id='hour' onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.hour}>
+                                <option value="">---Select an hour---</option>
                                 {availableHours?.map((slot) => (
                                     <option key={slot} value={slot}>{slot}</option>
                                 ))}
-                                {formik.touched.hour && formik.errors.hour ? (<p className='hidden peer-invalid:block'>{formik.errors.hour}</p>) : null}
+                                {formik.touched.hour && formik.errors.hour && ( <p className='text-red-500 text-xs'>{formik.errors.hour}</p> )}
                             </select>
                         </div>
-
+                        <p className='text-red-600'>{error}</p>
                         <label className='col-span-2'>
-                            <input type='checkbox' name='policy' className='mr-2'/>I accept the policy
+                            <input type='checkbox' name='policy' id='policy' onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.policy} className='mr-2'/>I accept the policy
                         </label>
+                        {formik.touched.policy && formik.errors.policy && ( <p className='text-red-500 text-xs'>{formik.errors.policy}</p> )}
                     </div>
-
+                    <p className='font-bold'>{message}</p>
                     {/** SEND */}
                     <button type="submit">CONFIRM APPOINTMENT</button>
                     
-                </div>
+                </form>
             </div>
 
         </section>
