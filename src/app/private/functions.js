@@ -142,6 +142,76 @@ export async function deletePatient(id) {
         console.log("Error", err)
     }}
 
+export async function getPatientById(id) {
+    try {
+        const cookieStore = await cookies()
+        const token = cookieStore.get("userToken")?.value
+        const response = await fetch(`${path}/patients/${id}`, {
+            method: "GET",
+            headers: { "Authorization": `Bearer ${token}` }
+        })
+        if (response.ok) {
+            return await response.json()
+        } else {
+            return false
+        }
+    } catch (err) {
+        console.log("Error", err)
+    }
+}
+
+export async function updatePatient(values) {
+    try {
+        const cookieStore = await cookies()
+        const token = cookieStore.get("userToken")?.value
+        const response = await fetch(`${path}/patients/update`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}` },
+            body: JSON.stringify(values)
+        })
+        if (response.ok) {
+            return true
+        } else {
+            return false
+        }
+    } catch (err) {
+        console.log("Error", err)
+    }
+}
+export async function registerPatient(values) {
+    try {
+        const cookieStore = await cookies();
+        const token = cookieStore.get("userToken")?.value;
+
+        if (!values?.email || !values?.password) {
+            return { error: true, message: "Email and password are required." };
+        }
+
+        const response = await fetch(`${path}/patients/register-admin`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(values)
+        });
+
+        if (response.ok) {
+            return await response.json();
+        } else {
+            const errorData = await response.json();
+            console.error("Registration error:", errorData);
+            return { error: true, message: errorData?.message || "Registration failed." };
+        }
+    } catch (err) {
+        console.log("Error", err);
+        return { error: true, message: "Unexpected error occurred." };
+    }
+}
+
+
+
 export async function logOut() {
     try {
         const cookieStore = await cookies()

@@ -1,17 +1,21 @@
 "use client";
 
+// Import necessary libraries and components
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import "@/style/medicStuff.css";
 import { useRouter } from "next/navigation";
 import { registerDoctor } from "@private/functions";
-import DoctorFormFields from "@private/components/DoctorFormFields"; // Assuming this is extracted from your form
+import DoctorFormFields from "@private/components/DoctorFormFields"; // Form fields component
 
+// Main component for doctor registration form
 export default function DoctorRegisterForm() {
   const router = useRouter();
 
+  // Handles form submission
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
+      // Prepare payload for API call
       const payload = {
         firstname: values.firstname,
         lastname: values.lastname,
@@ -25,10 +29,11 @@ export default function DoctorRegisterForm() {
         img: "",
       };
 
+      // Call registerDoctor function and handle response
       const result = await registerDoctor(payload);
       if (result.success) {
         alert("Doctor registered successfully!");
-        router.push("/private/admin/doctors-admin");
+        router.push("/private/admin/doctors-admin"); // Redirect on success
       } else {
         alert("Registration failed.");
       }
@@ -36,11 +41,12 @@ export default function DoctorRegisterForm() {
       console.error(err);
       alert("Something went wrong.");
     } finally {
-      setSubmitting(false);
+      setSubmitting(false); // Stop submitting state
     }
   };
 
   return (
+    // Formik handles form state and validation
     <Formik
       initialValues={{
         firstname: "",
@@ -54,6 +60,7 @@ export default function DoctorRegisterForm() {
         password: "",
         confirmPassword: "",
       }}
+      // Validation schema using Yup
       validationSchema={Yup.object({
         firstname: Yup.string().required("Required"),
         lastname: Yup.string().required("Required"),
@@ -79,11 +86,14 @@ export default function DoctorRegisterForm() {
       {({ resetForm, isSubmitting }) => (
         <Form>
           <div className="form-container">
+            {/* Render form fields */}
             <DoctorFormFields />
             <div className="button-group">
+              {/* Button to reset the form */}
               <button type="button" className="button secondary" onClick={() => resetForm()}>
                 Redo
               </button>
+              {/* Submit button */}
               <button type="submit" className="button primary" disabled={isSubmitting}>
                 {isSubmitting ? "Submitting..." : "Submit"}
               </button>

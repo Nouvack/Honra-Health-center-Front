@@ -50,7 +50,7 @@ export default function PatientManager() {
   };
 
   const handleRegister = () => {
-    router.push("/registerePatientdeletePatient");
+    router.push("./patients-admin/register-patient");
   };
 
   return (
