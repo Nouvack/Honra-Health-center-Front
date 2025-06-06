@@ -90,7 +90,7 @@ export default function Fa2({ data, role }) {
 
     return (
         <section className="w-full max-w-sm px-6 text-center flex flex-col">
-            {changePassword? <form onSubmit={formik.handleSubmit} > 
+            {changePassword? <form onSubmit={formik.handleSubmit} className="flex flex-col justify-center" > 
                 {/** REQUIRE CHANGE PASSWORD - 2FA */}
                 <div className="text-left mb-6">
                     <label htmlFor="newPassword" className="text-xs text-gray-700 block mb-1">NEW PASSWORD</label>
@@ -109,7 +109,7 @@ export default function Fa2({ data, role }) {
                     {formik.touched.repeatPassword && formik.errors.repeatPassword && ( <p className="text-red-500 text-xs mt-1">{formik.errors.repeatPassword}</p> )}
                 </div>
                 {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
-                <button type="submit">CHANGE PASSWORD</button>
+                <button type="submit" className="bg-[var(--outer_space)] text-[var(--seasalt)] rounded-3xl py-1 px-4">CHANGE PASSWORD</button>
             </form> : 
             <div>
                 {/** NORMAL FLOW - 2FA */}

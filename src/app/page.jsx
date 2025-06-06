@@ -1,6 +1,6 @@
 "use client"
 
-import '@fortawesome/fontawesome-free/css/all.min.css'
+import "@/lib/fontawesome";
 
 import Footer from "@/components/Footer"
 import Header from "@/components/Header"
