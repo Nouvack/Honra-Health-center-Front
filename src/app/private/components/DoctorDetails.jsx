@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteDoctor } from "../admin/functions";
+import { deleteDoctor } from "@private/functions";
 
 export default function DoctorDetails({ doctor, onDelete, onEdit, onClose }) {
   if (!doctor) return null;

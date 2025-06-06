@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import "@/style/medicStuff.css";
-import DoctorCard from "@/app/private/components/DoctorCard";
-import DoctorDetails from "@/app/private/components/DoctorDetails"; // import modal
-import { getDoctors } from "../functions";
+import DoctorCard from "@private/components/DoctorCard";
+import DoctorDetails from "@private/components/DoctorDetails"; // import modal
+import { getDoctors } from "@private/functions";
 
 export default function DoctorManagement() {
   const [doctors, setDoctors] = useState([]);

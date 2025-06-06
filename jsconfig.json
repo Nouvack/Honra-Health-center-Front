@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@private/components/*": ["./src/app/private/components/*"],
+      "@private/functions": ["./src/app/private/functions.js"]
     }
   }
 }

@@ -67,7 +67,7 @@ export default function Fa2({ data, role }) {
                 <p>Scan this QR code with Google Authenticator:</p>
                 <img src={data.qr} alt="QR Code" />
             </>}
-           
+
             <p>Enter your 2FA code:</p>
             <div onPaste={handlePaste} className="flex gap-2">
                 {code.map((digit, index) => (
