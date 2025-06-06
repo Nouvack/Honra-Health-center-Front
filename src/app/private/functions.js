@@ -107,7 +107,7 @@ export async function updatePassword(newpassword, id) {
     }
 }
 
-export async function getAllPacients(){
+export async function getAllPatients(){
     try {
         const cookieStore = await cookies()
         const token = cookieStore.get("userToken")?.value
@@ -125,7 +125,7 @@ export async function getAllPacients(){
     }
 }
 
-export async function deletePacient(id) {
+export async function deletePatient(id) {
     try {
         const cookieStore = await cookies()
         const token = cookieStore.get("userToken")?.value

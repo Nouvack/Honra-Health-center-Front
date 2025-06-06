@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getAllPacients, deletePacient } from "@private/functions";
+import { getAllPatients, deletePatient } from "@private/functions";
 
 export default function PatientManager() {
   const [patients, setPatients] = useState([]);
@@ -10,7 +10,7 @@ export default function PatientManager() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getAllPacients();
+      const data = await getAllPatients();
       setPatients(data);
     };
     fetchData();
@@ -38,7 +38,7 @@ export default function PatientManager() {
     if (!confirmDelete) return;
 
     try {
-      await deletePacient(selected._id);
+      await deletePatient(selected._id);
       setPatients((prev) =>
         prev.filter((p) => p._id !== selected._id)
       );
@@ -50,7 +50,7 @@ export default function PatientManager() {
   };
 
   const handleRegister = () => {
-    router.push("/register-pacient");
+    router.push("/registerePatientdeletePatient");
   };
 
   return (
