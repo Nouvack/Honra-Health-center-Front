@@ -292,30 +292,34 @@ export async function registerPatient(values) {
   }
 }
 
-export async function updatePatientProfile(values) {
-    try {
-        const cookieStore = await cookies();
-        const token = cookieStore.get("userToken")?.value;
 
-        const response = await fetch(`${path}/patients/profile`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify(values)
-        });
+export async function updatePatientById(id, values) {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("userToken")?.value;
 
-        if (response.ok) {
-            return await response.json();
-        } else {
-            const data = await response.json();
-            return { success: false, message: data?.message || "Update failed." };
-        }
-    } catch (err) {
-        return { success: false, message: "Unexpected error occurred." };
+    const response = await fetch(`${path}/patients/update/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+      body: JSON.stringify(values),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return { success: true, data };
+    } else {
+      const error = await response.json();
+      return { success: false, message: error.message || "Update failed." };
     }
+  } catch (err) {
+    console.error("Error updating patient:", err);
+    return { success: false, message: "Unexpected error occurred." };
+  }
 }
+
 
 export async function deleteDoctor(id) {
     try {

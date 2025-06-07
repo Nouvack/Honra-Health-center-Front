@@ -1,73 +1,73 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
- 
+import Image from "next/image";
+import { logOut } from "@private/functions";
+
 export default function Admin({ id }) {
-    const router = useRouter();
+  const router = useRouter();
 
-    // Modal control
-    const [authModalFor, setAuthModalFor] = useState(null); // null, "bills", or "appointments"
+  const handleLogout = async () => {
+    try {
+      await logOut(); // Use your actual logout function
+      router.push("/logout"); // Or redirect to login/home
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
-    // Handle auth submit
-    const handleAuthSubmit = (values) => {
-        // TODO: Replace with real authentication logic
-        console.log("Authenticated:", values);
+  const navigate = (path) => () => router.push(path);
 
-        // Redirect based on which button triggered the modal
-        if (authModalFor === "appointments") {
-            router.push("/private/appointments");
-        } else if (authModalFor === "bills") {
-            router.push("/private/admin/bills");
-        }
+  return (
+    <section className="relative min-h-screen flex flex-col items-center justify-center bg-white px-4">
+      {/* Logout Button */}
+      <div className="absolute top-6 right-6">
+        <button
+          onClick={handleLogout}
+          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full shadow-lg transition"
+        >
+          Log out
+        </button>
+      </div>
 
-        // Close modal
-        setAuthModalFor(null);
-    };
+      {/* Logo */}
+      <div className="mb-4">
+        <Image src="/images/logo.png" alt="HONRA Health Center" width={160} height={60} />
+      </div>
 
-    return (
-        <section className="flex flex-col items-center justify-center h-screen text-center bg-white">
-            {/* Logo */}
-            <div className="mb-2">
-                <Image src="/images/logo.png" alt="HONRA Health Center" width={150} height={50} />
-            </div>
+      {/* Admin ID */}
+      <p className="text-sm text-gray-600 mb-10">ADMIN ID: {id}</p>
 
-            {/* Admin ID */}
-            <p className="text-sm text-gray-800 mb-8">ADMIN ID: {id}</p>
+      {/* Button Grid */}
+      <div className="grid grid-cols-2 gap-6 w-full max-w-md">
+        <button
+          onClick={navigate("/private/admin/doctors-admin")}
+          className="w-full bg-cyan-500 hover:bg-cyan-600 text-white py-3 rounded-xl text-lg font-semibold shadow-md transition"
+        >
+          Doctors
+        </button>
 
-            {/* Button Grid */}
-            <div className="grid grid-cols-2 gap-4">
-                {/* Doctors link (no auth) */}
-                <a href="/private/admin/doctors-admin">
-                    <button className="bg-cyan-400 text-white px-6 py-2 rounded-md border border-black hover:bg-cyan-500 transition w-full">
-                        Doctors
-                    </button>
-                </a>
+        <button
+          onClick={navigate("/private/appointments")}
+          className="w-full bg-cyan-500 hover:bg-cyan-600 text-white py-3 rounded-xl text-lg font-semibold shadow-md transition"
+        >
+          Appointments
+        </button>
 
-                {/* Appointments (requires auth modal) */}
-                <button
-                    onClick={() => setAuthModalFor("appointments")}
-                    className="bg-cyan-400 text-white px-6 py-2 rounded-md border border-black hover:bg-cyan-500 transition w-full"
-                >
-                    Appointments
-                </button>
+        <button
+          onClick={navigate("/private/admin/patients-admin")}
+          className="w-full bg-cyan-500 hover:bg-cyan-600 text-white py-3 rounded-xl text-lg font-semibold shadow-md transition"
+        >
+          Patients
+        </button>
 
-                {/* Bills (requires auth modal) */}
-                <button
-                    onClick={() => setAuthModalFor("bills")}
-                    className="bg-cyan-400 text-white px-6 py-2 rounded-md border border-black hover:bg-cyan-500 transition w-full"
-                >
-                    Bills
-                </button>
-
-                {/* Logout (no auth required) */}
-                <button className="bg-cyan-400 text-white px-6 py-2 rounded-md border border-black hover:bg-cyan-500 transition">
-                    Log out
-                </button>
-            </div>
-
-        
-        </section>
-    );
+        <button
+          onClick={navigate("/private/admin/bills")}
+          className="w-full bg-cyan-500 hover:bg-cyan-600 text-white py-3 rounded-xl text-lg font-semibold shadow-md transition"
+        >
+          Bills
+        </button>
+      </div>
+    </section>
+  );
 }

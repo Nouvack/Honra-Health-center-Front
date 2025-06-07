@@ -3,23 +3,25 @@ import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useParams, useRouter } from "next/navigation";
-import { getPatientById, updatePatientProfile } from "@private/functions"; // Adjust path
+import { getPatientById, updatePatientById } from "@private/functions";
 
 export default function UpdatePatientsPage() {
   const { id } = useParams();
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [patient, setPatient] = useState(null); // ✅ store fetched patient
 
   const phoneRegExp =
     /^((\+[1-9]{1,4}[ \-]*)|(\([0-9]{2,3}\)[ \-]*)|([0-9]{2,4})[ \-]*)*?[0-9]{3,4}?[ \-]*[0-9]{3,4}?$/;
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      name: "",
-      surname: "",
-      DNI: "",
-      email: "",
-      phoneNumber: "",
+      name: patient?.name || "",
+      surname: patient?.surname || "",
+      DNI: patient?.DNI || "",
+      email: patient?.email || "",
+      phoneNumber: patient?.phoneNumber || "",
       actualPassword: "",
       password: "",
     },
@@ -40,19 +42,23 @@ export default function UpdatePatientsPage() {
         .matches(/[!@#$%^&*(),.?":{}|<>]/, "One special character required")
         .optional(),
     }),
-    onSubmit: async (values, { resetForm }) => {
+    onSubmit: async (values) => {
+      if (!id) {
+        alert("Missing patient ID.");
+        return;
+      }
+
       setLoading(true);
       try {
-        const res = await updatePatientProfile({ id, ...values });
+        const res = await updatePatientById(id, values);
         if (res?.success) {
           alert("Patient profile updated successfully.");
-          resetForm();
           router.push("/private/admin/patients-admin");
         } else {
           alert("Update failed: " + (res?.message || "Unknown error"));
         }
-      } catch (error) {
-        console.error("Submit error:", error);
+      } catch (err) {
+        console.error("Submit error:", err);
         alert("An unexpected error occurred.");
       } finally {
         setLoading(false);
@@ -61,19 +67,12 @@ export default function UpdatePatientsPage() {
   });
 
   useEffect(() => {
+    if (!id) return;
+
     const fetchPatient = async () => {
-      if (!id) return;
       try {
         const data = await getPatientById(id);
-        formik.setValues({
-          name: data.name || "",
-          surname: data.surname || "",
-          DNI: data.DNI || "",
-          email: data.email || "",
-          phoneNumber: data.phoneNumber || "",
-          actualPassword: "",
-          password: "",
-        });
+        setPatient(data); // ✅ store for formik to use
       } catch (err) {
         console.error("Failed to fetch patient:", err);
         alert("Could not load patient details.");
@@ -88,11 +87,11 @@ export default function UpdatePatientsPage() {
       <section className="bg-white shadow rounded p-6">
         <h2 className="text-xl font-bold mb-4">Update Patient Profile</h2>
         <form onSubmit={formik.handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <TextInput label="First Name" name="name" formik={formik} autoUppercase />
-          <TextInput label="Last Name" name="surname" formik={formik} autoUppercase />
-          <TextInput label="DNI" name="DNI" formik={formik} />
-          <TextInput label="Email" name="email" type="email" formik={formik} />
-          <TextInput label="Phone Number" name="phoneNumber" formik={formik} />
+          <TextInput label="First Name" name="name" formik={formik} autoUppercase placeholder={patient?.name} />
+          <TextInput label="Last Name" name="surname" formik={formik} autoUppercase placeholder={patient?.surname} />
+          <TextInput label="DNI" name="DNI" formik={formik} placeholder={patient?.DNI} />
+          <TextInput label="Email" name="email" type="email" formik={formik} placeholder={patient?.email} />
+          <TextInput label="Phone Number" name="phoneNumber" formik={formik} placeholder={patient?.phoneNumber} />
           <TextInput label="Current Password" name="actualPassword" type="password" formik={formik} />
           <TextInput label="New Password" name="password" type="password" formik={formik} />
 
@@ -100,9 +99,9 @@ export default function UpdatePatientsPage() {
             <button
               type="submit"
               className={`bg-blue-600 text-white px-4 py-2 rounded ${
-                loading || !formik.isValid || !formik.dirty ? "opacity-50 cursor-not-allowed" : ""
+                loading || !formik.isValid ? "opacity-50 cursor-not-allowed" : ""
               }`}
-              disabled={loading || !formik.isValid || !formik.dirty}
+              disabled={loading || !formik.isValid}
             >
               {loading ? "Updating..." : "Update Profile"}
             </button>
@@ -113,7 +112,7 @@ export default function UpdatePatientsPage() {
   );
 }
 
-function TextInput({ label, name, type = "text", formik, autoUppercase = false }) {
+function TextInput({ label, name, type = "text", formik, placeholder = "", autoUppercase = false }) {
   return (
     <div>
       <label htmlFor={name} className="text-sm">{label}</label>
@@ -121,10 +120,11 @@ function TextInput({ label, name, type = "text", formik, autoUppercase = false }
         id={name}
         type={type}
         name={name}
+        placeholder={placeholder} // ✅ Show placeholder from fetched data
         value={formik.values[name]}
         onChange={(e) => {
-          const value = autoUppercase ? e.target.value.toUpperCase() : e.target.value;
-          formik.setFieldValue(name, value);
+          e.target.value = autoUppercase ? e.target.value.toUpperCase() : e.target.value;
+          formik.handleChange(e);
         }}
         onBlur={formik.handleBlur}
         className="mt-1 block w-full px-3 py-2 border rounded-md text-sm"
