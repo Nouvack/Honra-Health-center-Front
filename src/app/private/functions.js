@@ -152,9 +152,28 @@ export async function getDoctor() {
     }
 }
 
-export async function updateDoctor(values) {
+export async function updateDoctor(values, id) {
     try {
-        
+        const cookieStore = await cookies()
+        const token = cookieStore.get("userToken")?.value
+        const response = await fetch (`${path}/doctors/update/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}` },
+            body: JSON.stringify(values)
+        })
+
+        const formData = new FormData();
+        formData.append("image", values.img);
+
+        const image = await fetch (`${path}/doctors/img/${id}`, {
+            method: "PATCH",
+            headers: { "Authorization": `Bearer ${token}` },
+            body: formData
+        })
+
+        console.log(response)
+        return {data: !!response.ok, picture: !!image.ok}
     } catch (err) {
         return false
     }

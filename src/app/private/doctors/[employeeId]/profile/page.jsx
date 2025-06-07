@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { getDoctor } from "../../../functions"
+import { getDoctor, updateDoctor } from "../../../functions"
 import Image from "next/image"
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -11,6 +11,8 @@ import Header from "@/app/private/components/Header";
 
 export default function Profile() {
     const [doctor, setDoctor] = useState()
+    const [image, setImage] = useState()
+    const [error, setError] = useState("")
 
     useEffect(() => {
         const getData = async () => {
@@ -20,6 +22,7 @@ export default function Profile() {
                 console.log("Error later set error")
             } else {
                 setDoctor({...data, shift: readableShifts})
+                setImage(data?.img)
             }
         }
         getData()
@@ -34,15 +37,12 @@ export default function Profile() {
         );
     };
 
-    const selectImage = (data) => {
-        const file = data.currentTarget.files[0]
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                formik.setFieldValue("img", reader.result); 
-            };
-            reader.readAsDataURL(file);
+    const displayTemporaryImage = (value) => {
+        const reader = new FileReader()
+        reader.onloadend = () => {
+            setImage(reader.result)
         }
+        reader.readAsDataURL(value.currentTarget.files[0])
     }
 
     const formik = useFormik({
@@ -60,9 +60,15 @@ export default function Profile() {
         }, 
         validationSchema,
         onSubmit: async (values) => {
-            
+            const response = await updateDoctor(values, doctor._id)
+            console.log(response)
+            if (response.data && response.picture) {
+                window.alert("Profile successfully updated.")
+                window.location.reload()
+            } else {
+                setError("Something went wrong. Please try again later.")
+            }
         }
-
     })
 
     return (
@@ -72,12 +78,14 @@ export default function Profile() {
             <form onSubmit={formik.handleSubmit} className="relative flex flex-col items-center w-full pb-20">
                 <div className="m-10 flex flex-col items-center gap-4">
                     <div className="relative rounded-full w-50 h-50 overflow-hidden">
-                        <Image src={formik.values.img || "/images/default_doctor.jpg"} alt="profile" objectFit="cover" layout="fill"/>
+                        <Image src={image || "/images/default_doctor.jpg"} alt="profile" objectFit="cover" layout="fill"/>
                     </div>
                     <label 
                         className="hover:bg-[var(--mint_green)] rounded-3xl border border-[var(--turquoise)] py-1 px-4 transition text-xs"
                         >CHANGE IMAGE 
-                        <input type="file" accept="/image*" onChange={(value) => selectImage(value)}/> 
+                        <input type="file" accept="/image*" onChange={(value) => {formik.setFieldValue("img", value.currentTarget.files[0]);
+                                                                                displayTemporaryImage(value)
+                        }}/> 
                     </label>
                 </div>
                 
@@ -146,7 +154,7 @@ export default function Profile() {
                         {formik.touched.description && formik.errors.description ? (<p className='hidden peer-invalid:block'>{formik.errors.description}</p>) : null}
                     </div>
                 </div>
-
+                <p>{error}</p>
                 <button type="submit">SAVE PROFILE</button>
             </form>)}
         </section>
@@ -189,10 +197,15 @@ const validationSchema = Yup.object({
         .min(1, 'At least one workday must be selected')
         .required('Workdays are required'),
 
-    img: Yup.string()
-        .url('Must be a valid image URL')
-        .nullable(),
-
+    img: Yup.mixed()
+        .test("fileOrUrl", "Must be a file or a valid URL", (value) => {
+            if (!value) return true; // allow empty
+            if (typeof value === "string") {
+            return /^https?:\/\/.+/.test(value); // it's a valid URL
+            }
+            return value instanceof File; // it's a File object
+        })
+  .nullable(),
     description: Yup.string()
         .max(1000, 'Too long')
         .nullable()
