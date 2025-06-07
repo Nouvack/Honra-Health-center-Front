@@ -91,7 +91,7 @@ export async function registerDoctor(values) {
         const data = await response.json().catch(() => null);
         console.log("Response data:", data);
 
-        if (response.ok) return data;
+        if (response.ok) return {success: true, data};
         return { success: false, error: data?.error || "Unknown error" };
 
     } catch (err) {
