@@ -15,9 +15,9 @@ export default function DoctorManagement() {
 
   useEffect(() => {
     async function fetchDoctors() {
-      const data = await getDoctors();
+      //const data = await getDoctors();
 
-      const transformed = data.map((doc) => ({
+      const transformed = data?.map((doc) => ({
         id: doc._id,
         firstName: doc.firstname,
         lastName: doc.lastname,
