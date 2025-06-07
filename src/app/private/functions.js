@@ -152,6 +152,14 @@ export async function getDoctor() {
     }
 }
 
+export async function updateDoctor(values) {
+    try {
+        
+    } catch (err) {
+        return false
+    }
+}
+
 export async function updatePassword(newpassword, id) {
     try {
         const cookieStore = await cookies()

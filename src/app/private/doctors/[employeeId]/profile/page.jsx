@@ -6,6 +6,8 @@ import Image from "next/image"
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import '../style.css'
+import { readShifts } from "../functions";
+import Header from "@/app/private/components/Header";
 
 export default function Profile() {
     const [doctor, setDoctor] = useState()
@@ -13,10 +15,11 @@ export default function Profile() {
     useEffect(() => {
         const getData = async () => {
             const data = await getDoctor()
+            const readableShifts = await readShifts(data?.shift || [])
             if (!data) {
                 console.log("Error later set error")
             } else {
-                setDoctor(data)
+                setDoctor({...data, shift: readableShifts})
             }
         }
         getData()
@@ -30,6 +33,17 @@ export default function Profile() {
             : [...formik.values[name], value]
         );
     };
+
+    const selectImage = (data) => {
+        const file = data.currentTarget.files[0]
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                formik.setFieldValue("img", reader.result); 
+            };
+            reader.readAsDataURL(file);
+        }
+    }
 
     const formik = useFormik({
         enableReinitialize: true,
@@ -46,25 +60,25 @@ export default function Profile() {
         }, 
         validationSchema,
         onSubmit: async (values) => {
-
+            
         }
 
     })
 
     return (
         <section className="w-full h-max flex flex-col items-center">
+            <Header />
             {doctor && (
             <form onSubmit={formik.handleSubmit} className="relative flex flex-col items-center w-full pb-20">
-                <div className="w-50 h-50 m-10">
-                    <div className="relative rounded-full w-50 h-50 overflow-hidden m-10">
-                        <Image src={doctor.img? doctor.img : "/images/default_doctor.jpg"} alt="profile" objectFit="cover" layout="fill"/>
-                        <button
-                            className="absolute bottom-2 right-2 bg-red-200 w-8 h-8 rounded-full flex items-center justify-center z-20 shadow-md"
-                            type="button"
-                        >
-                            <i className="fa-solid fa-pen text-xs" />
-                        </button>
+                <div className="m-10 flex flex-col items-center gap-4">
+                    <div className="relative rounded-full w-50 h-50 overflow-hidden">
+                        <Image src={formik.values.img || "/images/default_doctor.jpg"} alt="profile" objectFit="cover" layout="fill"/>
                     </div>
+                    <label 
+                        className="hover:bg-[var(--mint_green)] rounded-3xl border border-[var(--turquoise)] py-1 px-4 transition text-xs"
+                        >CHANGE IMAGE 
+                        <input type="file" accept="/image*" onChange={(value) => selectImage(value)}/> 
+                    </label>
                 </div>
                 
                 <div className="border-[var(--turquoise)] w-5/6 items-center flex flex-col rounded-3xl">
@@ -89,7 +103,7 @@ export default function Profile() {
 
                         <div className='flex flex-col items-center'>
                             <p className='text-xs text-[var(--outer_space)]'>SPECIALTY</p>
-                            <select name="specialty" id="specialty" onBlur={formik.handleBlur} onChange={(e) => {formik.handleChange(e); updateFilter(e.target.value)}} value={formik.values.specialty}
+                            <select name="specialty" id="specialty" onBlur={formik.handleBlur} onChange={(e) => {formik.handleChange(e)}} value={formik.values.specialty}
                                     className="w-50">
                                 {["Cosmetic Surgery", "Forensic Pathology", "Neurology", "Space Medicine"].map(specialty => (
                                     <option key={specialty} value={specialty}>{specialty}</option>
@@ -100,11 +114,11 @@ export default function Profile() {
 
                         <p className="text-xs text-[var(--outer_space)] pt-4">SHIFT</p>
                         <div className="checkbox-group flex gap-2 justify-center">
-                            {["Morning", "Afternoon", "Night"].map((option) => (
+                            {["Morning", "Afternoon", "Night", "Latenight"].map((option) => (
                                 <label key={option} className="checkbox-item">
                                 <input
                                     type="checkbox"
-                                    checked={formik.values.shift.includes(option)}
+                                    checked={Array.isArray(formik.values.shift) && formik.values.shift.includes(option)}
                                     onChange={() => toggleCheckbox("shift", option)}
                                 />
                                 {option}
@@ -114,7 +128,7 @@ export default function Profile() {
 
                         <p className="text-xs text-[var(--outer_space)] pt-4">WORKDAYS</p>
                         <div className="checkbox-group flex gap-2 justify-center">
-                            {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((day) => (
+                            {["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"].map((day) => (
                                 <label key={day} className="checkbox-item">
                                 <input
                                     type="checkbox"
@@ -163,14 +177,14 @@ const validationSchema = Yup.object({
 
     shift: Yup.array()
         .of(Yup.string().oneOf([
-        "Morning", "Afternoon", "Night"
+        "Morning", "Afternoon", "Night", "Latenight"
         ]))
         .min(1, 'At least one workday must be selected')
         .required('Shift is required.'),
 
     workdays: Yup.array()
         .of(Yup.string().oneOf([
-        'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
+        'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'
         ]))
         .min(1, 'At least one workday must be selected')
         .required('Workdays are required'),
