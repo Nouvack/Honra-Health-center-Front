@@ -3,27 +3,32 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
 import { registerPatient } from "@private/functions"; // adjust path if needed
+import { useRouter } from "next/navigation";
 
 export default function AdminPatientsPage() {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  const handleSubmit = async (values, { resetForm }) => {
-    setLoading(true);
-    try {
-      const res = await registerPatient(values);
-      if (res?.success) {
-        alert("Patient registered successfully. Check email for verification.");
-        resetForm();
-      } else {
-        alert("Registration failed: " + (res?.message || "Unknown error"));
-      }
-    } catch (error) {
-      console.error("Submit error:", error);
-      alert("An unexpected error occurred.");
-    } finally {
-      setLoading(false);
+ const handleSubmit = async (values, { resetForm }) => {
+  setLoading(true);
+  try {
+    const res = await registerPatient(values);
+    if (res?.message === "Patient registered successfully.") {
+      alert("Patient registered successfully");
+      resetForm();
+      router.push("/private/admin/patients-admin");
+    } else {
+      alert("Registration failed: " + (res?.message || "Unknown error"));
     }
-  };
+  } catch (error) {
+    console.error("Submit error:", error);
+    alert("An unexpected error occurred.");
+  } finally {
+    setLoading(false);
+  }
+};
+
+
 
   const formik = useFormik({
     initialValues: {
