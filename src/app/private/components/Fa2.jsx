@@ -82,7 +82,6 @@ export default function Fa2({ data, role }) {
             } else if (!response) {
                 setError("Something wen't wrong.")
             } else {
-                console.log(response)
                 router.push(`/private/doctors/${response}`)
             }
         }

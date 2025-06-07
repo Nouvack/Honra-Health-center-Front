@@ -52,6 +52,9 @@ export async function verify2Fa(token, code, role) {
         })
         if (response.ok) {
             const res = await response.json()
+            if (res?.verified === false) {
+                return false
+            }
             const cookieStore = await cookies()
             cookieStore.set("userToken", res.token)
             return {
@@ -63,6 +66,7 @@ export async function verify2Fa(token, code, role) {
         }
     } catch (err) {
         console.log("error", err)
+        return false
     }
 }
 
@@ -87,7 +91,7 @@ export async function registerDoctor(values) {
         const data = await response.json().catch(() => null);
         console.log("Response data:", data);
 
-        if (response.ok) return data;
+        if (response.ok) return {success: true, data};
         return { success: false, error: data?.error || "Unknown error" };
 
     } catch (err) {

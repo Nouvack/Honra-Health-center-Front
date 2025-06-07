@@ -17,7 +17,7 @@ export default function DoctorManagement() {
     async function fetchDoctors() {
       const data = await getDoctors();
 
-      const transformed = data.map((doc) => ({
+      const transformed = data?.map((doc) => ({
         id: doc._id,
         firstName: doc.firstname,
         lastName: doc.lastname,
@@ -26,7 +26,8 @@ export default function DoctorManagement() {
         description: doc.description,
         shifts: doc.shift,
         workingDays: doc.workdays,
-        photoUrl: doc.img || "/images/default-doctor.png",
+        photoUrl: doc.img || "/images/default_doctor.jpg",
+        employeeId: doc.employeeId
       }));
 
       setDoctors(transformed);
