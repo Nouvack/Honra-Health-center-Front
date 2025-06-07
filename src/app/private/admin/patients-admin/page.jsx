@@ -25,7 +25,7 @@ export default function PatientManager() {
 
   const handleEdit = () => {
     if (selected) {
-      router.push(`/patients/edit/${selected._id}`);
+      router.push(`/private/admin/patients-admin/update-patient/${selected._id}`);
     }
   };
 
@@ -50,7 +50,7 @@ export default function PatientManager() {
   };
 
   const handleRegister = () => {
-    router.push("/registerePatientdeletePatient");
+    router.push("./patients-admin/register-patient");
   };
 
   return (
