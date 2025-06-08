@@ -191,16 +191,29 @@
 
 // export default nextConfig;
 
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: {
-    domains: ['indigo-secret-viper-132.mypinata.cloud'],
-  },
+    images: {
+        domains: ['indigo-secret-viper-132.mypinata.cloud']
+    },
   async headers() {
     return [
       {
         source: "/(.*)",
         headers: [
+          {
+            key: "Content-Security-Policy",
+            value:
+              "default-src 'self'; " +
+              "script-src 'self' 'unsafe-inline'; " +
+              "object-src 'none'; " +
+              "frame-ancestors 'none'; " +
+              "frame-src https://www.google.com; " +
+              "style-src 'self' 'unsafe-inline'; " +
+              "img-src 'self' data: https:; " +
+              "font-src 'self' https: data:;",
+          },
           {
             key: "X-Frame-Options",
             value: "DENY",
@@ -230,5 +243,3 @@ const nextConfig = {
     ];
   },
 };
-
-export default nextConfig;
