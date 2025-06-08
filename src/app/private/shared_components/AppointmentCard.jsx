@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { submitObservation, sendInvoice } from "../functions";
+import { submitObservation, sendInvoice } from "./functions";
 
 export default function AppointmentCard({ appointment }) {
     const [date, setDate] = useState("")

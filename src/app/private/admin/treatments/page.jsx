@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { createTreatment, getTreatments, updateTreatment, deleteTreatment } from "../functions"
-import Header from "../../components/Header"
+import Header from "../../shared_components/Header"
 import { useFormik } from "formik"
 import * as Yup from 'yup';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -28,7 +28,6 @@ export default function TreatmentsPage() {
     useEffect(() => {
         const getData = async () => {
             const response = await getTreatments()
-            console.log(response)
             response? setTreatments(response) : setError("Error retrieving treatments data.")
         }
         getData()

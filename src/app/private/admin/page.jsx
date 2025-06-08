@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { logOut } from "@private/functions";
+import { logOut } from "@/app/private/shared_components/functions";
 import './style.css'
 
 export default function Admin() {

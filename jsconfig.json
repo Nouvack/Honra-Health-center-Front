@@ -3,7 +3,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@private/components/*": ["./src/app/private/components/*"],
+      "@private/components/*": ["src/app/private/shared_components/*"],
       "@private/functions": ["./src/app/private/functions"]
     }
   }

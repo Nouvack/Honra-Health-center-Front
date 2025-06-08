@@ -1,13 +1,12 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { getDoctor, updateDoctor } from "../../../functions"
+import { getDoctor, readShifts, updateDoctor } from "../../../shared_components/functions"
 import Image from "next/image"
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import '../style.css'
-import { readShifts } from "../functions";
-import Header from "@/app/private/components/Header";
+import Header from "@/app/private/shared_components/Header";
+import { doctorValidationSchema, getDoctInitialVal } from "../../../shared_components/Doctor_validation_schema"
 
 export default function Profile() {
     const [doctor, setDoctor] = useState()
@@ -47,21 +46,10 @@ export default function Profile() {
 
     const formik = useFormik({
         enableReinitialize: true,
-        initialValues: {
-            firstname: doctor?.firstname || '',
-            lastname: doctor?.lastname || '',
-            email: doctor?.email || '',
-            phone: doctor?.phone || '',
-            specialty: doctor?.specialty || '',
-            shift: doctor?.shift || [],
-            workdays: doctor?.workdays || [],
-            img: doctor?.img || '',
-            description: doctor?.description || ''
-        }, 
-        validationSchema,
+        initialValues: getDoctInitialVal(doctor), 
+        validationSchema: doctorValidationSchema,
         onSubmit: async (values) => {
             const response = await updateDoctor(values, doctor._id)
-            console.log(response)
             if (response.data && response.picture) {
                 window.alert("Profile successfully updated.")
                 window.location.reload()
@@ -99,7 +87,7 @@ export default function Profile() {
                                 <label htmlFor={field}
                                     className='text-xs'>{field.toUpperCase()}</label>
                                 <input type='text' name={field} id={field} onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values[field]} />
-                                {formik.touched[field] && formik.errors[field] ? (<p className='hidden peer-invalid:block'>{formik.errors[field]}</p>) : null}
+                                {formik.touched[field] && formik.errors[field] ? (<p className='text-red-500 text-xs'>{formik.errors[field]}</p>) : null}
                             </div>
                         ))}
                     </div>
@@ -117,7 +105,7 @@ export default function Profile() {
                                     <option key={specialty} value={specialty}>{specialty}</option>
                                 ))}
                             </select>
-                            {formik.touched.specialty && formik.errors.specialty ? (<p className='hidden peer-invalid:block'>{formik.errors.specialty}</p>) : null}
+                            {formik.touched.specialty && formik.errors.specialty ? (<p className='text-red-500 text-xs'>{formik.errors.specialty}</p>) : null}
                         </div>
 
                         <p className="text-xs text-[var(--outer_space)] pt-4">SHIFT</p>
@@ -140,7 +128,7 @@ export default function Profile() {
                                 <label key={day} className="checkbox-item">
                                 <input
                                     type="checkbox"
-                                    checked={formik.values.workdays.includes(day)}
+                                    checked={formik.values.workdays?.includes(day)}
                                     onChange={() => toggleCheckbox("workdays", day)}
                                 />
                                 {day}
@@ -151,7 +139,7 @@ export default function Profile() {
                         <label htmlFor="description">DESCRIPTION</label>
                         <textarea name="description" id="description" onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.description}
                             className="w-full h-100 bg-[var(--seasalt)] resize-none text-left align-top rounded-3xl p-5" />
-                        {formik.touched.description && formik.errors.description ? (<p className='hidden peer-invalid:block'>{formik.errors.description}</p>) : null}
+                        {formik.touched.description && formik.errors.description ? (<p className='text-red-500 text-xs'>{formik.errors.description}</p>) : null}
                     </div>
                 </div>
                 <p>{error}</p>
@@ -160,53 +148,3 @@ export default function Profile() {
         </section>
     )
 }
-
-const validationSchema = Yup.object({
-    firstname: Yup.string()
-        .required('First name is required')
-        .min(2, 'Too short')
-        .max(50, 'Too long'),
-
-    lastname: Yup.string()
-        .required('Last name is required')
-        .min(2, 'Too short')
-        .max(50, 'Too long'),
-
-    email: Yup.string()
-        .email('Invalid email format')
-        .required('Email is required'),
-
-    phone: Yup.string()
-        .matches(/^\+?[0-9\s\-()]{7,20}$/, 'Invalid phone number')
-        .required('Phone is required'),
-
-    specialty: Yup.string()
-        .required('Specialty is required'),
-
-    shift: Yup.array()
-        .of(Yup.string().oneOf([
-        "Morning", "Afternoon", "Night", "Latenight"
-        ]))
-        .min(1, 'At least one workday must be selected')
-        .required('Shift is required.'),
-
-    workdays: Yup.array()
-        .of(Yup.string().oneOf([
-        'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'
-        ]))
-        .min(1, 'At least one workday must be selected')
-        .required('Workdays are required'),
-
-    img: Yup.mixed()
-        .test("fileOrUrl", "Must be a file or a valid URL", (value) => {
-            if (!value) return true; // allow empty
-            if (typeof value === "string") {
-            return /^https?:\/\/.+/.test(value); // it's a valid URL
-            }
-            return value instanceof File; // it's a File object
-        })
-  .nullable(),
-    description: Yup.string()
-        .max(1000, 'Too long')
-        .nullable()
-    })

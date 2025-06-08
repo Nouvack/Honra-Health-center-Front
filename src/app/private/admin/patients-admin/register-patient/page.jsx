@@ -2,7 +2,7 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
-import { registerPatient } from "@private/functions"; // adjust path if needed
+import { registerPatient } from "@/app/private/shared_components/functions"; // adjust path if needed
 import { useRouter } from "next/navigation";
 
 export default function AdminPatientsPage() {

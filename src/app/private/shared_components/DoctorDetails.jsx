@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteDoctor } from "@private/functions";
+import { deleteDoctor } from "@/app/private/shared_components/functions";
 
 export default function DoctorDetails({ doctor, onDelete, onEdit, onClose }) {
   if (!doctor) return null;

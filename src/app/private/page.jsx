@@ -4,8 +4,8 @@ import Image from "next/image"
 import { useFormik } from 'formik';
 import * as Yup from "yup";
 import { useState } from "react";
-import { logInAdmin, logInDoctor } from "./functions";
-import Fa2 from "./components/Fa2";
+import { logInAdmin, logInDoctor } from "./shared_components/functions";
+import Fa2 from "./shared_components/Fa2";
 
 export default function Private() {
     const [userType, setUserType] = useState("")

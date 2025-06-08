@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react"
 import { filterAppointments, getAppointments } from "../functions"
-import AppointmentCard from "@/app/private/components/AppointmentCard"
-import Header from "@/app/private/components/Header"
+import AppointmentCard from "@/app/private/shared_components/AppointmentCard"
+import Header from "@/app/private/shared_components/Header"
 
 export default function Appointments() {
     const [error, setError] = useState()
