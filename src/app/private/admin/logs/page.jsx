@@ -1,6 +1,6 @@
 "use client"
 
-import Header from "../../components/Header"
+import Header from "../../shared_components/Header"
 import { useEffect, useState } from "react"
 import { getLogs } from "../functions"
 

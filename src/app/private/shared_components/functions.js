@@ -70,69 +70,33 @@ export async function verify2Fa(token, code, role) {
     }
 }
 
-export async function registerDoctor(values) {
+export async function readShifts(shifts) {
     try {
-        const cookieStore = await cookies();
-        const token = cookieStore.get("userToken")?.value;
-        console.log("Token:", token);
-        console.log("Values being sent:", values);
-
-        const response = await fetch(`${path}/doctors/register`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify(values)
-        });
-
-        console.log("Response status:", response.status);
-
-        const data = await response.json().catch(() => null);
-        console.log("Response data:", data);
-
-        if (response.ok) return {success: true, data};
-        return { success: false, error: data?.error || "Unknown error" };
-
+        const newArray = []
+        for (const shift of shifts) {
+            newArray.push(shift.name)
+        }
+        return newArray
     } catch (err) {
-        console.error("Fetch error:", err);
-        return { success: false, error: "Network or server error" };
+        return false
     }
 }
+
+
 
 export async function getDoctorById(id) {
-        const cookieStore = await cookies()
-        const token = cookieStore.get("userToken")?.value
-        const response = await fetch(`${path}/doctors/${id}`, {
-            method: "GET",
-            headers: { "Authorization": `Bearer ${token}` }
-        })
-        if (response.ok) {
-            return await response.json()
-        } else {
-            return false
-        }
-    }
-export async function getDoctors() {
-    try {   
-        const cookieStore = await cookies()
-        const token = cookieStore.get("userToken")?.value
-        const response = await fetch(`${path}/doctors`, {
-            method: "GET",  
-            headers: { "Authorization": `Bearer ${token}` }
-        })
-        if (response.ok) {
-            const res = await response.json()
-            return res
-        } else {
-            return false    
-        }
-    }
-    catch (err) {
-        console.log("Error", err)
+    const cookieStore = await cookies()
+    const token = cookieStore.get("userToken")?.value
+    const response = await fetch(`${path}/doctors/${id}`, {
+        method: "GET",
+        headers: { "Authorization": `Bearer ${token}` }
+    })
+    if (response.ok) {
+        return await response.json()
+    } else {
+        return false
     }
 }
-
 
 export async function getDoctor() {
     try {
@@ -172,7 +136,6 @@ export async function updateDoctor(values, id) {
             body: formData
         })
 
-        console.log(response)
         return {data: !!response.ok, picture: !!image.ok}
     } catch (err) {
         return false
@@ -231,41 +194,6 @@ export async function sendInvoice(email, treatment) {
     }
 }
 
-export async function getAllPatients(){
-    try {
-        const cookieStore = await cookies()
-        const token = cookieStore.get("userToken")?.value
-        const response = await fetch(`${path}/patients/all`, {
-            method: "GET",
-            headers: { "Authorization": `Bearer ${token}` }
-        })
-        if (response.ok) {
-            return await response.json()
-        } else {
-            return false
-        }
-    } catch (err) {
-        console.log("Error", err)
-    }
-}
-
-export async function deletePatient(id) {
-    try {
-        const cookieStore = await cookies()
-        const token = cookieStore.get("userToken")?.value
-        const response = await fetch(`${path}/patients/delete/${id}`, {
-            method: "DELETE",
-            headers: { "Authorization": `Bearer ${token}` }
-        })
-        if (response.ok) {
-            return true
-        } else {
-            return false
-        }
-    } catch (err) {
-        console.log("Error", err)
-    }}
-
 export async function getPatientById(id) {
     try {
         const cookieStore = await cookies()
@@ -303,86 +231,6 @@ export async function updatePatient(values) {
         console.log("Error", err)
     }
 }
-
-export async function registerPatient(values) {
-  try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("userToken")?.value;
-
-    if (!values?.email || !values?.password) {
-      return { success: false, message: "Email and password are required." };
-    }
-
-    const response = await fetch(`${path}/patients/register-admin`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      },
-      body: JSON.stringify(values)
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      return { success: true, message: data.message };
-    } else {
-      console.error("Registration error:", data);
-      return { success: false, message: data?.message || "Registration failed." };
-    }
-  } catch (err) {
-    console.log("Error", err);
-    return { success: false, message: "Unexpected error occurred." };
-  }
-}
-
-
-export async function updatePatientById(id, values) {
-  try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("userToken")?.value;
-
-    const response = await fetch(`${path}/patients/update/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-      },
-      body: JSON.stringify(values),
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      return { success: true, data };
-    } else {
-      const error = await response.json();
-      return { success: false, message: error.message || "Update failed." };
-    }
-  } catch (err) {
-    console.error("Error updating patient:", err);
-    return { success: false, message: "Unexpected error occurred." };
-  }
-}
-
-
-export async function deleteDoctor(id) {
-    try {
-        const cookieStore = await cookies()
-        const token = cookieStore.get("userToken")?.value
-        const response = await fetch(`${path}/doctors/delete/${id}`, {
-            method: "DELETE",
-            headers: { "Authorization": `Bearer ${token}` }
-        })
-        if (response.ok) {
-            return true
-        } else {
-            return false
-        }
-    } catch (err) {
-        console.log("Error", err)
-    }
-}
-
 
 export async function logOut() {
     try {

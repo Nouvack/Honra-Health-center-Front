@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getAllPatients, deletePatient } from "@private/functions";
-import Header from "../../components/Header";
+import { getAllPatients, deletePatient } from "../functions";
+import Header from "../../shared_components/Header";
 
 export default function PatientManager() {
   const [patients, setPatients] = useState([]);

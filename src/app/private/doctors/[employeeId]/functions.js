@@ -3,17 +3,7 @@
 import { cookies } from 'next/headers'
 const path = process.env.API_PATH
 
-export async function readShifts(shifts) {
-    try {
-        const newArray = []
-        for (const shift of shifts) {
-            newArray.push(shift.name)
-        }
-        return newArray
-    } catch (err) {
-        return false
-    }
-}
+
 
 export async function getAppointments() {
     try {

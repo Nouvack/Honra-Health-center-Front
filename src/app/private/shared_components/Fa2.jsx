@@ -1,7 +1,7 @@
 "use client"
 
 import { useRef, useState } from "react";
-import { verify2Fa, updatePassword } from "../functions";
+import { verify2Fa, updatePassword } from "./functions";
 import { useRouter }  from "next/navigation"
 import { useFormik } from "formik";
 import * as Yup from "yup";

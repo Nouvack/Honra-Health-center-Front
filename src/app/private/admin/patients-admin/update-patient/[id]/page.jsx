@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useParams, useRouter } from "next/navigation";
-import { getPatientById, updatePatientById } from "@private/functions";
+import { getPatientById, updatePatientById } from "@/app/private/shared_components/functions";
 
 export default function UpdatePatientsPage() {
   const { id } = useParams();
