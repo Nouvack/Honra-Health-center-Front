@@ -3,7 +3,7 @@
 const path = process.env.API_PATH
 import Image from "next/image"
 import { useParams } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export default function VerifyEmail() {
     const params = useParams()

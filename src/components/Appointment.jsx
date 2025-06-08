@@ -151,8 +151,8 @@ export default function Appointment({doctors}) {
                                 {availableHours?.map((slot) => (
                                     <option key={slot} value={slot}>{slot}</option>
                                 ))}
-                                {formik.touched.hour && formik.errors.hour && ( <p className='text-red-500 text-xs'>{formik.errors.hour}</p> )}
                             </select>
+                            {formik.touched.hour && formik.errors.hour && ( <p className='text-red-500 text-xs'>{formik.errors.hour}</p> )}
                         </div>
                         <p className='text-red-600'>{error}</p>
                         <label className='col-span-2'>
