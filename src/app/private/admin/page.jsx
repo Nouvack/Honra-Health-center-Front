@@ -27,8 +27,9 @@ export default function Admin() {
         <button onClick={navigate("/private/admin/doctors-admin")} > Doctors </button>
         <button onClick={navigate("/private/appointments")} > Appointments </button>
         <button onClick={navigate("/private/admin/patients-admin")} > Patients </button>
-        <button onClick={navigate("/private/admin/bills")} > Bills </button>
+        <button onClick={navigate("/private/admin/bills")} > Invoices </button>
         <button onClick={navigate("/private/admin/treatments")}>Treatments</button>
+        <button onClick={navigate("/private/admin/logs")}>Logs</button>
         <button onClick={handleLogout}>Log Out</button>
       </div>
     </section>

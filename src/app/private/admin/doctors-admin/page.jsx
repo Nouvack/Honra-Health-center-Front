@@ -6,6 +6,7 @@ import "@/style/medicStuff.css";
 import DoctorCard from "@private/components/DoctorCard";
 import DoctorDetails from "@private/components/DoctorDetails"; // import modal
 import { getDoctors } from "@private/functions";
+import Header from "../../components/Header";
 
 export default function DoctorManagement() {
   const [doctors, setDoctors] = useState([]);
@@ -58,8 +59,9 @@ export default function DoctorManagement() {
 
   return (
     <div className="doctor-management-container">
-      <img src="/images/logo.png" alt="Logo" className="logo" />
-      <h2 className="title">Doctor Management</h2>
+      <Header />
+      <p className="font-bold">DOCTOR MANAGEMENT</p>
+      <hr className="w-5/6 border-[var(--turquoise)] mb-10" />
       <button className="button primary" onClick={handleRegisterDoctor}>
         Register Doctor
       </button>

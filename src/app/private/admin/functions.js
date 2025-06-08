@@ -37,7 +37,32 @@ export async function createTreatment(values) {
         })
         return !!response.ok
     } catch (err) {
-        console.log(err)
+        return false
+    }
+}
+
+export async function getLogs() {
+    try {
+        const cookieStore = await cookies();
+        const token = cookieStore.get("userToken")?.value;
+        const response = await fetch (`${path}/logs`, {
+            method: "GET",
+            headers: { "Authorization": `Bearer ${token}` }
+        })
+        return response.ok? await response.json() : false
+    } catch (err) {
+        return false
+    }
+}
+
+export async function getInvoices() {
+    try {
+        const response = await fetch (`${path}/invoices`, {
+            method: "GET",
+            headers: { "Authorization": `Bearer ${token}` }
+        })
+        return response.ok? await response.json() : false
+    } catch (err) {
         return false
     }
 }

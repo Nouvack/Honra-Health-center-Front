@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getAllPatients, deletePatient } from "@private/functions";
+import Header from "../../components/Header";
 
 export default function PatientManager() {
   const [patients, setPatients] = useState([]);
@@ -54,16 +55,18 @@ export default function PatientManager() {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-4 space-y-4">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-semibold">Patients</h2>
-        <button
-          onClick={handleRegister}
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-        >
-          Register Patient
-        </button>
-      </div>
+    <div className="w-full min-h-screen flex flex-col items-center">
+      <Header />
+      <p className="font-bold">PATIENTS</p>
+      <hr className="w-5/6 border-[var(--turquoise)] mb-10" />
+      
+      <button
+        onClick={handleRegister}
+        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+      >
+        Register Patient
+      </button>
+    
 
       <div className="overflow-x-auto rounded border border-gray-200 shadow">
         <table className="min-w-full divide-y divide-gray-200">

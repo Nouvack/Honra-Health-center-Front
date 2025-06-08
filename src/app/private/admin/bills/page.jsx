@@ -1,12 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "@/style/medicStuff.css";
 import BillCard from "@/app/private/components/BillCard";
+import Header from "../../components/Header";
+import { getInvoices } from "../functions";
 
 export default function BillsPage() {
     const [search, setSearch] = useState("");
     const [bills, setBills] = useState([]);
+    const [error, setError] = useState("")
 
     const filteredBills = bills.filter((bill) =>
       bill.billNumber.toLowerCase().includes(search.toLowerCase()) ||
@@ -14,10 +17,19 @@ export default function BillsPage() {
       bill.treatmentId.toLowerCase().includes(search.toLowerCase())
     );
 
+    useEffect(() => {
+      const getData = async() => {
+        const response = await getInvoices()
+        response? setBills(response) : setError("Error loading Invoices.")
+      } 
+      getData()
+    }, [])
+
     return (
       <div className="doctor-management-container">
-        <img src="/images/logo.png" alt="Logo" className="logo" />
-        <h2 className="title">Bill Management</h2>
+        <Header/>
+        <p className="font-bold">INVOICES</p>
+        <hr className="w-5/6 border-[var(--turquoise)] mb-10" />
 
         <input
           type="text"
