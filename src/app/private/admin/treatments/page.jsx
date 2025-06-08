@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { createTreatment, getTreatments } from "../functions"
+import { createTreatment, getTreatments, updateTreatment, deleteTreatment } from "../functions"
 import Header from "../../components/Header"
 import { useFormik } from "formik"
 import * as Yup from 'yup';
@@ -44,7 +44,7 @@ export default function TreatmentsPage() {
                 {error && <p>{error}</p>}
                 {openWindow && <TreatmentWindow treatment={params.treatment} isNew={params.isNew}/>}
 
-                <div className="flex flex-wrap gap-20">
+                <div className="flex flex-wrap gap-20 justify-center">
                     {["Cosmetic Surgery", "Forensic Pathology", "Neurology", "Space Medicine"].map(type => 
                     <div key={type} >
                         <table className="divide-y divide-[var(--turquoise)] max-w-150">
@@ -76,11 +76,11 @@ export default function TreatmentsPage() {
 
 
 function TreatmentWindow({treatment, isNew}) {
-
     const [msg, setMsg] = useState("")
 
-    const handleDelete = async (treatment) => {
-
+    const handleDelete = async () => {
+        const response = await deleteTreatment(treatment._id) 
+        response? window.location.reload() : setMsg("Something went wrong.")
     }
 
     const formik = useFormik({
@@ -105,18 +105,18 @@ function TreatmentWindow({treatment, isNew}) {
             type: Yup.string()
                 .required("Type is required")
                 .min(1, "Type cannot be empty"),
-        }), onSubmit: async(values) => {
-            const response = await createTreatment(values)
+        }), onSubmit: async(values, {resetForm}) => {
+            const response = isNew? await createTreatment(values) : await updateTreatment(values, treatment._id)
             if (response) {
-                setMsg("Treatment successfully created.");
-                resetForm(); // 👈 This clears all fields
+                setMsg("Action successfully realized.");
+                if (isNew) resetForm();
             } else {
                 setMsg("Something went wrong.");
             }        
         }
     })
     return (
-        <form onSubmit={formik.handleSubmit}
+        <form onSubmit={formik.handleSubmit} onReset={formik.handleReset}
             className="w-1/2 h-1/2 bg-[var(--outer_space)] shadow-[var(--mint_green)] shadow-md absolute flex flex-col items-center p-10 rounded-3xl text-[var(--seasalt)]">
             
             <button onClick={() => window.location.reload()} className="w-10 h-10"><FontAwesomeIcon icon={faCircleXmark} className="text-2xl absolute right-10 top-8" /></button>
@@ -134,15 +134,15 @@ function TreatmentWindow({treatment, isNew}) {
             {formik.touched.description && formik.errors.description && ( <p className='text-red-500 text-xs'>{formik.errors.description}</p> )}
 
             {!isNew && <div>
-                <p>Created at: {treatment.createdAt}</p>
-                <p>Last updated: {treatment.updatedAt === treatment.createdAt? "---" : treatment.updatedAt}</p>
+                <p className="text-sm">Created at: {new Date(treatment.createdAt).toLocaleString()}</p>
+                <p className="text-sm">Last updated: {treatment.updatedAt === treatment.createdAt? "---" : new Date(treatment.updatedAt).toLocaleString()}</p>
             </div>}
 
             <p className="font-bold">{msg}</p>
             <button type="submit"
                 className="bg-[var(--seasalt)] text-[var(--outer_space)] rounded-3xl py-1 px-4 w-30">{isNew? "CREATE": "UPDATE"}</button>
 
-            {!isNew && <button onClick={(e) => handleDelete(e)}>DELETE</button>}
+            {!isNew && <button onClick={() => handleDelete()}>DELETE</button>}
 
         </form>
     )

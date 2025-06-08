@@ -41,6 +41,36 @@ export async function createTreatment(values) {
     }
 }
 
+export async function updateTreatment(values, id) {
+    try {
+        const cookieStore = await cookies()
+        const token = cookieStore.get("userToken")?.value
+        const response = await fetch (`${path}/treatments/update/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`},
+            body: JSON.stringify(values),
+        })
+        return !!response.ok
+    } catch (err) {
+        return false
+    }
+}
+
+export async function deleteTreatment(id) {
+    try {
+        const cookieStore = await cookies()
+        const token = cookieStore.get("userToken")?.value
+        const response = await fetch (`${path}/treatments/delete/${id}`, {
+            method: "DELETE",
+            headers: { "Authorization": `Bearer ${token}`}
+        })
+        return !!response.ok
+    } catch (err) {
+        return false
+    }
+}
+
 export async function getLogs() {
     try {
         const cookieStore = await cookies();

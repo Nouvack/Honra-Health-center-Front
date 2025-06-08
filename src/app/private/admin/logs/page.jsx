@@ -10,12 +10,12 @@ export default function Logs() {
     const [logs, setLogs] = useState([])
 
     const colors = {
-        "LOG IN": "bg-yellow-300",
-        "CREATE": "bg-yellow-100",
-        "DELETE": "bg-red-600 text-white",
-        "UPDATE": "bg-orange-400",
-        "READ": "bg-blue-300",
-        "FAIL": "bg-red-600 text-white",
+        "LOGIN": "bg-yellow-100 text-yellow-800",     // soft yellow
+        "CREATE": "bg-green-100 text-green-800",       // minty green
+        "DELETE": "bg-red-100 text-red-800",           // light pink/red
+        "UPDATE": "bg-orange-100 text-orange-800",     // peach
+        "READ": "bg-blue-100 text-blue-800",           // sky blue
+        "FAIL": "bg-rose-100 text-rose-800",           // soft rose
     };
 
     useEffect(() => {
