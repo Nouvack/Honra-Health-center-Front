@@ -218,6 +218,19 @@ export async function submitObservation(values, id) {
     }
 }
 
+export async function sendInvoice(email, treatment) {
+    try {
+        const response = await fetch (`${path}/invoices/create`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({patientId: email, treatmentId: treatment})
+        })
+        return response.ok? true : false
+    } catch (err) {
+        return false
+    }
+}
+
 export async function getAllPatients(){
     try {
         const cookieStore = await cookies()

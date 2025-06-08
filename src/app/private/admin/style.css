@@ -1,0 +1,11 @@
+.admin-home button {
+    background-color: var(--mint_green);
+    padding: 4px 20px;
+    border-radius: 25px;
+    transition: all 0.2s ease-in-out;
+}
+
+.admin-home button:hover {
+    background-color: var(--outer_space);
+    color: var(--seasalt);
+}

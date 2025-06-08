@@ -2,11 +2,17 @@
 
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation";
 import { useParams, usePathname } from "next/navigation"
 
 export default function Doctor() {
     const { employeeId } = useParams()
     const pathname = usePathname()
+
+    const handleLogout = async () => {
+        await logOut()
+        router.push("/private")
+    };
 
     return (
         <section className="w-full h-screen flex flex-col justify-center items-center">
@@ -21,8 +27,7 @@ export default function Doctor() {
                         className="bg-[var(--mint_green)] px-4 py-1 rounded-3xl">Appointments</Link>
                     <Link href={`${pathname}/patients`}
                         className="bg-[var(--mint_green)] px-4 py-1 rounded-3xl">My Patients</Link>
-                    <Link href={`/private`}
-                        className="bg-[var(--mint_green)] px-4 py-1 rounded-3xl">Log Out</Link>
+                    <button onClick={handleLogout}>Log Out</button>
                 </div>
             </div>
 

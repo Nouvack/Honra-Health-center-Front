@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { submitObservation } from "../functions";
+import { submitObservation, sendInvoice } from "../functions";
 
 export default function AppointmentCard({ appointment }) {
     const [date, setDate] = useState("")
@@ -44,7 +44,9 @@ export default function AppointmentCard({ appointment }) {
         }), onSubmit: async (values) => {
             setError("")
             const response = await submitObservation(values, appointment.id)
-            if (response) {
+            const secondResponse = await sendInvoice(appointment.patient.email, appointment.treatment.name)
+            if (response && secondResponse) {
+                window.alert("Obeservations and Invoice sent.")
                 window.location.reload()
             } else {
                 setError("Something went wrong, please try again later.")
