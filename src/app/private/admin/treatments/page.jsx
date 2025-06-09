@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { createTreatment, getTreatments, updateTreatment, deleteTreatment } from "../functions"
-import Header from "../../shared_components/Header"
+import Header from "../../shared_components/PrivateHeader"
 import { useFormik } from "formik"
 import * as Yup from 'yup';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

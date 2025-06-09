@@ -70,12 +70,11 @@ export default function AppointmentCard({ appointment }) {
             <div className="flex w-full">
                 <div className="flex flex-col flex-1">
                     <p className="font-bold">{date}</p>
-                    <p>Patient: {appointment.patient.name} {appointment.patient.surname} </p>
-                    <p>Doctor: {appointment.doctor.name} {appointment.doctor.surname} </p>
-                    <p>Treatment: {appointment.treatment.name}</p>
+                    <p>Patient: {appointment.patientId.name} {appointment.patientId.surname} {appointment.patientId.DNI} </p>
+                    <p>Doctor: {appointment.doctorId.firstname} {appointment.doctorId.lastname} </p>
+                    <p>Treatment: {appointment.treatmentId.name}</p>
                 </div>
                 {isToday === "Upcoming" && <p className="items-center flex">-----</p>}
-                {console.log(appointment)}
                 {isToday === "Today" && (appointment.visited === true ? <p className="items-center flex">VISITED</p> 
                     : <button className="bg-[var(--mint_green)] rounded-3xl px-4 font-bold text-[var(--turquoise)]" 
                             onClick={() => handleDisplay()}>CHECK ARRIVED</button>)}
@@ -84,8 +83,8 @@ export default function AppointmentCard({ appointment }) {
 
             {expanded && <div className="w-full">
                 <hr className="border-[var(--turquoise)] m-5" />
-                <p>Specialty: {appointment.treatment.type} </p>
-                <p>Price: $ {appointment.treatment.price} </p>
+                <p>Specialty: {appointment.treatmentId.type} </p>
+                <p>Price: $ {appointment.treatmentId.price} </p>
                 <p>Observations: {appointment.observation || "Not documented"} </p>
             </div>}
 

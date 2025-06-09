@@ -36,13 +36,13 @@ export async function registerPatient(values) {
   }
 }
 
-
 export async function updatePatientById(id, values) {
+  console.log(id)
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("userToken")?.value;
     console.log(id, values,token)
-    const response = await fetch(`${path}/patients/profile?patient=${id}`, {
+    const response = await fetch(`${path}/patients/update-patient?patient=${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

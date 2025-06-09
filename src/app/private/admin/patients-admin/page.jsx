@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { getAllPatients } from "../functions";
-import Header from "../../shared_components/Header";
+import Header from "../../shared_components/PrivateHeader";
 import PatientRows from "./components/PatientRows";
 import PatientsWindow from "./components/PatientsWindow";
 

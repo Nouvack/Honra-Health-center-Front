@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Header from "../../shared_components/Header";
+import Header from "../../shared_components/PrivateHeader";
 import { getInvoices } from "../functions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileArrowDown, faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";

@@ -25,7 +25,7 @@ export default function Admin() {
       {/* Button Grid */}
       <div className="grid grid-cols-3 gap-2">
         <button onClick={navigate("/private/admin/doctors-admin")} > Doctors </button>
-        <button onClick={navigate("/private/appointments")} > Appointments </button>
+        <button onClick={navigate("/private/admin/appointments")} > Appointments </button>
         <button onClick={navigate("/private/admin/patients-admin")} > Patients </button>
         <button onClick={navigate("/private/admin/bills")} > Invoices </button>
         <button onClick={navigate("/private/admin/treatments")}>Treatments</button>

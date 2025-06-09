@@ -1,6 +1,6 @@
 "use client"
 
-import Header from "../../shared_components/Header"
+import Header from "../../shared_components/PrivateHeader"
 import { useEffect, useState } from "react"
 import { getLogs } from "../functions"
 

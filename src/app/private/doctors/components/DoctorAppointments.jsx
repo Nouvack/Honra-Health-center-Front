@@ -1,13 +1,14 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { filterAppointments, getAppointments } from "./functions"
-import AppointmentCard from "@/app/private/shared_components/AppointmentCard"
-import Header from "@/app/private/shared_components/Header"
+import AppointmentCard from "../../shared_components/AppointmentCard"
+import { filterAppointments } from "../../shared_components/functions"
+import { getAppointments } from "./functions"
+import { useState, useEffect } from "react"
 
-export default function DoctorAppointments() {
+export default function Appointments() {
     const [error, setError] = useState()
     const [appointments, setAppointments] = useState([])
+    const [search, setSearch] = useState()
     const [filteredAppointments, setFilteredAppointments] = useState([])
     const [filter, setFilter] = useState()
 
@@ -25,12 +26,13 @@ export default function DoctorAppointments() {
     }, [])
 
     useEffect(() => {
-        const filterData = async () => {
-            const result = await filterAppointments(appointments, filter);
-            setFilteredAppointments(result);
-        }
-        filterData()
-    }, [filter])
+        const timeout = setTimeout( async() => {
+            const response = await filterAppointments(appointments, search, filter)
+            response ? setFilteredAppointments(response) : setError("Could not search appointments. Try again later.")
+            
+        }, 300)
+        return () => clearTimeout(timeout)
+    }, [search, filter])
     
     return (
         <section className="w-full flex flex-col items-center">
@@ -38,6 +40,9 @@ export default function DoctorAppointments() {
                 <p className="font-bold">APPOINTMENTS</p>
                 <hr className="w-5/6 border-[var(--turquoise)] mb-10" />
                 <div className="w-120">
+                    <p className="text-[var(--turquoise)]">SEARCH:</p>
+                    <input type="text" onChange={(e) => setSearch(e.target.value)}
+                        className="bg-[var(--mint_green)] rounded-3xl py-1 px-3 w-full" placeholder="PATIENT DNI / DOCTOR EMPLOYEE ID"/>
                     <p className="text-[var(--turquoise)]">FILTER:</p>
                     <div className="flex justify-between">
                         {["All", "Today", "Upcoming", "Past"].map((f) => 
@@ -47,10 +52,10 @@ export default function DoctorAppointments() {
                         )}
                     </div>
                 </div>
-                
-                {filteredAppointments.length > 0 ? 
+
+                {filteredAppointments?.length > 0 ? 
                     <div className="w-full m-10 gap-6 flex flex-col overflow-y-scroll p-5">
-                        {filteredAppointments?.map((aptm) => <AppointmentCard appointment={aptm} key={aptm.id} />)}
+                        {filteredAppointments?.map((aptm) => <AppointmentCard appointment={aptm} key={aptm._id} />)}
                     </div> : <p className="m-20">You do not have any appointments.</p>
                 }
                 

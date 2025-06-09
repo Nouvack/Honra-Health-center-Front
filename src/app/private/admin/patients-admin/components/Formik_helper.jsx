@@ -12,6 +12,7 @@ export function getInitialValues (patient) {
       phoneNumber: patient.phoneNumber || "",
       DNI: patient.DNI || "",
       password: "",
+      actualPassword: ""
     }
   )
 }

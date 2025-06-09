@@ -18,12 +18,15 @@ export default function PatientsWindow({patient, isNew}) {
 
     const formik = useFormik({
         initialValues: getInitialValues(patient), validationSchema, 
-        onSubmit: async (values) => {
+        onSubmit: async (patientValues) => {
+            console.log(patient._id)
             let response
             if (isNew === true) {
-                response = await registerPatient(values)
+                response = await registerPatient(patientValues)
             } else {
-                response = await updatePatientById(patient._id, values)
+                const data = {email: patientValues.email, phoneNumber: patientValues.phoneNumber, password: patientValues.password}
+                console.log(data)
+                response = await updatePatientById(patient._id, patientValues)
             }
             response? setMsg(response.message) : setMsg("Something went wrong.")
         }

@@ -3,7 +3,7 @@
 import { getDoctInitialVal, doctorValidationSchema } from "@/app/private/shared_components/Doctor_validation_schema"
 import { useState, useEffect } from "react";
 import DoctorCard from "@/app/private/admin/doctors-admin/components/DoctorCard";
-import Header from "../../shared_components/Header";
+import Header from "../../shared_components/PrivateHeader";
 import { useFormik } from 'formik';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faCircleXmark } from "@fortawesome/free-solid-svg-icons";

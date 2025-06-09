@@ -243,3 +243,52 @@ export async function logOut() {
     }
 }
 
+export async function filterAppointments(appointments, search, filter) {
+    try {
+        if (!search && filter === "All") {
+            return appointments
+        }
+        let searchedData = appointments.filter((aptm) => {
+            return aptm.patientId.DNI.includes(search.toUpperCase()) ||
+            aptm.doctorId.employeeId.toLowerCase().includes(search.toLowerCase())
+
+        })
+        console.log(searchedData)
+        let filteredData = []
+        const today = new Date()
+        switch (filter) {
+            case "Today":
+                filteredData = searchedData.filter((aptm) => {
+                    const aptmDate = new Date(aptm.date);
+                    return (
+                        aptmDate.getFullYear() === today.getFullYear() &&
+                        aptmDate.getMonth() === today.getMonth() &&
+                        aptmDate.getDate() === today.getDate()
+                    );
+                });
+                break;
+
+            case "Past":
+                filteredData = searchedData.filter((aptm) => {
+                    const aptmDate = new Date(aptm.date);
+                    return aptmDate < today;
+                });
+                break;
+
+            case "Upcoming":
+                filteredData = searchedData.filter((aptm) => {
+                    const aptmDate = new Date(aptm.date);
+                    return aptmDate > today;
+                });
+                break;
+
+            default:
+                filteredData = searchedData;
+                break;
+        }
+        console.log(filteredData)
+        return filteredData;
+    } catch (err) {
+        return false
+    }
+}

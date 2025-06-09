@@ -177,3 +177,17 @@ export async function deleteDoctor(id) {
         console.log("Error", err)
     }
 }
+
+export async function getAllAppointents() {
+    try {
+        const cookieStore = await cookies()
+        const token = cookieStore.get("userToken")?.value
+        const response = await fetch (`${path}/appointments/all`, {
+            method: "GET",
+            headers: { "Authorization": `Bearer ${token}` }
+        })
+        return response.ok ? await response.json() : false
+    } catch (err) {
+        return false
+    }
+}
