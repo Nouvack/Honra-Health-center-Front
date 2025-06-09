@@ -2,7 +2,7 @@
 
 import '@/style/landing.css'
 import { useEffect, useState } from "react"
-import { filterData } from '../functions'
+import { filterData } from '../shared_components/functions'
 import Card from './DoctorCard'
 
 export default function Doctors({doctors}) {

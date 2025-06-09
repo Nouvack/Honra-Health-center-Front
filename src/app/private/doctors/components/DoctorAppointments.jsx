@@ -1,11 +1,11 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { filterAppointments, getAppointments } from "../functions"
+import { filterAppointments, getAppointments } from "./functions"
 import AppointmentCard from "@/app/private/shared_components/AppointmentCard"
 import Header from "@/app/private/shared_components/Header"
 
-export default function Appointments() {
+export default function DoctorAppointments() {
     const [error, setError] = useState()
     const [appointments, setAppointments] = useState([])
     const [filteredAppointments, setFilteredAppointments] = useState([])
@@ -33,8 +33,7 @@ export default function Appointments() {
     }, [filter])
     
     return (
-        <section className="w-full min-h-screen flex flex-col items-center">
-            <Header />
+        <section className="w-full flex flex-col items-center">
             <div className="w-full flex flex-col items-center p-20">
                 <p className="font-bold">APPOINTMENTS</p>
                 <hr className="w-5/6 border-[var(--turquoise)] mb-10" />

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Header from "@/components/Header"
+import Header from "@/app/shared_components/Header"
 import Login from "./components/Login"
 import Register from "./components/Register"
 

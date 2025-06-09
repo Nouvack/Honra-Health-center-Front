@@ -1,14 +1,14 @@
 "use client"
 
-import Footer from "@/components/Footer"
-import Header from "@/components/Header"
+import Footer from "@/app/shared_components/Footer"
+import Header from "@/app/shared_components/Header"
 import { useEffect, useState } from "react"
 import { getDoctor, getTreatments } from "../components/functions"
 import Image from "next/image"
 import { useParams } from 'next/navigation';
 import TreatmentCards from "../components/TratmentCards"
 import Calendar from "../components/Calendar"
-import Appointment from "@/components/Appointment"
+import Appointment from "@/app/home/Appointment"
 
 export default function Doctors() {
     const params = useParams();

@@ -103,8 +103,6 @@ function DoctorWindow({rawDoctor, isNew}) {
         onSubmit: async (values) => {
           if (isNew) {
             const response = await registerDoctor(values)
-            console.log(values)
-            console.log(response)
             response? setMsg("Action successfully realized.") : setMsg("Something went wrong.")
           } else {
             const response = await updateDoctor(values, doctor._id)

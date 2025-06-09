@@ -1,7 +1,7 @@
 "use client"
 
-import Header from "@/components/Header"
-import Footer from "@/components/Footer"
+import Header from "@/app/shared_components/Header"
+import Footer from "@/app/shared_components/Footer"
 
 export default function Legal() {
     return(

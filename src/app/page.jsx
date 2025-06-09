@@ -2,15 +2,15 @@
 
 import "@/lib/fontawesome";
 
-import Footer from "@/components/Footer"
-import Header from "@/components/Header"
-import Contact from "@/components/landing/Contact"
-import Doctors from "@/components/landing/Doctors"
-import Hero from "@/components/landing/Hero"
-import Specialties from "@/components/landing/Specialties"
-import Appointment from '@/components/Appointment'
+import Footer from "@/app/shared_components/Footer"
+import Header from "@/app/shared_components/Header"
+import Contact from "@/app/home_components/Contact"
+import Doctors from "@/app/home_components/Doctors"
+import Hero from "@/app/home_components/Hero"
+import Specialties from "@/app/home_components/Specialties"
+import Appointment from '@/app/shared_components/Appointment'
 import { useEffect, useState } from 'react'
-import { getDoctors } from '@/components/functions'
+import { getDoctors } from '@/app/home_components/functions'
 
 export default function Home() {
     const [doctors, setDoctors] = useState([])

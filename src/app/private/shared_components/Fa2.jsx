@@ -62,7 +62,7 @@ export default function Fa2({ data, role }) {
                     setDoctorId(response.doctorId)
                     setChangePassword(true)
                 } else {
-                    router.push(`/private/doctors/${response.employeeId}`)
+                    router.push(`/private/doctors`)
                 }
             } else if (role === "admin") {
                 router.push(`/private/admin`)

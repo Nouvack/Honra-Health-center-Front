@@ -21,6 +21,7 @@
     --seasalt: #FCFAF9;
     --turquoise: #36DBD2;
     --outer_space: #415257;
+    ---transparent: rgba(255, 255, 255, 0);
   }
 }
 

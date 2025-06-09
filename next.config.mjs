@@ -8,7 +8,7 @@ const nextConfig = {
       {
         source: "/(.*)",
         headers: [
-          {
+          /*{
             key: "Content-Security-Policy",
             value:
               "default-src 'self'; " +
@@ -19,7 +19,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline'; " +
               "img-src 'self' data: https:; " +
               "font-src 'self' https: data:;",
-          },
+          },*/
           {
             key: "X-Frame-Options",
             value: "DENY",

@@ -1,5 +1,5 @@
 "use client";
-import "@/style/medicStuff.css"; 
+
 import { Formik, Form, useFormikContext } from "formik";
 import * as Yup from "yup";
 import { loginPatient } from "./functions";

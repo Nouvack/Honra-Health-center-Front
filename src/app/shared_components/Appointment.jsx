@@ -39,7 +39,7 @@ export default function Appointment({doctors}) {
                 setMessage("Appointment confirmed. Don't forget it. 🎉")
                 formik.specialty.setFieldValue("")
                 formik.date.setFieldValue("")
-                formik.gour.setFieldValue("")
+                formik.hour.setFieldValue("")
             } else {
                 setMessage("Something went wrong. Please try again later.")
             }
