@@ -191,3 +191,30 @@ export async function getAllAppointents() {
         return false
     }
 }
+
+export async function makeAppByAdmin(values) {
+    try {
+        const cookieStore = await cookies()
+        const token = cookieStore.get("userToken")?.value
+
+        const [hour, minute] = values.hour.split(":").map(Number);
+
+        // Combine date and hour
+        const fullDate = new Date(values.date);
+        fullDate.setHours(hour, minute, 0, 0); // set hour, minute, second, ms
+
+        // Now convert to ISO string
+        const isoDate = fullDate.toISOString();
+
+        const body= {
+            treatmentId: values.treatment,
+            doctorId: values.doctorId,
+            date: isoDate
+        }
+
+        const response = await fetch (`${path}/appointments/make-by-admin?dni=${values.patient}`)
+        return !!response
+    } catch (err) {
+        return false
+    }
+}

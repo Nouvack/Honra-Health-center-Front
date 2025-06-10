@@ -56,7 +56,7 @@ export async function getTreatments(specialty) {
         const response = await fetch (`${path}/treatments/byspecialty/${specialty}`, {
             method: "GET"
         })
-        return response.ok? response.json() : []
+        return response.ok? await response.json() : []
     } catch (err) {
         return false
     }

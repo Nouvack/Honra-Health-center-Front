@@ -37,7 +37,6 @@ export default function Register({ onSwitch }) {
         onSubmit: async (values) => {
             setIsSubmitting(true);
             try {
-                console.log("Submitting form values:", values);
 
                 if (typeof registerAPatient !== "function") {
                     throw new Error("registerPatient is not a function or is not properly imported.");
@@ -65,17 +64,14 @@ export default function Register({ onSwitch }) {
     });
 
     return (
-        <section id="background" className="w-screen h-screen flex items-center justify-center">
-            <div className="w-1/2 h-screen hidden lg:block relative">
-                <img src="/images/Polygon 3.png" alt="Background" className="object-cover w-full h-full" />
-                <img src="/images/Polygon 4.png" alt="Overlay" className="absolute top-0 left-0 w-180 h-190" />
-                <img src="/images/doctora_bg.png" alt="Doctor" className="absolute top-8 left-30 w-150 h-200" />
-            </div>
+        <section className="w-screen h-screen flex items-center justify-center bg-cover"
+            style={{backgroundImage: `url('/images/textured_bg.png')`}}>
 
-            <div id="componentR" className="mt-16 flex w-3/5 max-w-md flex-col justify-center items-center p-3 gap-3">
+            <div id="componentR"
+                className="mt-16 flex w-1/2 flex-col justify-center items-center p-3 gap-3">
                 <p className="font-bold text-base">Register</p>
 
-                <form onSubmit={formik.handleSubmit} className="flex flex-col gap-3 w-full items-center">
+                <form onSubmit={formik.handleSubmit} className="grid grid-cols-2 gap-3 w-full items-center justify-center">
                     {["name", "surname", "phoneNumber", "DNI", "email", "password"].map((field) => (
                         <div key={field}>
                             <p className="text-xs capitalize">{field.replace(/([A-Z])/g, ' $1')}</p>
@@ -135,14 +131,16 @@ export default function Register({ onSwitch }) {
                             </button>
                         </label>
                     </div>
-
-                    <button
+                    <div className="flex items-center justify-center col-span-2">
+                            <button
                         type="submit"
                         disabled={isSubmitting || !formik.values.privacyPolicy}
-                        className="bg-[var(--button)] p-2 rounded-md w-full text-white text-sm"
+                        className="bg-[var(--button)] p-2 rounded-3xl w-1/2 text-white text-sm  text-center"
                     >
                         {isSubmitting ? "Registering..." : "Register"}
                     </button>
+                    </div>
+                            
                 </form>
 
                 <p className="text-xs mb-3">

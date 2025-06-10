@@ -70,7 +70,7 @@ export default function AppointmentCard({ appointment }) {
             <div className="flex w-full">
                 <div className="flex flex-col flex-1">
                     <p className="font-bold">{date}</p>
-                    <p>Patient: {appointment.patientId.name} {appointment.patientId.surname} {appointment.patientId.DNI} </p>
+                    <p>Patient: {appointment.patientId?.name} {appointment.patientId?.surname} {appointment.patientId?.DNI} </p>
                     <p>Doctor: {appointment.doctorId.firstname} {appointment.doctorId.lastname} </p>
                     <p>Treatment: {appointment.treatmentId.name}</p>
                 </div>

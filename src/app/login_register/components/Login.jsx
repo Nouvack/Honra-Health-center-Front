@@ -13,33 +13,30 @@ function LoginFormFields() {
     } = useFormikContext();
 
     return (
-        <div className="flex flex-col gap-4">
-            <div>
-                <label htmlFor="email">Email</label>
+        <div className="flex flex-col gap-2">
+                <label htmlFor="email" className="text-xs">Email</label>
                 <input
                     id="email"
                     type="email"
                     placeholder="Luis@gmail.com"
                     {...getFieldProps("email")}
-                    className="input-field"
+                    className="input-field py-2 px-3 border rounded-3xl w-full"
                 />
                 {touched.email && errors.email && (
                     <p className="error">{errors.email}</p>
                 )}
-            </div>
-            <div>
-                <label htmlFor="password">Password</label>
+
+                <label htmlFor="password" className="text-xs">Password</label>
                 <input
                     id="password"
                     type="password"
                     placeholder="********"
                     {...getFieldProps("password")}
-                    className="input-field"
+                    className="input-field py-2 px-3 border rounded-3xl w-full"
                 />
                 {touched.password && errors.password && (
                     <p className="error">{errors.password}</p>
                 )}
-            </div>
         </div>
     );
 }
@@ -64,27 +61,9 @@ export default function Login({ onSwitch }) {
     };
 
     return (
-        <section
-            id="background"
-            className="w-screen h-screen flex items-center justify-center"
+        <section 
+            className="w-screen h-screen flex items-center justify-center bg-cover" style={{backgroundImage: `url('/images/textured_bg.png')`}}
         >
-            <div className="w-1/2 h-screen hidden lg:block relative">
-                <img
-                    src="/images/Polygon 3.png"
-                    alt="Background"
-                    className="object-cover w-full h-full"
-                />
-                <img
-                    src="/images/Polygon 4.png"
-                    alt="Overlay"
-                    className="absolute top-0 left-0 w-180 h-190"
-                />
-                <img
-                    src="/images/doctora_bg.png"
-                    alt="Doctor"
-                    className="absolute top-8 left-30 w-150 h-200"
-                />
-            </div>
 
             <div
                 id="componentL"
@@ -109,7 +88,7 @@ export default function Login({ onSwitch }) {
                             <LoginFormFields />
                             <button
                                 type="submit"
-                                className="bg-[var(--button)] p-2 rounded-md w-full text-white disabled:opacity-60"
+                                className="bg-[var(--button)] p-2 rounded-3xl w-full text-white disabled:opacity-60"
                                 disabled={isSubmitting}
                             >
                                 {isSubmitting ? "Logging in..." : "Log in"}
