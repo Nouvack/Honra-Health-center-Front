@@ -1,6 +1,8 @@
 "use client"
 import { useState } from "react"
-import { User, Phone, Mail, Lock, Edit3, Save, X, Eye, EyeOff, Trash2 } from "lucide-react"
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser, faEyeSlash, faEye, faPhone, faMailBulk, faLock, faEdit, faSave, faX, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 export default function PatientData({user}) {
   /** 
@@ -98,7 +100,7 @@ export default function PatientData({user}) {
                 e.target.style.backgroundColor = "transparent"
               }}
             >
-              <Edit3 size={18} />
+              <FontAwesomeIcon icon={faEdit} />
             </button>
           )}
         </div>
@@ -108,7 +110,7 @@ export default function PatientData({user}) {
             <p className="text-gray-700 font-medium">{displayValue}</p>
             {field === "password" && (
               <button onClick={() => setShowPassword(!showPassword)} className="p-1 text-gray-400 hover:text-gray-600">
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                {showPassword ? <FontAwesomeIcon icon={faEyeSlash} /> : <FontAwesomeIcon icon={faEye} />}
               </button>
             )}
           </div>
@@ -147,14 +149,14 @@ export default function PatientData({user}) {
                   e.target.style.backgroundColor = "var(--turquoise)"
                 }}
               >
-                <Save size={16} />
+                <FontAwesomeIcon icon={faSave} />
                 Save
               </button>
               <button
                 onClick={() => cancelEdit(field)}
                 className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
               >
-                <X size={16} />
+                <FontAwesomeIcon icon={faX} size={16} />
                 Cancel
               </button>
             </div>
@@ -178,7 +180,7 @@ export default function PatientData({user}) {
               background: `linear-gradient(135deg, var(--turquoise), var(--outer_space))`,
             }}
           >
-            <User size={32} className="text-white sm:w-10 sm:h-10" />
+            <FontAwesomeIcon icon={faUser} className="text-white sm:w-10 sm:h-10" />
           </div>
           <h1 className="text-xl sm:text-2xl font-bold mb-2" style={{ color: "var(--outer_space)" }}>
             My Profile
@@ -196,7 +198,7 @@ export default function PatientData({user}) {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg" style={{ backgroundColor: "var(--mint_green)" }}>
-                <User size={20} style={{ color: "var(--outer_space)" }} />
+                <FontAwesomeIcon icon={faUser} style={{ color: "var(--outer_space)" }} />
               </div>
               <h3 className="font-semibold text-gray-800">Full Name</h3>
             </div>
@@ -209,19 +211,19 @@ export default function PatientData({user}) {
         {renderEditableField(
           "phone",
           "Phone Number",
-          <Phone size={20} style={{ color: "var(--outer_space)" }} />,
+          <FontAwesomeIcon icon={faPhone} size={20} style={{ color: "var(--outer_space)" }} />,
           "tel",
         )}
         {renderEditableField(
           "email",
           "Email Address",
-          <Mail size={20} style={{ color: "var(--outer_space)" }} />,
+          <FontAwesomeIcon icon={faMailBulk} size={20} style={{ color: "var(--outer_space)" }} />,
           "email",
         )}
         {renderEditableField(
           "password",
           "Password",
-          <Lock size={20} style={{ color: "var(--outer_space)" }} />,
+          <FontAwesomeIcon icon={faLock} size={20} style={{ color: "var(--outer_space)" }} />,
           "password",
         )}
       </div>
@@ -230,7 +232,7 @@ export default function PatientData({user}) {
       <div className="bg-red-50 border border-red-200 rounded-lg p-4 sm:p-6">
         <div className="flex items-center gap-3 mb-4">
           <div className="p-2 bg-red-100 rounded-lg">
-            <Trash2 size={20} className="text-red-600" />
+            <FontAwesomeIcon icon={faTrash} size={20} className="text-red-600" />
           </div>
           <div>
             <h3 className="font-semibold text-red-800">Danger Zone</h3>
