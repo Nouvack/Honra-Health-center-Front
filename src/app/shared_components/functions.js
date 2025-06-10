@@ -1,5 +1,7 @@
 "use server"
 
+import { cookies, headers } from "next/headers";
+
 export async function sendAppointment(values) {
     try {
         const cookieStore = await cookies()
@@ -59,5 +61,32 @@ export async function getTreatments(specialty) {
         return response.ok? await response.json() : []
     } catch (err) {
         return false
+    }
+}
+
+
+export async function getPatient() {
+    try {
+        const cookieStore = await cookies()
+        const patient = cookieStore.get("token")
+        if (!patient) {
+            return {status: false, msg: "You need to log in to make an appointment."}
+        }
+        const response = await fecth (`${path}/patients/profile`, {
+            method: "GET",
+            headers: {"Authorization": `Bearer ${token}`}
+        })
+        if (!response) {
+            return {status: false, msg: "An error has ocurred."}
+        } else {
+            if (response.ok) {
+                const patient = await response.json()
+                return {status: true, patient}
+            } else {
+                return {status: false, msg: "An error has ocurred."}
+            }
+        }
+    } catch (err) {
+        return {status: false, msg: "An error has ocurred."}
     }
 }

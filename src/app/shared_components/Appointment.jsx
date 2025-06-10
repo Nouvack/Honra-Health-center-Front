@@ -3,7 +3,7 @@
 import '@/style/appointments.css'
 import { useFormik } from 'formik';
 import { useState, useEffect } from 'react';
-import { filterData, getAvailableHours, getTreatments, sendAppointment } from './functions'
+import { filterData, getAvailableHours, getPatient, getTreatments, sendAppointment } from './functions'
 import * as Yup from "yup";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -24,7 +24,7 @@ export default function Appointment({doctors}) {
 
     const formik = useFormik({
         initialValues: {
-            name: "queso", surname: "podrido", phone: "", dni: "",
+            name: "", surname: "", phone: "", dni: "",
             specialty: "", doctor: "", treatment: "",
             date: "", hour: "", policy: false
         }, validationSchema: Yup.object({
@@ -45,6 +45,18 @@ export default function Appointment({doctors}) {
             }
         }
     })
+
+    useEffect(() => {
+        const getData = async () => {
+            const response = await getPatient() 
+            if (response?.status === false || !response) {
+                setError( response.msg )
+            } else {
+                //
+            }
+        }
+       getData()
+    }, [])
 
     useEffect(() => {
         if (doctors && doctors.length > 0) {
@@ -85,21 +97,24 @@ export default function Appointment({doctors}) {
                 <p className="text-xl font-bold p-4">Make an Appointment</p>
                 <form onSubmit={formik.handleSubmit} className="flex flex-col relative w-full h-max items-center">
                     {/** PATIENT DATA */}
-                    <p className="text-sm text-[var(--outer_space)]">PATIENT DATA</p>
-                    <hr className="w-5/6 border-[var(--outer_space)]" />
-                    <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 p-4'>
-                        {["name", "surname", "phone", "dni"].map((field) => (
-                            <div key={field}
-                                className='flex flex-col'>
-                                <label htmlFor={field}
-                                    className='text-xs text-[var(--outer_space)]'>{field.toUpperCase()}</label>
-                                <input name={field} id={field} disabled={true} value={formik.values[field]}
-                                     className='bg-[var(--mint_green)] py-1 w-40 rounded-3xl text-center' />
-                            </div>
-                        ))}
+                    {error? <p>{error}</p> : 
+                    <div>
+                        <p className="text-sm text-[var(--outer_space)]">PATIENT DATA</p>
+                        <hr className="w-5/6 border-[var(--outer_space)]" />
+                        <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 p-4'>
+                            {["name", "surname", "phone", "dni"].map((field) => (
+                                <div key={field}
+                                    className='flex flex-col'>
+                                    <label htmlFor={field}
+                                        className='text-xs text-[var(--outer_space)]'>{field.toUpperCase()}</label>
+                                    <input name={field} id={field} disabled={true} value={formik.values[field]}
+                                        className='bg-[var(--mint_green)] py-1 w-40 rounded-3xl text-center' />
+                                </div>
+                            ))}
+                        </div>
+                        <p className='text-xs'>*This data is only for preview, you can change it from your profile.</p>
                     </div>
-                    <p className='text-xs'>*This data is only for preview, you can change it from your profile.</p>
-
+                    }
                     {/** SPECIALTY */}
                     <p className="text-sm text-[var(--outer_space)] pt-4">SPECIALTY</p>
                     <hr className="w-5/6 border-[var(--outer_space)]" />
