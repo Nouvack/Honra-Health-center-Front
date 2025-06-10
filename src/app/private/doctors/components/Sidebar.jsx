@@ -48,7 +48,7 @@ export function Sidebar({ setDisplay, selected, name }) {
             onClick={() => setDisplay(item.title)}
             className={`${selected === item.title ? 'bg-[var(--mint_green)]' : 'hover:bg-[var(--mint_green)] text-[var(--outer_space)]'} w-full h-15 rounded-3xl transition`}>
             <div className="flex flex-col items-center">
-              <item.icon className="h-6 w-6 flex-shrink-0" />
+              {item.icon}
               {!isCollapsed && <span>{item.title}</span>}
             </div>
           </button>))}
