@@ -1,5 +1,7 @@
 "use client"
 
+export const dynamic = "force-dynamic"
+
 const path = process.env.API_PATH
 import Image from "next/image"
 import { useSearchParams } from "next/navigation"
