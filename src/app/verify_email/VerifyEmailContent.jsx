@@ -3,18 +3,22 @@
 import Image from "next/image"
 import { useSearchParams } from "next/navigation"
 import { useState, useEffect } from "react"
+const path = process.env.API_PATH
 
 export default function VerifyEmailContent() {
     const searchParams = useSearchParams()
     const token = searchParams.get("token")
     const [message, setMessage] = useState("Verifying user, please wait.")
+    console.log("Token obtenido: ", token);
 
     useEffect(() => {
         if (!token) return setMessage("No token provided in the URL.")
 
         const sendToken = async () => {
             try {
-                const response = await fetch(`${process.env.API_PATH}/patients/verify-email?token=${token}`)
+                const response = await fetch(`${path}/patients/verify-email?token=${token}`)
+                // console.log("Url pedida: ", `${process.env.API_PATH}/patients/verify-email?token=${token}`);
+                // console.log("Respuesta:\n", response);
                 setMessage(response.ok
                     ? "Email verified successfully. You can now log in."
                     : "Email was not verified successfully. Please try again.")
