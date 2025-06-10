@@ -1,5 +1,5 @@
 "use client"
-/** 
+
 const path = process.env.NEXT_PUBLIC_API_PATH
 import Image from "next/image"
 import { useSearchParams } from "next/navigation"
@@ -144,21 +144,5 @@ export default function ResetPassword() {
                 ) : null}
             </div>
         </section>
-    )
-}
-*/
-
-"use client"
-
-import { Suspense } from "react"
-import ResetPassword from "./VerifyPasswordReset"
-
-export const dynamic = "force-dynamic" // sigue siendo necesario
-
-export default function Page() {
-    return (
-        <Suspense fallback={<p>Loading...</p>}>
-            <ResetPassword />
-        </Suspense>
     )
 }

@@ -73,12 +73,12 @@ export async function getPatient() {
         if (!patient) {
             return {status: false, msg: "You need to log in to make an appointment."}
         }
-        //console.log(patient)
+        console.log(patient)
         const response = await fecth (`${path}/patients/profile`, {
             method: "GET",
             headers: {"Authorization": `Bearer ${token}`}
         })
-        //console.log(response)
+        console.log(response)
         if (!response) {
             return {status: false, msg: "An error has ocurred."}
         } else {
