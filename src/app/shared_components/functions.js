@@ -1,11 +1,12 @@
 "use server"
 
 import { cookies, headers } from "next/headers";
+const path = process.env.API_PATH
 
 export async function sendAppointment(values) {
     try {
         const cookieStore = await cookies()
-        const token = cookieStore.get("userToken")?.value
+        const token = cookieStore.get("token")?.value
 
         const [hour, minute] = values.hour.split(":").map(Number);
 
@@ -28,6 +29,7 @@ export async function sendAppointment(values) {
                     "Authorization": `Bearer ${token}` },
             body: JSON.stringify(body)
         })
+        console.log(response)
         return response.ok? true : false
     }catch (err) {
         return false
@@ -66,19 +68,16 @@ export async function getTreatments(specialty) {
 
 
 export async function getPatient() {
-    console.log("hesdasd")
     try {
         const cookieStore = await cookies()
-        const patient = cookieStore.get("token")
+        const patient = cookieStore.get("token")?.value
         if (!patient) {
             return {status: false, msg: "You need to log in to make an appointment."}
         }
-        console.log(patient)
-        const response = await fecth (`${path}/patients/profile`, {
+        const response = await fetch (`${path}/patients/profile`, {
             method: "GET",
-            headers: {"Authorization": `Bearer ${token}`}
+            headers: {"Authorization": `Bearer ${patient}`}
         })
-        console.log(response)
         if (!response) {
             return {status: false, msg: "An error has ocurred."}
         } else {

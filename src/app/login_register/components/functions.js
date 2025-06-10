@@ -4,6 +4,8 @@ import { cookies } from 'next/headers'
 const path = process.env.API_PATH
 
 export async function loginPatient(values) {
+  
+
   try {
     const response = await fetch(`${path}/patients/login`, {
       method: 'POST',
@@ -16,7 +18,8 @@ export async function loginPatient(values) {
     const data = await response.json();
 
     if (response.ok && data.token) {
-      cookies().set('token', data.token);
+      const cookieStore = await cookies()
+      cookieStore.set('token', data.token);
       return { success: true, ...data };
     }
 

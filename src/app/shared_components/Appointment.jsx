@@ -56,6 +56,8 @@ export default function Appointment({doctors}) {
                 setPatient(response.patient)
                 formik.setFieldValue("name", response.patient.name)
                 formik.setFieldValue("surname", response.patient.surname)
+                formik.setFieldValue("phone", response.patient.phoneNumber)
+                formik.setFieldValue("dni", response.patient.DNI)
             }
         }
        getData()
