@@ -106,6 +106,16 @@ export default function Login({ onSwitch }) {
                         Register
                     </button>
                 </p>
+
+                <p className="text-sm">
+                    Forgot your password?{" "}
+                    <button
+                        onClick={() => onSwitch("recover")}
+                        className="underline text-[var(--turquoise)] bg-transparent border-none p-0 m-0 cursor-pointer"
+                    >
+                        Recover Password
+                    </button>
+                    </p>
             </div>
         </section>
     );
