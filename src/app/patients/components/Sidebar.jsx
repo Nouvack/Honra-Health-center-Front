@@ -1,7 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { Calendar, FileText, LogOut, User, ChevronLeft, ChevronRight } from "lucide-react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faCalendarDays, faFileArchive, faClose, faUser, faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons"
 
 export function Sidebar({ setDisplay, selected }) {
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -9,15 +10,15 @@ export function Sidebar({ setDisplay, selected }) {
   const menuItems = [
     {
       title: "Personal Data",
-      icon: User,
+      icon: <FontAwesomeIcon icon={faUser}/>,
     },
     {
       title: "Appointments",
-      icon: Calendar,
+      icon: <FontAwesomeIcon icon={faCalendarDays}/>,
     },
     {
       title: "Invoices",
-      icon: FileText,
+      icon: <FontAwesomeIcon icon={faFileArchive}/>,
     },
   ]
 
@@ -37,7 +38,7 @@ export function Sidebar({ setDisplay, selected }) {
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="rounded-full p-2 transition flex-shrink-0 hover:bg-[var(--mint_green)] bg-[var(--turquoise)]" >
-          {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
+          {isCollapsed ? <FontAwesomeIcon icon={faArrowRight}/> : <FontAwesomeIcon icon={faArrowLeft}/>}
         </button>
       </div>
 
@@ -57,7 +58,7 @@ export function Sidebar({ setDisplay, selected }) {
       {/* Botón de Logout - siempre en la parte inferior */}
       <button onClick={handleLogout}
         className="w-full flex justify-center gap-3 transition font-medium text-[var(--turquoise)] hover:text-[var(--mint_green)]" >
-        <LogOut className="h-6 w-6 flex-shrink-0" />
+        <FontAwesomeIcon icon={faClose} className="h-6 w-6 flex-shrink-0" />
         {!isCollapsed && <span className="text-base">Log out</span>}
       </button>
     </div>

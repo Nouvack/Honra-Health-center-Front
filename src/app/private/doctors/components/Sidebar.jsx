@@ -1,7 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { Calendar, FileText, LogOut, User, ChevronLeft, ChevronRight } from "lucide-react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faCalendarDays, faFileArchive, faClose, faUser, faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons"
 import { logOut } from "../../shared_components/functions"
 import { useRouter } from "next/navigation"
 
@@ -12,15 +13,15 @@ export function Sidebar({ setDisplay, selected, name }) {
   const menuItems = [
     {
       title: "Profile",
-      icon: User,
+      icon: <FontAwesomeIcon icon={faUser}/>,
     },
     {
       title: "Appointments",
-      icon: Calendar,
+      icon: <FontAwesomeIcon icon={faCalendarDays}/>,
     },
     {
       title: "Patients",
-      icon: FileText,
+      icon: <FontAwesomeIcon icon={faFileArchive}/>,
     },
   ]
 
@@ -37,7 +38,7 @@ export function Sidebar({ setDisplay, selected, name }) {
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="w-10 absolute right-5 rounded-full p-2 transition flex-shrink-0 hover:bg-[var(--mint_green)] bg-[var(--turquoise)]" >
-          {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
+          {isCollapsed ? <FontAwesomeIcon icon={faArrowRight}/> : <FontAwesomeIcon icon={faArrowLeft}/> }
         </button>
 
         <div className="space-y-3  flex flex-col flex-1 justify-center items-center">
@@ -55,7 +56,7 @@ export function Sidebar({ setDisplay, selected, name }) {
 
         <button onClick={handleLogout}
           className="w-full flex justify-center gap-3 transition font-medium text-[var(--outer_space)] hover:text-[var(--mint_green)]" >
-          <LogOut className="h-6 w-6 flex-shrink-0" />
+          <FontAwesomeIcon icon={faClose} className="h-6 w-6 flex-shrink-0" />
           {!isCollapsed && <span className="text-base">Log out</span>}
         </button>
       </div>
