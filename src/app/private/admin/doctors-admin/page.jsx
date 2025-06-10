@@ -8,7 +8,8 @@ import { useFormik } from 'formik';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image"
-import { deleteDoctor, getDoctors, registerDoctor, updateDoctor } from "../functions";
+import { deleteDoctor, getDoctors, registerDoctor } from "../functions";
+import { updateDoctor } from "../../shared_components/functions";
 
 export default function DoctorManagement() {
     const [doctors, setDoctors] = useState([]);
