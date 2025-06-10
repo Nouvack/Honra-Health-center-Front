@@ -3,7 +3,7 @@
 import Image from "next/image"
 import { useSearchParams } from "next/navigation"
 import { useState, useEffect } from "react"
-const path = process.env.API_PATH
+const path = process.env.NEXT_PUBLIC_API_PATH
 
 export default function VerifyEmailContent() {
     const searchParams = useSearchParams()
