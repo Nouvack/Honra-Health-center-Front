@@ -9,7 +9,6 @@ export default function VerifyEmailContent() {
     const searchParams = useSearchParams()
     const token = searchParams.get("token")
     const [message, setMessage] = useState("Verifying user, please wait.")
-    console.log("Token obtenido: ", token);
 
     useEffect(() => {
         if (!token) return setMessage("No token provided in the URL.")
@@ -17,8 +16,7 @@ export default function VerifyEmailContent() {
         const sendToken = async () => {
             try {
                 const response = await fetch(`${path}/patients/verify-email?token=${token}`)
-                // console.log("Url pedida: ", `${process.env.API_PATH}/patients/verify-email?token=${token}`);
-                // console.log("Respuesta:\n", response);
+                console.log(`${path}/patients/verify-email?token=${token}`)
                 setMessage(response.ok
                     ? "Email verified successfully. You can now log in."
                     : "Email was not verified successfully. Please try again.")
