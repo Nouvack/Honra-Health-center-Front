@@ -146,7 +146,7 @@ export default function Register({ onSwitch }) {
                 <p className="text-xs mb-3">
                     Already have an account?{" "}
                     <button
-                        onClick={onSwitch}
+                        onClick={() => onSwitch("login")}
                         className="underline text-[var(--turquoise)] bg-transparent border-none p-0 m-0 cursor-pointer"
                     >
                         Log in

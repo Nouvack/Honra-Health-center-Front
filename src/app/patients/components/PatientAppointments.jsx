@@ -1,74 +1,95 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import FullCalendar from "@fullcalendar/react"
-import dayGridPlugin from "@fullcalendar/daygrid"
-import interactionPlugin from "@fullcalendar/interaction"
-import timeGridPlugin from "@fullcalendar/timegrid"
-import "@fullcalendar/daygrid/index.cjs"
-import "@fullcalendar/timegrid/index.cjs"
+import { useEffect, useState } from "react";
+import { cancelAppointment, getPatientAppointments } from "../functions";
 
 export default function PatientAppointments() {
-  const [appointments, setAppointments] = useState([])
-  const [modalOpen, setModalOpen] = useState(false)
-  const [selectedDate, setSelectedDate] = useState(null)
+  const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [cancelingId, setCancelingId] = useState(null);
 
-  const handleDateClick = (arg) => {
-    setSelectedDate(arg.dateStr)
-    setModalOpen(true)
-  }
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      setLoading(true);
+      const res = await getPatientAppointments();
+      if (res.success && Array.isArray(res.appointments)) {
+        setAppointments(res.appointments);
+      } else {
+        setAppointments([]);
+      }
+      setLoading(false);
+    };
+    fetchAppointments();
+  }, []);
 
-  const handleAddAppointment = (data) => {
-    setAppointments((prev) => [...prev, data])
-    setModalOpen(false)
-  }
-
-  const handleEventClick = ({ event }) => {
-    if (confirm("Delete this appointment?")) {
-      setAppointments((prev) => prev.filter((a) => a.appointmentId !== event.id))
+  const handleCancel = async (id) => {
+    setCancelingId(id);
+    const res = await cancelAppointment(id);
+    if (res.success) {
+      setAppointments((prev) => prev.filter((a) => a.id !== id));
+      alert("Appointment canceled.");
+    } else {
+      alert(res.message || "Failed to cancel appointment.");
     }
+    setCancelingId(null);
+  };
+
+  if (loading) {
+    return <div className="p-8 text-center">Loading appointments...</div>;
+  }
+
+  if (!appointments.length) {
+    return <div className="p-8 text-center text-gray-500">No appointments found.</div>;
   }
 
   return (
-      <div className="main-content bg-[var(--seasalt)] py-25">
-
-        {/* Page Title */}
-        <h2 className="text-3xl font-bold mb-6" style={{ color: "var(--outer_space)" }}>
-          Appointments
-        </h2>
-
-        {/* FullCalendar component */}
-        <div className="bg-white rounded-lg p-4 shadow-sm" style={{ border: `1px solid var(--mint_green)` }}>
-          <FullCalendar
-            plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
-            initialView="dayGridMonth"
-            dateClick={handleDateClick}
-            events={appointments.map((a) => ({
-              id: a.appointmentId,
-              title: `Patient ${a.pacientId} - Dr. ${a.doctorId}`,
-              date: a.date,
-              backgroundColor: "var(--turquoise)",
-              borderColor: "var(--outer_space)",
-            }))}
-            eventClick={handleEventClick}
-            headerToolbar={{
-              left: "prev,next today",
-              center: "title",
-              right: "dayGridMonth,timeGridWeek,timeGridDay",
-            }}
-            height="auto"
-          />
-        </div>
-
-        {modalOpen && (
-          <AppointmentFormModal
-            date={selectedDate}
-            onSubmit={handleAddAppointment}
-            onClose={() => setModalOpen(false)}
-          />
-        )}
+    <div className="main-content bg-[var(--seasalt)] py-10 px-6">
+      <h2 className="text-3xl font-bold mb-6" style={{ color: "var(--outer_space)" }}>
+        Appointments
+      </h2>
+      <div className="flex flex-col gap-6">
+        {appointments.map((a) => (
+          <div
+            key={a.id}
+            className="bg-white rounded-lg shadow-sm border border-[var(--mint_green)] p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+          >
+            <div className="flex-1">
+              <p>
+                <strong>Date:</strong> {new Date(a.date).toLocaleString()}
+              </p>
+              <p>
+                <strong>Doctor:</strong> Dr. {a.doctor.name} {a.doctor.surname}
+              </p>
+              <p>
+                <strong>Patient:</strong> {a.patient.name} {a.patient.surname}
+              </p>
+              <p>
+                <strong>Treatment:</strong> {a.treatment.name}
+              </p>
+              <p>
+                <strong>Specialty:</strong> {a.treatment.type}
+              </p>
+              <p>
+                <strong>Price:</strong> ${a.treatment.price}
+              </p>
+              {a.observation && (
+                <p>
+                  <strong>Observation:</strong> {a.observation}
+                </p>
+              )}
+            </div>
+            <div className="flex flex-col gap-2">
+              <button
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+                onClick={() => handleCancel(a.id)}
+                disabled={cancelingId === a.id}
+              >
+                {cancelingId === a.id ? "Canceling..." : "Cancel Appointment"}
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
-  )
+    </div>
+  );
 }
-
-

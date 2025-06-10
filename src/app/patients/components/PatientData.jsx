@@ -2,107 +2,170 @@
 import { useState } from "react"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faEyeSlash, faEye, faPhone, faMailBulk, faLock, faEdit, faSave, faX, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faEyeSlash, faEye, faPhone, faMailBulk, faLock, faEdit, faSave, faX, faTrash, faClose } from "@fortawesome/free-solid-svg-icons";
+import {
+  getPatientProfile,
+  updateProfile,
+  signOut,
+  patientLogOut,
+} from "../functions";
+import { useRouter } from "next/navigation";
+import ActualPassword from "./ActualPassword";
 
 export default function PatientData() {
-  /** 
-  const [user, setUser] = useState({
-    firstName: "Vicente",
-    lastName: "Gonzalez",
-    phone: "684521546",
-    email: "vicente.gonzalez@email.com",
-    password: "mypassword123",
-  })*/
-
-    const user = {}
-
+  const [actualPassword, setActualPassword] = useState("");
+  const [actualPasswordError, setActualPasswordError] = useState("");
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [editMode, setEditMode] = useState({
     phone: false,
     email: false,
     password: false,
-  })
+  });
+  const [tempValues, setTempValues] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [successMsg, setSuccessMsg] = useState("");
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  const [tempValues, setTempValues] = useState({})
-  const [showPassword, setShowPassword] = useState(false)
-  const [errors, setErrors] = useState({})
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const router = useRouter();
 
-  const startEdit = (field) => {
-    setEditMode((prev) => ({ ...prev, [field]: true }))
-    setTempValues({ [field]: user[field] })
-    setErrors({})
-  }
-
-  const cancelEdit = (field) => {
-    setEditMode((prev) => ({ ...prev, [field]: false }))
-    setTempValues({})
-    setErrors({})
-  }
+  useEffect(() => {
+    async function fetchProfile() {
+      setLoading(true);
+      const res = await getPatientProfile();
+      if (res.success) {
+        setUser(res);
+        setError("");
+      } else {
+        setError(res.message || "Failed to load profile");
+      }
+      setLoading(false);
+    }
+    fetchProfile();
+  }, []);
 
   const validateField = (field, value) => {
     switch (field) {
       case "phone":
-        const phoneRegex = /^[+]?[0-9\s\-$$$$]{9,15}$/
-        return !phoneRegex.test(value) ? "Invalid phone format" : ""
+        const phoneRegex = /^[+]?[0-9\s\-]{9,15}$/;
+        return !phoneRegex.test(value) ? "Invalid phone format" : "";
       case "email":
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        return !emailRegex.test(value) ? "Invalid email" : ""
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return !emailRegex.test(value) ? "Invalid email" : "";
       case "password":
-        return value.length < 6 ? "Password must be at least 6 characters" : ""
+        return value.length < 6
+          ? "Password must be at least 6 characters"
+          : "";
       default:
-        return ""
+        return "";
     }
-  }
+  };
 
-  const saveEdit = (field) => {
-    const newErrors = {}
-    newErrors[field] = validateField(field, tempValues[field])
+  const handleGlobalUpdate = async () => {
+    const newErrors = {};
+    let hasError = false;
 
-    if (newErrors[field]) {
-      setErrors(newErrors)
-      return
+    Object.keys(tempValues).forEach((field) => {
+      const err = validateField(field, tempValues[field]);
+      if (err) {
+        newErrors[field] = err;
+        hasError = true;
+      }
+    });
+
+    if (!actualPassword) {
+      setActualPasswordError("Current password is required");
+      hasError = true;
+    } else {
+      setActualPasswordError("");
     }
 
-    setUser((prev) => ({ ...prev, [field]: tempValues[field] }))
-    setEditMode((prev) => ({ ...prev, [field]: false }))
-    setTempValues({})
-    setErrors({})
-  }
+    if (hasError) {
+      setErrors(newErrors);
+      return;
+    }
 
-  const handleDeleteAccount = () => {
-    alert("Account deleted successfully")
-    setShowDeleteConfirm(false)
-  }
+    const payload = {
+      ...(tempValues.phone && { phoneNumber: tempValues.phone }),
+      ...(tempValues.email && { email: tempValues.email }),
+      ...(tempValues.password && { password: tempValues.password }),
+      actualPassword,
+    };
+
+    const res = await updateProfile(payload);
+    if (res.success) {
+      setUser((prev) => ({ ...prev, ...payload }));
+      setEditMode({ phone: false, email: false, password: false });
+      setTempValues({});
+      setErrors({});
+      setSuccessMsg("Profile updated successfully.");
+      setActualPassword("");
+      setActualPasswordError("");
+    } else {
+      if (res.errors && Array.isArray(res.errors)) {
+        const pwdErr = res.errors.find((e) => e.path === "actualPassword");
+        if (pwdErr) setActualPasswordError(pwdErr.msg);
+      }
+      setErrors({ global: res.message || "Update failed" });
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    const res = await signOut();
+    if (res.success) {
+      alert("Account deleted successfully.");
+      router.push("/login_register");
+    } else {
+      alert(res.message || "Failed to delete account.");
+    }
+    setShowDeleteConfirm(false);
+  };
+
+  const handleSignOut = async () => {
+    await patientLogOut();
+    router.push("/login_register");
+  };
 
   const renderEditableField = (field, label, icon, type = "text") => {
-    const isEditing = editMode[field]
-    const value = field === "name" ? `${user?.firstName} ${user?.lastName}` : user[field]
-    const displayValue = field === "password" && !showPassword ? "••••••••••" : value
-
-    return (
-      <div className="rounded-lg p-6 shadow-sm border border-gray-200" style={{ backgroundColor: "white" }}>
+    const isEditing = editMode[field];
+    const value = user
+      ? field === "name"
+        ? `${user.name} ${user.surname}`
+        : field === "phone"
+        ? user.phoneNumber
+        : user[field]
+      : "";
+    const displayValue =
+      field === "password" && !showPassword ? "••••••••••" : value;
+return (
+      <div className="rounded-lg p-6 shadow-sm border border-gray-200 bg-white">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg" style={{ backgroundColor: "var(--mint_green)" }}>
+            <div
+              className="p-2 rounded-lg"
+              style={{ backgroundColor: "var(--mint_green)" }}
+            >
               {icon}
             </div>
             <h3 className="font-semibold text-gray-800">{label}</h3>
           </div>
-          {field !== "name" && !isEditing && (
+          {field !== "name" && (
             <button
-              onClick={() => startEdit(field)}
+              onClick={() =>
+                setEditMode((prev) => ({ ...prev, [field]: !prev[field] }))
+              }
               className="p-2 text-gray-500 rounded-lg transition-colors"
-              style={{
-                color: "var(--outer_space)",
-              }}
+              style={{ color: "var(--outer_space)" }}
               onMouseEnter={(e) => {
-                e.target.style.backgroundColor = "var(--tea_rose)"
+                e.target.style.backgroundColor = "var(--tea_rose)";
               }}
               onMouseLeave={(e) => {
-                e.target.style.backgroundColor = "transparent"
+                e.target.style.backgroundColor = "transparent";
               }}
             >
-              <FontAwesomeIcon icon={faEdit} />
+              <FontAwesomeIcon icon={faEdit}/>
             </button>
           )}
         </div>
@@ -111,134 +174,128 @@ export default function PatientData() {
           <div className="flex items-center gap-2">
             <p className="text-gray-700 font-medium">{displayValue}</p>
             {field === "password" && (
-              <button onClick={() => setShowPassword(!showPassword)} className="p-1 text-gray-400 hover:text-gray-600">
-                {showPassword ? <FontAwesomeIcon icon={faEyeSlash} /> : <FontAwesomeIcon icon={faEye} />}
+              <button
+                onClick={() => setShowPassword(!showPassword)}
+                className="p-1 text-gray-400 hover:text-gray-600"
+              >
+                {showPassword ? <FontAwesomeIcon icon={faEyeSlash}/> : <FontAwesomeIcon icon={faEye}/>}
               </button>
             )}
           </div>
         ) : (
-          <div className="space-y-3">
-            {field === "name" ? (
-              <div className="text-gray-700 font-medium">{displayValue}</div>
-            ) : (
-              <div>
-                <input
-                  type={type}
-                  value={tempValues[field] || ""}
-                  onChange={(e) => setTempValues((prev) => ({ ...prev, [field]: e.target.value }))}
-                  className={`w-full p-3 border rounded-lg focus:ring-2 focus:border-transparent ${
-                    errors[field] ? "border-red-500" : "border-gray-300"
-                  }`}
-                  style={{
-                    focusRingColor: "var(--turquoise)",
-                  }}
-                />
-                {errors[field] && <p className="text-red-500 text-sm mt-1">{errors[field]}</p>}
-              </div>
+          <div>
+            <input
+              type={type}
+              value={tempValues[field] || ""}
+              onChange={(e) =>
+                setTempValues((prev) => ({
+                  ...prev,
+                  [field]: e.target.value,
+                }))
+              }
+              className={`w-full p-3 border rounded-lg focus:ring-2 focus:border-transparent ${
+                errors[field] ? "border-red-500" : "border-gray-300"
+              }`}
+              placeholder={`Enter ${label.toLowerCase()}`}
+            />
+            {errors[field] && (
+              <p className="text-red-500 text-sm mt-1">{errors[field]}</p>
             )}
-
-            <div className="flex flex-col sm:flex-row gap-2">
-              <button
-                onClick={() => saveEdit(field)}
-                className="flex items-center justify-center gap-2 px-4 py-2 text-white rounded-lg transition-colors"
-                style={{
-                  backgroundColor: "var(--turquoise)",
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = "var(--outer_space)"
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.backgroundColor = "var(--turquoise)"
-                }}
-              >
-                <FontAwesomeIcon icon={faSave} />
-                Save
-              </button>
-              <button
-                onClick={() => cancelEdit(field)}
-                className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
-              >
-                <FontAwesomeIcon icon={faX} size={16} />
-                Cancel
-              </button>
-            </div>
           </div>
         )}
       </div>
-    )
-  }
+    );
+  };
+
+  if (loading) return <div className="p-8 text-center">Loading profile...</div>;
+  if (error)
+    return <div className="p-8 text-center text-red-500">{error}</div>;
+  if (!user) return null;
 
   return (
     <div>
-      {/* Header */}
-      <div
-        className="rounded-lg p-6 sm:p-8 shadow-sm border border-gray-200 mb-6"
-        style={{ backgroundColor: "white" }}
-      >
-        <div className="text-center">
-          <div
-            className="w-20 h-20 sm:w-24 sm:h-24 rounded-full mx-auto mb-4 flex items-center justify-center"
-            style={{
-              background: `linear-gradient(135deg, var(--turquoise), var(--outer_space))`,
-            }}
-          >
-            <FontAwesomeIcon icon={faUser} className="text-white sm:w-10 sm:h-10" />
-          </div>
-          <h1 className="text-xl sm:text-2xl font-bold mb-2" style={{ color: "var(--outer_space)" }}>
-            My Profile
-          </h1>
-          <p className="text-sm sm:text-base" style={{ color: "var(--outer_space)" }}>
-            Manage your personal information
-          </p>
+      <div className="rounded-lg p-6 sm:p-8 shadow-sm border border-gray-200 mb-6 bg-white text-center">
+        <div
+          className="w-20 h-20 sm:w-24 sm:h-24 rounded-full mx-auto mb-4 flex items-center justify-center"
+          style={{
+            background: `linear-gradient(135deg, var(--turquoise), var(--outer_space))`,
+          }}
+        >
+          <FontAwesomeIcon icon={faUser}/>
         </div>
+        <h1
+          className="text-xl sm:text-2xl font-bold mb-2"
+          style={{ color: "var(--outer_space)" }}
+        >
+          My Profile
+        </h1>
+        <p
+          className="text-sm sm:text-base"
+          style={{ color: "var(--outer_space)" }}
+        >
+          Manage your personal information
+        </p>
+        <button
+          onClick={handleSignOut}
+          className="mt-4 flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+        >
+          <FontAwesomeIcon icon={faClose}/>
+          Sign Out
+        </button>
+        {successMsg && <p className="text-green-600 mt-2">{successMsg}</p>}
       </div>
 
-      {/* Profile Fields */}
       <div className="space-y-4 mb-6">
-        {/* Name field is not editable */}
-        <div className="rounded-lg p-6 shadow-sm border border-gray-200" style={{ backgroundColor: "white" }}>
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg" style={{ backgroundColor: "var(--mint_green)" }}>
-                <FontAwesomeIcon icon={faUser} style={{ color: "var(--outer_space)" }} />
-              </div>
-              <h3 className="font-semibold text-gray-800">Full Name</h3>
-            </div>
-            <div className="text-gray-700 font-medium">
-              {user?.firstName} {user?.lastName}
-            </div>
-          </div>
-        </div>
-
+        {renderEditableField(
+          "name",
+          "Full Name",
+          <FontAwesomeIcon icon={faUser} style={{ color: "var(--outer_space)" }} />
+        )}
         {renderEditableField(
           "phone",
           "Phone Number",
-          <FontAwesomeIcon icon={faPhone} size={20} style={{ color: "var(--outer_space)" }} />,
-          "tel",
+          <FontAwesomeIcon icon={faPhone} style={{ color: "var(--outer_space)" }} />,
+          "tel"
         )}
         {renderEditableField(
           "email",
           "Email Address",
-          <FontAwesomeIcon icon={faMailBulk} size={20} style={{ color: "var(--outer_space)" }} />,
-          "email",
+          <FontAwesomeIcon icon={faMailBulk} style={{ color: "var(--outer_space)" }} />,
+          "email"
         )}
         {renderEditableField(
           "password",
           "Password",
-          <FontAwesomeIcon icon={faLock} size={20} style={{ color: "var(--outer_space)" }} />,
-          "password",
+          <FontAwesomeIcon icon={faLock} style={{ color: "var(--outer_space)" }} />,
+          "password"
         )}
       </div>
 
-      {/* Delete Account Section */}
+      <ActualPassword
+        value={actualPassword}
+        onChange={setActualPassword}
+        error={actualPasswordError}
+      />
+
+      <div className="flex justify-end mb-6">
+        <button
+          onClick={handleGlobalUpdate}
+          className="px-6 py-2 bg-[var(--turquoise)] text-white rounded-lg hover:bg-[var(--outer_space)] transition-colors font-medium"
+        >
+          Update Profile
+        </button>
+      </div>
+
       <div className="bg-red-50 border border-red-200 rounded-lg p-4 sm:p-6">
         <div className="flex items-center gap-3 mb-4">
           <div className="p-2 bg-red-100 rounded-lg">
-            <FontAwesomeIcon icon={faTrash} size={20} className="text-red-600" />
+            <FontAwesomeIcon icon={faTrash} className="text-red-600" />
           </div>
           <div>
             <h3 className="font-semibold text-red-800">Danger Zone</h3>
-            <p className="text-red-600 text-xs sm:text-sm">This action cannot be undone</p>
+            <p className="text-red-600 text-xs sm:text-sm">
+              This action cannot be undone
+            </p>
           </div>
         </div>
 
@@ -254,7 +311,8 @@ export default function PatientData() {
             <div className="bg-white p-4 rounded-lg border border-red-300">
               <h4 className="font-semibold text-red-800">Are you sure?</h4>
               <p className="text-red-600 text-xs sm:text-sm">
-                This will permanently delete your account. You cannot undo this action.
+                This will permanently delete your account. You cannot undo this
+                action.
               </p>
               <div className="flex gap-4 mt-4">
                 <button
@@ -275,10 +333,9 @@ export default function PatientData() {
         )}
       </div>
 
-      {/* Footer */}
       <div className="text-center mt-8 text-gray-500 text-xs sm:text-sm">
         <p>Last updated: {new Date().toLocaleDateString("es-ES")}</p>
       </div>
     </div>
-  )
+  );
 }

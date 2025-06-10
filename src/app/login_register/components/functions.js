@@ -63,3 +63,42 @@ export async function registerAPatient(values) {
     return { success: false, message: error.message || "Network or server error" };
   }
 }
+
+
+export async function getPatientInvoices() {
+  try {
+    const cookieStore = cookies();
+    const token = cookieStore.get('userToken')?.value;
+
+    if (!token) {
+      return { success: false, message: "Authentication token not found" };
+    }
+
+    const response = await fetch(`${path}/patients/invoices`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return { success: true, invoices: data };
+    } else {
+      return {
+        success: false,
+        message: data?.message || `Failed to fetch invoices (${response.status})`,
+      };
+    }
+  } catch (error) {
+    console.error("Error fetching invoices:", error);
+    return {
+      success: false,
+      message: error.message || "Network or server error",
+    };
+  }
+}
+
+
+
