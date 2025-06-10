@@ -80,28 +80,29 @@ export default function Appointment({doctors}) {
 
     return (
         <section id="appointment" className="w-full h-max flex flex-col items-center mt-24">
-            <div className="bg-[var(--mint_green)] w-5/6 items-center flex flex-col rounded-3xl">
+            <div className="w-5/6 items-center flex flex-col rounded-3xl bg-cover"
+                style={{backgroundImage: `url('/images/textured_bg_small.png')`}}>
                 <p className="text-xl font-bold p-4">Make an Appointment</p>
                 <form onSubmit={formik.handleSubmit} className="flex flex-col relative w-full h-max items-center">
                     {/** PATIENT DATA */}
-                    <p className="text-sm text-[var(--turquoise)]">PATIENT DATA</p>
-                    <hr className="w-5/6 border-[var(--turquoise)]" />
+                    <p className="text-sm text-[var(--outer_space)]">PATIENT DATA</p>
+                    <hr className="w-5/6 border-[var(--outer_space)]" />
                     <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 p-4'>
                         {["name", "surname", "phone", "dni"].map((field) => (
                             <div key={field}
                                 className='flex flex-col'>
                                 <label htmlFor={field}
-                                    className='text-xs'>{field.toUpperCase()}</label>
+                                    className='text-xs text-[var(--outer_space)]'>{field.toUpperCase()}</label>
                                 <input name={field} id={field} disabled={true} value={formik.values[field]}
-                                     className='bg-[var(--seasalt)] py-1 w-40 rounded-3xl text-center' />
+                                     className='bg-[var(--mint_green)] py-1 w-40 rounded-3xl text-center' />
                             </div>
                         ))}
                     </div>
                     <p className='text-xs'>*This data is only for preview, you can change it from your profile.</p>
 
                     {/** SPECIALTY */}
-                    <p className="text-sm text-[var(--turquoise)] pt-4">SPECIALTY</p>
-                    <hr className="w-5/6 border-[var(--turquoise)]" />
+                    <p className="text-sm text-[var(--outer_space)] pt-4">SPECIALTY</p>
+                    <hr className="w-5/6 border-[var(--outer_space)]" />
                     <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 p-4'>
                         <div className='flex flex-col'>
                             <label htmlFor="specialty" className='text-xs'>SPECIALTY</label>

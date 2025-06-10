@@ -1,9 +1,9 @@
 #appointment label {
-    color: var(--turquoise);
+    color: var(--outer_space);
 }
 
 #appointment button[type="submit"] {
-    background-color: var(--outer_space);
+    background-color: var(--turquoise);
     padding: 2px 20px;
     border-radius: 35px;
     color: var(--seasalt);

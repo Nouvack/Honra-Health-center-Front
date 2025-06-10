@@ -11,6 +11,7 @@ export default function Calendar({doctor}) {
         minTime: '00:00:00',
         maxTime: '23:00:00'
     });
+    
     const [appointments, setAppointments] = useState([])
 
     useEffect(() => {
@@ -22,13 +23,15 @@ export default function Calendar({doctor}) {
             getSchedule()
             
             const getAppointments = async () => {
-                console.log(doctor)
                 const response = await getDoctorAppointments(doctor._id)
-                if (!response) {
-                    console.log(response) // BORRAR ESTA LINEA
-                } else {
-                    setAppointments(response)
-                    console.log(response)
+                if (response) {
+                    const formattedAppointments = response.map(appointment => ({
+                        title: 'Booked', // or include patient name if available
+                        start: new Date(appointment.date), // assuming timestamp is ISO or epoch
+                        end: new Date(new Date(appointment.date).getTime() + 60 * 60 * 1000), // 1 hour later
+                        color: '#FF6B6B', // red for booked
+                    }));
+                    setAppointments(formattedAppointments);
                 }
             }
             getAppointments()
@@ -52,7 +55,7 @@ export default function Calendar({doctor}) {
                 slotMaxTime={schedule.endTime || "23:00:00"}
                 height='auto'
                 nowIndicator={true}
-                events={[]}
+                events={appointments}
             />
         </section>
     )

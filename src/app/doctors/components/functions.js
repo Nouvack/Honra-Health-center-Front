@@ -67,7 +67,6 @@ export async function getDoctorAppointments(id) {
         const response = await fetch(`${path}/appointments/doctorAppointmentsForEveryone/${id}`, {
             method: "GET"
         })
-        console.log(response)
         return response.ok? response.json() : false
     } catch (err) {
         return false

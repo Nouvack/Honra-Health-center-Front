@@ -8,7 +8,7 @@ import Image from "next/image"
 import { useParams } from 'next/navigation';
 import TreatmentCards from "../components/TratmentCards"
 import Calendar from "../components/Calendar"
-import Appointment from "@/app/home/Appointment"
+import Appointment from "@/app/shared_components/Appointment"
 
 export default function Doctors() {
     const params = useParams();
