@@ -106,7 +106,7 @@ export default function Login({ onSwitch }) {
                         Register
                     </button>
                 </p>
-
+                {/** */}
                 <p className="text-sm">
                     Forgot your password?{" "}
                     <button

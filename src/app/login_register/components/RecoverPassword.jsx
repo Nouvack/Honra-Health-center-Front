@@ -13,6 +13,7 @@ export default function RecoverPassword({ onSwitch }) {
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ email }),
 });
+  console.log(res)
     if (res.ok) {
       setMessage("Check your email for a reset link.");
     } else {
