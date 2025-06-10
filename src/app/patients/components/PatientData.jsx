@@ -4,7 +4,7 @@ import { useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faEyeSlash, faEye, faPhone, faMailBulk, faLock, faEdit, faSave, faX, faTrash } from "@fortawesome/free-solid-svg-icons";
 
-export default function PatientData({user}) {
+export default function PatientData() {
   /** 
   const [user, setUser] = useState({
     firstName: "Vicente",
@@ -13,6 +13,8 @@ export default function PatientData({user}) {
     email: "vicente.gonzalez@email.com",
     password: "mypassword123",
   })*/
+
+    const user = {}
 
   const [editMode, setEditMode] = useState({
     phone: false,
@@ -74,7 +76,7 @@ export default function PatientData({user}) {
 
   const renderEditableField = (field, label, icon, type = "text") => {
     const isEditing = editMode[field]
-    const value = field === "name" ? `${user.firstName} ${user.lastName}` : user[field]
+    const value = field === "name" ? `${user?.firstName} ${user?.lastName}` : user[field]
     const displayValue = field === "password" && !showPassword ? "••••••••••" : value
 
     return (
@@ -203,7 +205,7 @@ export default function PatientData({user}) {
               <h3 className="font-semibold text-gray-800">Full Name</h3>
             </div>
             <div className="text-gray-700 font-medium">
-              {user.firstName} {user.lastName}
+              {user?.firstName} {user?.lastName}
             </div>
           </div>
         </div>

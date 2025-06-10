@@ -2,7 +2,7 @@
 
 import Footer from "@/app/shared_components/Footer"
 import Header from "@/app/shared_components/Header"
-import { Sidebar } from "@/app/patients/components/Sidebar"
+import { Sidebar } from "./components/Sidebar"
 import { useState } from "react"
 import PatientData from "./components/PatientData"
 import PatientAppointments from "./components/PatientAppointments"
@@ -21,7 +21,7 @@ export default function Home() {
       </div>
       
       <main className="flex flex-col flex-1 w-full h-full pr-5 py-25 overflow-y-auto" >
-        {section === "Personal Data" && <PatientData user={123}/>}
+        {section === "Personal Data" && <PatientData/>}
         {section === "Appointments" && <PatientAppointments/>}
         {section === "Invoices" && <PatientsInvoices/>}
       </main>
