@@ -16,7 +16,6 @@ export default function VerifyEmailContent() {
         const sendToken = async () => {
             try {
                 const response = await fetch(`${path}/patients/verify-email?token=${token}`)
-                console.log(`${path}/patients/verify-email?token=${token}`)
                 setMessage(response.ok
                     ? "Email verified successfully. You can now log in."
                     : "Email was not verified successfully. Please try again.")
