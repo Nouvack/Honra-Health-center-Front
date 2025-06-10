@@ -7,7 +7,7 @@ export async function getPatientProfile() {
   const cookieStore = await cookies();
 
   try {
-    const token = cookieStore.get('userToken')?.value;
+    const token = cookieStore.get('token')?.value;
 
     if (!token) {
       return { success: false, message: 'No authentication token found' };
@@ -43,7 +43,7 @@ export async function getPatientAppointments() {
   const cookieStore = await cookies();
 
   try {
-    const token = cookieStore.get('userToken')?.value;
+    const token = cookieStore.get('token')?.value;
 
     if (!token) {
       return { success: false, message: 'No authentication token found' };
@@ -80,7 +80,7 @@ export async function cancelAppointment(appointmentId) {
   const cookieStore = await cookies();
 
   try {
-    const token = cookieStore.get('userToken')?.value;
+    const token = cookieStore.get('token')?.value;
 
     if (!token) {
       return { success: false, message: 'No authentication token found' };
@@ -118,7 +118,7 @@ export async function cancelAppointment(appointmentId) {
 export async function patientLogOut() {
   try {
     const cookieStore = await cookies(); 
-    cookieStore.set("PatientToken", "", {
+    cookieStore.set("token", "", {
       path: "/",
       httpOnly: true,
       expires: new Date(0),
@@ -136,7 +136,7 @@ export async function signOut() {
   const cookieStore = cookies();
 
   try {
-    const token = cookieStore.get("PatientToken")?.value;
+    const token = cookieStore.get("token")?.value;
 
     if (!token) {
       return { success: false, message: "No authentication token found" };
@@ -158,7 +158,7 @@ export async function signOut() {
       };
     }
 
-    cookieStore.set("PatientToken", "", {
+    cookieStore.set("token", "", {
       path: "/",
       httpOnly: true,
       expires: new Date(0),
@@ -182,7 +182,7 @@ export async function updateProfile(values) {
 
   try {
     const cookieStore = await cookies();
-    const token = cookieStore.get("PatientToken")?.value;
+    const token = cookieStore.get("token")?.value;
 
 
     if (!token) {
@@ -229,7 +229,7 @@ export async function getPatientInvoices() {
   const cookieStore = await cookies();
 
   try {
-    const token = cookieStore.get('userToken')?.value;
+    const token = cookieStore.get('token')?.value;
     console.log("🔑 Token:", token);
 
     if (!token) {

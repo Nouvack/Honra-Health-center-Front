@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { useSearchParams } from "next/navigation"
 import { useState, useEffect } from "react"
+const path = process.env.NEXT_PUBLIC_API_PATH
 
 export default function VerifyEmailContent() {
     const searchParams = useSearchParams()
@@ -14,7 +15,7 @@ export default function VerifyEmailContent() {
 
         const sendToken = async () => {
             try {
-                const response = await fetch(`${process.env.API_PATH}/patients/verify-email?token=${token}`)
+                const response = await fetch(`${path}/patients/verify-email?token=${token}`)
                 setMessage(response.ok
                     ? "Email verified successfully. You can now log in."
                     : "Email was not verified successfully. Please try again.")

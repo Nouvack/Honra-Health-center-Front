@@ -1,13 +1,12 @@
 "use client"
 
+const path = process.env.NEXT_PUBLIC_API_PATH
 import Image from "next/image"
 import { useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import * as Yup from "yup";
-
-const path = process.env.NEXT_PUBLIC_API_PATH;
 
 export default function ResetPassword() {
     const searchParams = useSearchParams();

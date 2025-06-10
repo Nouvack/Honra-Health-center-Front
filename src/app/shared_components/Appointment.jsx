@@ -14,6 +14,7 @@ export default function Appointment({doctors}) {
     const [availableHours, setAvailableHours] = useState([])
     const [error, setError] = useState("")
     const [message, setMessage] = useState("")
+    const [patient, setPatient] = useState()
 
     const getDayStatus = (date) => {
         const doctor = filteredDoctors.find(doc => doc._id === formik.values.doctor);
@@ -52,7 +53,9 @@ export default function Appointment({doctors}) {
             if (response?.status === false || !response) {
                 setError( response.msg )
             } else {
-                //
+                setPatient(response.patient)
+                formik.setFieldValue("name", response.patient.name)
+                formik.setFieldValue("surname", response.patient.surname)
             }
         }
        getData()

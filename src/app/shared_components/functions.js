@@ -66,21 +66,25 @@ export async function getTreatments(specialty) {
 
 
 export async function getPatient() {
+    console.log("hesdasd")
     try {
         const cookieStore = await cookies()
         const patient = cookieStore.get("token")
         if (!patient) {
             return {status: false, msg: "You need to log in to make an appointment."}
         }
+        //console.log(patient)
         const response = await fecth (`${path}/patients/profile`, {
             method: "GET",
             headers: {"Authorization": `Bearer ${token}`}
         })
+        //console.log(response)
         if (!response) {
             return {status: false, msg: "An error has ocurred."}
         } else {
             if (response.ok) {
                 const patient = await response.json()
+                console.log(response)
                 return {status: true, patient}
             } else {
                 return {status: false, msg: "An error has ocurred."}
