@@ -42,6 +42,7 @@ export default function Appointments() {
                 <p className="font-bold">APPOINTMENTS</p>
                 <hr className="w-5/6 border-[var(--turquoise)] mb-10" />
                 <div className="w-120">
+                    <p>{error}</p>
                     <p className="text-[var(--turquoise)]">SEARCH:</p>
                     <input type="text" onChange={(e) => setSearch(e.target.value)}
                         className="bg-[var(--mint_green)] rounded-3xl py-1 px-3 w-full" placeholder="PATIENT DNI / DOCTOR EMPLOYEE ID"/>

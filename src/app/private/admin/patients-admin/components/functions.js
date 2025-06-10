@@ -37,7 +37,6 @@ export async function registerPatient(values) {
 }
 
 export async function updatePatientById(id, values) {
-  console.log(id)
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("userToken")?.value;
@@ -50,8 +49,7 @@ export async function updatePatientById(id, values) {
       },
       body: JSON.stringify(values),
     });
-    console.log(response)
-    return !!response.ok
+    return response.ok && await response.json()
   } catch (err) {
     console.error("Error updating patient:", err);
     return false

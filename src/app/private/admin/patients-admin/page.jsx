@@ -55,7 +55,7 @@ export default function PatientManager() {
                 className="font-bold hover:bg-[var(--mint_green)] w-full">+</button>
               </td>
             </tr>
-            {patients.map((p) => ( <PatientRows patient={p} selected={selected} setSelected={setSelected} setPatientWindow={setPatientWindow} key={p._id} /> ))}
+            {patients?.map((p) => ( <PatientRows patient={p} selected={selected} setSelected={setSelected} setPatientWindow={setPatientWindow} key={p._id} /> ))}
           </tbody>
         </table>
       </div>

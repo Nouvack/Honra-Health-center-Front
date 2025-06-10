@@ -35,7 +35,7 @@ export default function BillsPage() {
                 <th className="p-2 text-center">Patient name</th>
                 <th className="p-2 text-center">Description</th>
                 <th className="p-2 text-center">Amount</th>
-                <th className="p-2 text-center">Actions</th>
+                <th className="p-2 text-center"></th>
                 </tr>
             </thead>
             <tbody className="divide-y divide-[var(--mint_green)]">
@@ -78,7 +78,6 @@ function Rows({bill}) {
       <td className="px-2">{bill.treatmentId.name}</td>
       <td className="px-2">$ {bill.amount}</td>
       <td className="flex gap-2 justify-center">
-        <button><FontAwesomeIcon icon={faFileArrowDown}/></button>
         <button 
           onMouseDown={toggleVisibility}
           onMouseUp={closeVisibility}
