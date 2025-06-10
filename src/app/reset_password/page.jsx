@@ -1,6 +1,6 @@
 "use client"
 
-const path = process.env.API_PATH
+const path = process.env.NEXT_PUBLIC_API_PATH
 import Image from "next/image"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
