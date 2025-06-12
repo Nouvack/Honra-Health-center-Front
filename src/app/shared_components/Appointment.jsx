@@ -14,7 +14,6 @@ export default function Appointment({doctors}) {
     const [availableHours, setAvailableHours] = useState([])
     const [error, setError] = useState("")
     const [message, setMessage] = useState("")
-    const [patient, setPatient] = useState()
 
     const getDayStatus = (date) => {
         const doctor = filteredDoctors.find(doc => doc._id === formik.values.doctor);
@@ -53,7 +52,6 @@ export default function Appointment({doctors}) {
             if (response?.status === false || !response) {
                 setError( response.msg )
             } else {
-                setPatient(response.patient)
                 formik.setFieldValue("name", response.patient.name)
                 formik.setFieldValue("surname", response.patient.surname)
                 formik.setFieldValue("phone", response.patient.phoneNumber)
@@ -103,7 +101,7 @@ export default function Appointment({doctors}) {
                 <form onSubmit={formik.handleSubmit} className="flex flex-col relative w-full h-max items-center">
                     {/** PATIENT DATA */}
                     {error? <p>{error}</p> : 
-                    <div>
+                    <>
                         <p className="text-sm text-[var(--outer_space)]">PATIENT DATA</p>
                         <hr className="w-5/6 border-[var(--outer_space)]" />
                         <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 p-4'>
@@ -118,7 +116,7 @@ export default function Appointment({doctors}) {
                             ))}
                         </div>
                         <p className='text-xs'>*This data is only for preview, you can change it from your profile.</p>
-                    </div>
+                    </>
                     }
                     {/** SPECIALTY */}
                     <p className="text-sm text-[var(--outer_space)] pt-4">SPECIALTY</p>

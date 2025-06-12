@@ -1,14 +1,9 @@
 "use client"
-import { useState, useEffect } from "react"
 
+import { useState, useEffect } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faEyeSlash, faEye, faPhone, faMailBulk, faLock, faEdit, faSave, faX, faTrash, faClose } from "@fortawesome/free-solid-svg-icons";
-import {
-  getPatientProfile,
-  updateProfile,
-  signOut,
-  patientLogOut,
-} from "../functions";
+import { faUser, faPhone, faMailBulk, faLock, faEdit, faTrash, faClose } from "@fortawesome/free-solid-svg-icons";
+import { getPatientProfile, updateProfile, signOut, patientLogOut, } from "../functions";
 import { useRouter } from "next/navigation";
 import ActualPassword from "./ActualPassword";
 
@@ -18,13 +13,8 @@ export default function PatientData() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [editMode, setEditMode] = useState({
-    phone: false,
-    email: false,
-    password: false,
-  });
+  const [editMode, setEditMode] = useState({ phone: false, email: false, password: false, });
   const [tempValues, setTempValues] = useState({});
-  const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [successMsg, setSuccessMsg] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -55,8 +45,8 @@ export default function PatientData() {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return !emailRegex.test(value) ? "Invalid email" : "";
       case "password":
-        return value.length < 6
-          ? "Password must be at least 6 characters"
+        return value.length < 8
+          ? "Password must be at least 8 characters"
           : "";
       default:
         return "";
@@ -137,33 +127,23 @@ export default function PatientData() {
         ? user.phoneNumber
         : user[field]
       : "";
-    const displayValue =
-      field === "password" && !showPassword ? "••••••••••" : value;
+
+    const displayValue = field === "password" ? "••••••••••" : value;
+
 return (
       <div className="rounded-lg p-6 shadow-sm border border-gray-200 bg-white">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div
-              className="p-2 rounded-lg"
-              style={{ backgroundColor: "var(--mint_green)" }}
-            >
+            <div className="p-2 rounded-lg bg-[var(--mint_green)]">
               {icon}
             </div>
             <h3 className="font-semibold text-gray-800">{label}</h3>
           </div>
           {field !== "name" && (
-            <button
-              onClick={() =>
-                setEditMode((prev) => ({ ...prev, [field]: !prev[field] }))
-              }
-              className="p-2 text-gray-500 rounded-lg transition-colors"
-              style={{ color: "var(--outer_space)" }}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = "var(--tea_rose)";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = "transparent";
-              }}
+            <button onClick={() => setEditMode((prev) => ({ ...prev, [field]: !prev[field] })) }
+              className="p-2 text-gray-500 rounded-lg transition-colors text-[var(--outer_space)]" 
+              onMouseEnter={(e) => { e.target.style.backgroundColor = "var(--mint_green)"; }}
+              onMouseLeave={(e) => { e.target.style.backgroundColor = "transparent"; }}
             >
               <FontAwesomeIcon icon={faEdit}/>
             </button>
@@ -171,36 +151,17 @@ return (
         </div>
 
         {!isEditing ? (
-          <div className="flex items-center gap-2">
-            <p className="text-gray-700 font-medium">{displayValue}</p>
-            {field === "password" && (
-              <button
-                onClick={() => setShowPassword(!showPassword)}
-                className="p-1 text-gray-400 hover:text-gray-600"
-              >
-                {showPassword ? <FontAwesomeIcon icon={faEyeSlash}/> : <FontAwesomeIcon icon={faEye}/>}
-              </button>
-            )}
-          </div>
+          <p className="text-gray-700 font-medium">{displayValue}</p>
         ) : (
           <div>
-            <input
-              type={type}
-              value={tempValues[field] || ""}
-              onChange={(e) =>
-                setTempValues((prev) => ({
-                  ...prev,
-                  [field]: e.target.value,
-                }))
-              }
+            <input type={type} value={tempValues[field] || ""}
+              autoComplete={`new-${field}`}
+              onChange={(e) => setTempValues((prev) => ({ ...prev, [field]: e.target.value, })) }
               className={`w-full p-3 border rounded-lg focus:ring-2 focus:border-transparent ${
-                errors[field] ? "border-red-500" : "border-gray-300"
-              }`}
+                errors[field] ? "border-red-500" : "border-gray-300" }`}
               placeholder={`Enter ${label.toLowerCase()}`}
             />
-            {errors[field] && (
-              <p className="text-red-500 text-sm mt-1">{errors[field]}</p>
-            )}
+            {errors[field] && ( <p className="text-red-500 text-sm mt-1">{errors[field]}</p> )}
           </div>
         )}
       </div>
@@ -208,33 +169,19 @@ return (
   };
 
   if (loading) return <div className="p-8 text-center">Loading profile...</div>;
-  if (error)
-    return <div className="p-8 text-center text-red-500">{error}</div>;
+  if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
   if (!user) return null;
 
   return (
     <div>
       <div className="rounded-lg p-6 sm:p-8 shadow-sm border border-gray-200 mb-6 bg-white text-center">
-        <div
-          className="w-20 h-20 sm:w-24 sm:h-24 rounded-full mx-auto mb-4 flex items-center justify-center"
-          style={{
-            background: `linear-gradient(135deg, var(--turquoise), var(--outer_space))`,
-          }}
+        <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full mx-auto mb-4 flex items-center justify-center"
+          style={{ background: `linear-gradient(135deg, var(--turquoise), var(--outer_space))`, }}
         >
           <FontAwesomeIcon icon={faUser}/>
         </div>
-        <h1
-          className="text-xl sm:text-2xl font-bold mb-2"
-          style={{ color: "var(--outer_space)" }}
-        >
-          My Profile
-        </h1>
-        <p
-          className="text-sm sm:text-base"
-          style={{ color: "var(--outer_space)" }}
-        >
-          Manage your personal information
-        </p>
+        <h1 className="text-xl sm:text-2xl font-bold mb-2 text-[var(--outer_space)]" > My Profile </h1>
+        <p className="text-sm sm:text-base text-[var(--outer_space)]" > Manage your personal information </p>
         <button
           onClick={handleSignOut}
           className="mt-4 flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
@@ -249,24 +196,24 @@ return (
         {renderEditableField(
           "name",
           "Full Name",
-          <FontAwesomeIcon icon={faUser} style={{ color: "var(--outer_space)" }} />
+          <FontAwesomeIcon icon={faUser} />
         )}
         {renderEditableField(
           "phone",
           "Phone Number",
-          <FontAwesomeIcon icon={faPhone} style={{ color: "var(--outer_space)" }} />,
+          <FontAwesomeIcon icon={faPhone} />,
           "tel"
         )}
         {renderEditableField(
           "email",
           "Email Address",
-          <FontAwesomeIcon icon={faMailBulk} style={{ color: "var(--outer_space)" }} />,
+          <FontAwesomeIcon icon={faMailBulk} />,
           "email"
         )}
         {renderEditableField(
           "password",
           "Password",
-          <FontAwesomeIcon icon={faLock} style={{ color: "var(--outer_space)" }} />,
+          <FontAwesomeIcon icon={faLock} />,
           "password"
         )}
       </div>
@@ -278,11 +225,9 @@ return (
       />
 
       <div className="flex justify-end mb-6">
-        <button
-          onClick={handleGlobalUpdate}
+        <button onClick={handleGlobalUpdate}
           className="px-6 py-2 bg-[var(--turquoise)] text-white rounded-lg hover:bg-[var(--outer_space)] transition-colors font-medium"
-        >
-          Update Profile
+        > Update Profile
         </button>
       </div>
 

@@ -48,10 +48,10 @@ export default function BillsPage() {
 
 function Rows({bill}) {
   
-  const visibleName = bill.patientId.name + " " + bill.patientId.surname
-  const invisibleName = `${bill.patientId.name.charAt(0)}. ${bill.patientId.surname}`
-  const visibleDni = bill.patientId.DNI
-  const invisibleDni = `*****${bill.patientId.DNI.slice(-4)}`
+  const visibleName = bill.patientId?.name + " " + bill.patientId?.surname
+  const invisibleName = `${bill.patientId?.name.charAt(0)}. ${bill.patientId?.surname}`
+  const visibleDni = bill.patientId?.DNI
+  const invisibleDni = `*****${bill.patientId?.DNI.slice(-4)}`
 
   const [icon, setIcon] = useState(<FontAwesomeIcon icon={faEye}/>)
   const [name, setName] = useState(invisibleName)

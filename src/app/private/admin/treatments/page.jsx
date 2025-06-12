@@ -116,20 +116,25 @@ function TreatmentWindow({treatment, isNew}) {
     })
     return (
         <form onSubmit={formik.handleSubmit} onReset={formik.handleReset}
-            className="w-1/2 h-1/2 bg-[var(--outer_space)] shadow-[var(--mint_green)] shadow-md absolute flex flex-col items-center p-10 rounded-3xl text-[var(--seasalt)]">
+            className="w-1/2 h-1/2 bg-[var(--outer_space)] shadow-[var(--mint_green)] shadow-md absolute flex flex-col items-center p-10 rounded-3xl text-[var(--seasalt)] gap-4">
             
             <button onClick={() => window.location.reload()} className="w-10 h-10"><FontAwesomeIcon icon={faCircleXmark} className="text-2xl absolute right-10 top-8" /></button>
 
+            {!isNew ? <p className="text-[var(--turquoise)]">EDIT TREATMENT </p> : <p className="text-[var(--turquoise)]">REGISTER TREATMENT</p>}
+
             <input type="text" name="name" id="name" placeholder="Name"
-                onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.name}/>
+                onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.name}
+                className="border border-[var(--turquoise)] px-2 py-1 rounded-3xl w-1/2"/>
             {formik.touched.name && formik.errors.name && ( <p className='text-red-500 text-xs'>{formik.errors.name}</p> )}
         
             <input type="number" name="price" id="price" placeholder="$ Price"
-                onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.price !== undefined ? formik.values.price : ""}/>
+                onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.price !== undefined ? formik.values.price : ""}
+                className="border border-[var(--turquoise)] px-2 py-1 rounded-3xl w-1/2"/>
             {formik.touched.price && formik.errors.price && ( <p className='text-red-500 text-xs'>{formik.errors.price}</p> )}
 
-            <input type="textarea" name="description" id="description" placeholder="Description"
-                onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.description}/>
+            <textarea name="description" id="description" placeholder="Description"
+                onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.description}
+                className="border border-[var(--turquoise)] px-2 py-1 rounded-3xl w-1/2 h-1/2"/>
             {formik.touched.description && formik.errors.description && ( <p className='text-red-500 text-xs'>{formik.errors.description}</p> )}
 
             {!isNew && <div>
