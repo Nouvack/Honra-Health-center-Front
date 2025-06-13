@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faCalendarDays, faFileArchive, faClose, faUser, faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons"
+import { faCalendarDays, faFileArchive, faUser, faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons"
 
 export function Sidebar({ setDisplay, selected }) {
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -21,12 +21,6 @@ export function Sidebar({ setDisplay, selected }) {
       icon: <FontAwesomeIcon icon={faFileArchive}/>,
     },
   ]
-
-  const handleLogout = () => {
-    if (confirm("Are you sure you want to log out?")) {
-      window.location.href = "/login" // RUTA INEXISTENTE CAMBIAR ESTO
-    }
-  }
 
   return (
     <div className={`h-5/6 p-5 flex flex-col justify-between transition-all duration-300 m-5 rounded-3xl bg-[var(--outer_space)] ${
@@ -54,13 +48,6 @@ export function Sidebar({ setDisplay, selected }) {
             </div>
         </button>))}
       </div>
-
-      {/* Botón de Logout - siempre en la parte inferior */}
-      <button onClick={handleLogout}
-        className="w-full flex justify-center gap-3 transition font-medium text-[var(--turquoise)] hover:text-[var(--mint_green)]" >
-        <FontAwesomeIcon icon={faClose} className="h-6 w-6 flex-shrink-0" />
-        {!isCollapsed && <span className="text-base">Log out</span>}
-      </button>
     </div>
   )
 }
