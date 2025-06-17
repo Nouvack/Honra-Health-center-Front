@@ -8,7 +8,7 @@ import { logInAdmin, logInDoctor } from "./shared_components/functions";
 import Fa2 from "./shared_components/Fa2";
 
 export default function Private() {
-    const [userType, setUserType] = useState("")
+    const [userType, setUserType] = useState(null)
     const [error, setError] = useState("")
     const [auth, setAuth] = useState(null)
 
@@ -29,13 +29,15 @@ export default function Private() {
         onSubmit: async (values) => {
             setError("")
             let response
+            if (!userType) {
+                setError("Please select a user type (Admin or Doctor).")
+                return
+            }
             if (userType === "doctor") {
                 response = await logInDoctor(values)
             } else if (userType === "admin") {
                 response = await logInAdmin(values)
-            } else {
-                setError("Please select a user type (Admin or Doctor).")
-            }
+            } 
             response? setAuth(response) : setError("Invalid credentials.")
         }
     });
@@ -117,13 +119,12 @@ export default function Private() {
                         className={`w-full ${
                             !userType ? "opacity-50 cursor-not-allowed" : ""
                         } bg-cyan-400 hover:bg-cyan-500 text-white font-medium py-2 rounded-3xl transition`}
-                        disabled={!userType}
                     >
                         ENTER
                     </button>
 
                     {/* Error Message */}
-                    <p className="text-red-500 text-sm mt-2">{error}</p>
+                    {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
                 </form>
             }
         </section>

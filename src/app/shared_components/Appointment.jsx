@@ -7,6 +7,7 @@ import { filterData, getAvailableHours, getPatient, getTreatments, sendAppointme
 import * as Yup from "yup";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { addDays } from 'date-fns';
 
 export default function Appointment({doctors}) {
     const [filteredDoctors, setFilteredDoctors] = useState([])
@@ -64,6 +65,11 @@ export default function Appointment({doctors}) {
     useEffect(() => {
         if (doctors && doctors.length > 0) {
             updateFilter(formik.values.specialty)
+        }
+        if (doctors.length === 1) {
+            const [doctor] = doctors;
+            formik.setFieldValue("specialty", doctor.specialty)
+            formik.setFieldValue("doctor", doctor._id)
         }
     }, [doctors])
 
