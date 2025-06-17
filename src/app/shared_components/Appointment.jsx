@@ -90,10 +90,14 @@ export default function Appointment({doctors}) {
         const getHours = async() => {
             if (!formik.values.doctor || !formik.values.date) return;
             const response = await getAvailableHours(formik.values.doctor, formik.values.date)
-            if (!response) {
-                setError("no data")
+            console.log(response)
+            if (!response || response.length === 0) {
+                setAvailableHours([]);
+                formik.setFieldError("hour", "No available hours for the selected date.");
+                formik.setFieldValue("hour", "");
             } else {
                 setAvailableHours(response)
+                formik.setFieldError("hour", "");
             }
         }
         getHours()
@@ -173,6 +177,7 @@ export default function Appointment({doctors}) {
                             <label htmlFor='hour' className='text-xs'>HOUR</label>
                             <select name='hour' id='hour' onBlur={formik.handleBlur} onChange={formik.handleChange} value={formik.values.hour}>
                                 <option value="">---Select an hour---</option>
+                                {availableHours.length === 0 && <option>No available hours</option>}
                                 {availableHours?.map((slot) => (
                                     <option key={slot} value={slot}>{slot}</option>
                                 ))}
