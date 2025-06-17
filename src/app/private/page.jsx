@@ -33,6 +33,8 @@ export default function Private() {
                 response = await logInDoctor(values)
             } else if (userType === "admin") {
                 response = await logInAdmin(values)
+            } else {
+                setError("Please select a user type (Admin or Doctor).")
             }
             response? setAuth(response) : setError("Invalid credentials.")
         }

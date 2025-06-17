@@ -159,7 +159,7 @@ export default function Appointment({doctors}) {
                                 selected={formik.values.date}
                                 onChange={(date) => formik.setFieldValue("date", date)}
                                 placeholderText='---Select a date---'
-                                minDate={new Date()}
+                                minDate={addDays(new Date(), 1)}
                                 filterDate={getDayStatus} />
                         </div>
 
