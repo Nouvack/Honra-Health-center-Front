@@ -39,10 +39,12 @@ export async function sendAppointment(values) {
 
 export async function getAvailableHours(doctorId, date) {
     try {
-        const response = await fetch(`${path}/appointments/getAvailableHours/${doctorId}?date=${date.toISOString()}`, {
+        const formattedDate = date.toLocaleDateString("en-CA");
+        const response = await fetch(`${path}/appointments/getAvailableHours/${doctorId}?date=${formattedDate}`, {
             method: "GET"
         })
-        return response.ok? response.json() : []
+        console.log(response)
+        return response.ok? await response.json() : []
     } catch (err) {
         return false
     }

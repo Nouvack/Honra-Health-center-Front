@@ -87,8 +87,10 @@ export default function Appointment({doctors}) {
     } 
 
     useEffect(() => {
+        console.log("trigger")
         const getHours = async() => {
             if (!formik.values.doctor || !formik.values.date) return;
+            console.log(formik.values.date)
             const response = await getAvailableHours(formik.values.doctor, formik.values.date)
             console.log(response)
             if (!response || response.length === 0) {
