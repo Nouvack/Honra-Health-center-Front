@@ -43,7 +43,6 @@ export async function getAvailableHours(doctorId, date) {
         const response = await fetch(`${path}/appointments/getAvailableHours/${doctorId}?date=${formattedDate}`, {
             method: "GET"
         })
-        console.log(response)
         return response.ok? await response.json() : []
     } catch (err) {
         return false
