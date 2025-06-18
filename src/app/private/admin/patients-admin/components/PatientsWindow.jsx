@@ -27,7 +27,7 @@ export default function PatientsWindow({patient, isNew, setPatientWindow}) {
                 const data = {email: patientValues.email, phoneNumber: patientValues.phoneNumber, password: patientValues.password}
                 response = await updatePatientById(patient._id, patientValues)
             }
-            console.log(response)
+            console.log("response",response)
             if (response.success) {
                 window.alert(response.message || "Action succcesfully done.")
                 window.location.reload()

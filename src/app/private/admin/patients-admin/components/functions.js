@@ -59,9 +59,19 @@ export async function updatePatientById(id, values) {
       },
       body: JSON.stringify(values),
     });
-    return response.ok && await response.json()
+    if (response.ok) {
+      const data = await response.json();
+      return { success: true, message: data.message };
+    } else {
+      const data = await response.json();
+      const error =
+        Array.isArray(data.errors) && data.errors.length > 0
+          ? data.errors[0].msg
+          : data?.message || `Registration failed (${response.status})`;
+
+      return { success: false, message: error };
+    }
   } catch (err) {
-    console.error("Error updating patient:", err);
-    return false
+    return { success: false, message: err.message }
   }
 }
