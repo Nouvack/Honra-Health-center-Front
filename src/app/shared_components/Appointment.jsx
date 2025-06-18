@@ -36,13 +36,13 @@ export default function Appointment({doctors}) {
             policy: Yup.bool().oneOf([true], "Accept the privacy policy.")
         }), onSubmit: async (values) => {
             const response = await sendAppointment(values)
-            if (response) {
+            if (response.success) {
                 setMessage("Appointment confirmed. Don't forget it. 🎉")
                 formik.specialty.setFieldValue("")
                 formik.date.setFieldValue("")
                 formik.hour.setFieldValue("")
             } else {
-                setMessage("Something went wrong. Please try again later.")
+                setMessage(response.message)
             }
         }
     })

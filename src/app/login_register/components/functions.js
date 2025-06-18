@@ -51,7 +51,6 @@ export async function registerAPatient(values) {
       return { success: true, message: data.message };
     } else {
       const data = await response.json();
-      console.log(data)
       const error =
         Array.isArray(data.errors) && data.errors.length > 0
           ? data.errors[0].msg

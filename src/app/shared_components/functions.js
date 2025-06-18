@@ -34,9 +34,20 @@ export async function sendAppointment(values) {
                     "Authorization": `Bearer ${token}` },
             body: JSON.stringify(body)
         })
-        return response.ok? true : false
-    }catch (err) {
-        return false
+        if (response.ok) {
+            const data = await response.json();
+            return { success: true, message: data.message };
+        } else {
+            const data = await response.json();
+            const error =
+                Array.isArray(data.errors) && data.errors.length > 0
+                ? data.errors[0].msg
+                : data?.message || `Registration failed (${response.status})`;
+
+            return { success: false, message: error };
+        }
+    } catch (error) {
+        return { success: false, message: error.message || "Network or server error" };
     }
 }
 
@@ -46,6 +57,7 @@ export async function getAvailableHours(doctorId, date) {
         const response = await fetch(`${path}/appointments/getAvailableHours/${doctorId}?date=${formattedDate}`, {
             method: "GET"
         })
+        console.log(response)
         return response.ok? await response.json() : []
     } catch (err) {
         return false
