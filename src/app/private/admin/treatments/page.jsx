@@ -41,7 +41,7 @@ export default function TreatmentsPage() {
                 <hr className="w-5/6 border-[var(--turquoise)] mb-10" />
 
                 {error && <p>{error}</p>}
-                {openWindow && <TreatmentWindow treatment={params.treatment} isNew={params.isNew}/>}
+                {openWindow && <TreatmentWindow treatment={params.treatment} isNew={params.isNew} setOpenWindow={setOpenWindow} />}
 
                 <div className="flex flex-wrap gap-20 justify-center">
                     {["Cosmetic Surgery", "Forensic Pathology", "Neurology", "Space Medicine"].map(type => 
@@ -74,7 +74,7 @@ export default function TreatmentsPage() {
 }
 
 
-function TreatmentWindow({treatment, isNew}) {
+function TreatmentWindow({treatment, isNew, setOpenWindow}) {
     const [msg, setMsg] = useState("")
 
     const handleDelete = async () => {
@@ -107,8 +107,8 @@ function TreatmentWindow({treatment, isNew}) {
         }), onSubmit: async(values, {resetForm}) => {
             const response = isNew? await createTreatment(values) : await updateTreatment(values, treatment._id)
             if (response) {
-                setMsg("Action successfully realized.");
-                if (isNew) resetForm();
+                window.alert("Action successfully realized.");
+                window.location.reload()
             } else {
                 setMsg("Something went wrong.");
             }        
@@ -118,7 +118,7 @@ function TreatmentWindow({treatment, isNew}) {
         <form onSubmit={formik.handleSubmit} onReset={formik.handleReset}
             className="w-1/2 h-5/6 bg-[var(--outer_space)] shadow-[var(--mint_green)] shadow-md absolute flex flex-col items-center p-10 rounded-3xl text-[var(--seasalt)] gap-4">
             
-            <button onClick={() => window.location.reload()} className="w-10 h-10"><FontAwesomeIcon icon={faCircleXmark} className="text-2xl absolute right-10 top-8" /></button>
+            <button onClick={() => setOpenWindow(false)} className="w-10 h-10"><FontAwesomeIcon icon={faCircleXmark} className="text-2xl absolute right-10 top-8" /></button>
 
             {!isNew ? <p className="text-[var(--turquoise)]">EDIT TREATMENT </p> : <p className="text-[var(--turquoise)]">REGISTER TREATMENT</p>}
 

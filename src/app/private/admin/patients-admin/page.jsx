@@ -30,7 +30,7 @@ export default function PatientManager() {
         <p className="font-bold">PATIENTS</p>
         <hr className="w-5/6 border-[var(--turquoise)] mb-10" />
         
-        {patientWindow === true && <PatientsWindow patient={selected} isNew={!selected}/>}
+        {patientWindow === true && <PatientsWindow patient={selected} isNew={!selected} setPatientWindow={setPatientWindow}/>}
       
         <table className="divide-y divide-[var(--turquoise)] w-5/6">
           <thead className="bg-[var(--mint_green)]">

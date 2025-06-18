@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { deletePatient, registerPatient, updatePatientById } from "./functions";
 
-export default function PatientsWindow({patient, isNew}) {
+export default function PatientsWindow({patient, isNew, setPatientWindow}) {
 
     const [msg, setMsg] = useState("")
 
@@ -26,13 +26,18 @@ export default function PatientsWindow({patient, isNew}) {
                 const data = {email: patientValues.email, phoneNumber: patientValues.phoneNumber, password: patientValues.password}
                 response = await updatePatientById(patient._id, patientValues)
             }
-            response? setMsg(response.message) || setMsg("Action succcesfully done.") : setMsg("Something went wrong.")
+            if (response) {
+                window.alert(response.message || "Action succcesfully done.")
+                window.location.reload()
+            } else {
+                setMsg("Something went wrong.")
+            }
         }
     })
 
     return (
         <form onSubmit={formik.handleSubmit} className="w-1/2 h-1/2 z-30 bg-[var(--outer_space)] shadow-[var(--mint_green)] shadow-md absolute flex flex-col items-center p-10 rounded-3xl text-[var(--seasalt)] overflow-y-auto"> 
-            <button onClick={() => window.location.reload()} className="w-10 h-10"><FontAwesomeIcon icon={faCircleXmark} className="text-2xl absolute right-10 top-8" /></button>
+            <button onClick={() => setPatientWindow(false)} className="w-10 h-10"><FontAwesomeIcon icon={faCircleXmark} className="text-2xl absolute right-10 top-8" /></button>
             
             {isNew === true? <p className="text-[var(--turquoise)]">REGISTER A PATIENT</p> : <p className="text-[var(--turquoise)]">UPDATE A PATIENT</p>}
             <hr className="w-5/6 border-[var(--turquoise)] mb-10" />
