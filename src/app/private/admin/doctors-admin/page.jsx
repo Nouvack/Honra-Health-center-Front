@@ -201,6 +201,7 @@ function DoctorWindow({rawDoctor, isNew}) {
                     {formik.touched.description && formik.errors.description ? (<p className='text-red-500 text-xs'>{formik.errors.description}</p>) : null}
                 </div>
             </div>
+            {isNew && <p>Important! This is the temporary password: Password123$</p>}
             <p className="font-bold">{msg}</p>
             <button type="submit"
                 className="bg-[var(--seasalt)] text-[var(--outer_space)] rounded-3xl py-1 px-4 w-50">{isNew? "REGISTER DOCTOR": "UPDATE PROFILE"}</button>
