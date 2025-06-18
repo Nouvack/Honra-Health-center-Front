@@ -20,6 +20,7 @@ export default function Appointments() {
             } else {
                 setAppointments(response)
                 setFilter("All")
+                console.log(response)
             }
         }
         getData()

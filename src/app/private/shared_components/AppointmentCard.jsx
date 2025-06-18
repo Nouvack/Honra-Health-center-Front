@@ -74,7 +74,7 @@ export default function AppointmentCard({ appointment }) {
                     <p>Doctor: {appointment.doctorId.firstname} {appointment.doctorId.lastname} </p>
                     <p>Treatment: {appointment.treatmentId.name}</p>
                 </div>
-                {isToday === "Upcoming" && <p className="items-center flex">-----</p>}
+                {isToday === "Upcoming" && <p className="items-center flex">UPCOMING</p>}
                 {isToday === "Today" && (appointment.visited === true ? <p className="items-center flex">VISITED</p> 
                     : <button className="bg-[var(--mint_green)] rounded-3xl px-4 font-bold text-[var(--turquoise)]" 
                             onClick={() => handleDisplay()}>CHECK ARRIVED</button>)}
