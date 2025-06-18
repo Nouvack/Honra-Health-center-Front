@@ -33,15 +33,20 @@ export async function getAppointments() {
 
 export async function getDoctorPatients() {
     try {
-        const appointments = await getAppointments()
-        console.log(appointments)
-        const patients = []
+        const appointments = await getAppointments();
+        const patients = [];
+        const seenIds = new Set();
+
         for (const appointment of appointments) {
-            patients.includes(appointment.patientId) ? patients.push(appointment.patientId) : null
+            const patient = appointment.patientId;
+            if (!seenIds.has(patient._id)) {
+                seenIds.add(patient._id);
+                patients.push(patient);
+            }
         }
-        
-        return patients
+        return patients;
     } catch (err) {
-        return false
+        console.error("Failed to get doctor patients:", err);
+        return false;
     }
 }
