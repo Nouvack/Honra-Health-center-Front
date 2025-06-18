@@ -4,8 +4,6 @@ import { cookies } from 'next/headers'
 const path = process.env.API_PATH
 
 export async function loginPatient(values) {
-  
-
   try {
     const response = await fetch(`${path}/patients/login`, {
       method: 'POST',
@@ -48,22 +46,47 @@ export async function registerAPatient(values) {
       body: JSON.stringify(values)
     });
 
-    let data = {};
-    try {
-      data = await response.json();
-    } catch {
-      data = {};
-    }
-
     if (response.ok) {
-    
-      return { success: true, ...data };
+      const data = await response.json();
+      return { success: true, message: data.message };
     } else {
-      return { success: false, message: data?.message || `Registration failed (${response.status})` };
+      const data = await response.json();
+      console.log(data)
+      const error =
+        Array.isArray(data.errors) && data.errors.length > 0
+          ? data.errors[0].msg
+          : data?.message || `Registration failed (${response.status})`;
+
+      return { success: false, message: error };
     }
   } catch (error) {
     console.error('Error in registration:', error);
     return { success: false, message: error.message || "Network or server error" };
+  }
+}
+
+export async function resendVerificationEmail(values) {
+  try {
+    const response = await fetch(`${path}/patients/resend-verification-email`, {
+      method: "POST",
+      headers: {'Content-Type': 'application/json',},
+      body: JSON.stringify(values)
+    })
+    if (response.ok) {
+      const data = await response.json();
+      return { success: true, message: data.message };
+    } else {
+      const data = await response.json();
+      console.log(data)
+      const error =
+        Array.isArray(data.errors) && data.errors.length > 0
+          ? data.errors[0].msg
+          : data?.message || `Registration failed (${response.status})`;
+
+      return { success: false, message: error };
+    }
+  } catch (err) {
+    return false
   }
 }
 

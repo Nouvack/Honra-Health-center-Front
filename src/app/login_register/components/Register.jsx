@@ -3,24 +3,20 @@ import "./style.css";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
-import { registerAPatient } from "./functions";
-import Cookies from "../../documents/cookies/page"; // Ensure this is correctly imported
+import { registerAPatient, resendVerificationEmail } from "./functions";
+import Cookies from "../../documents/cookies/page";
 
 export default function Register({ onSwitch }) {
     const [showCookiesModal, setShowCookiesModal] = useState(false);
     const [privacyViewed, setPrivacyViewed] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState("")
+    const [resendEmail, setResendEmail] = useState(false)
 
     const formik = useFormik({
         initialValues: {
-            email: "",
-            password: "",
-            name: "",
-            surname: "",
-            phoneNumber: "",
-            birthDate: "",
-            DNI: "",
-            gender: "",
+            email: "", password: "", name: "", surname: "",
+            phoneNumber: "", birthDate: "", DNI: "", gender: "",
             privacyPolicy: false,
         },
         validationSchema: Yup.object({
@@ -35,31 +31,21 @@ export default function Register({ onSwitch }) {
             privacyPolicy: Yup.boolean().oneOf([true], "You must accept the privacy policy"),
         }),
         onSubmit: async (values) => {
+            setError("")
             setIsSubmitting(true);
             try {
-
-                if (typeof registerAPatient !== "function") {
-                    throw new Error("registerPatient is not a function or is not properly imported.");
-                }
-
                 const response = await registerAPatient(values);
 
                 if (response?.success) {
                     alert("Registration successful! Please check your email to verify your account.");
-                    if (onSwitch && typeof onSwitch === "function") {
-                        onSwitch();
-                    } else {
-                        console.warn("onSwitch not provided or not a function.");
-                    }
                 } else {
-                    alert("Registration failed: " + (response?.message || "Unknown error"));
+                    setError(response.message)
+                    setIsSubmitting(false);
                 }
             } catch (error) {
-                console.error("Registration error:", error);
-                alert("An error occurred. Please check the console.");
-            } finally {
+                alert("Internal server error.");
                 setIsSubmitting(false);
-            }
+            } 
         }
     });
 
@@ -67,8 +53,12 @@ export default function Register({ onSwitch }) {
         <section className="w-screen h-screen flex items-center justify-center bg-cover"
             style={{backgroundImage: `url('/images/textured_bg.png')`}}>
 
-            <div id="componentR"
-                className="mt-16 flex w-1/2 flex-col justify-center items-center p-3 gap-3">
+            <div id="componentR" className="mt-16 flex w-1/2 flex-col justify-center items-center p-3 gap-3">
+                {resendEmail ? <div className="w-full flex flex-col items-center justify-center py-4">
+                    <p className="font-bold">Resend verification email:</p>
+                    <ResendEmailForm email={formik.values.email} setResendEmail={setResendEmail}/>
+                </div> : 
+                <>
                 <p className="font-bold text-base">Register</p>
 
                 <form onSubmit={formik.handleSubmit} className="grid grid-cols-2 gap-3 w-full items-center justify-center">
@@ -82,12 +72,18 @@ export default function Register({ onSwitch }) {
                                 {...formik.getFieldProps(field)}
                                 className="w-full px-2 py-1 text-sm"
                             />
+                            {formik.touched[field] && formik.errors[field] && (
+                                <p className="text-red-500 text-xs mt-1">{formik.errors[field]}</p>
+                            )}
                         </div>
                     ))}
 
                     <div>
                         <p className="text-xs">Birth date</p>
                         <input id="border" type="date" {...formik.getFieldProps("birthDate")} className="w-full px-2 py-1 text-sm" />
+                        {formik.touched.birthDate && formik.errors.birthDate && (
+                                <p className="text-red-500 text-xs mt-1">{formik.errors.birthDate}</p>
+                            )}
                     </div>
 
                     <div>
@@ -109,6 +105,9 @@ export default function Register({ onSwitch }) {
                                     </label>
                                 </div>
                             ))}
+                            {formik.touched.gender && formik.errors.gender && (
+                                <p className="text-red-500 text-xs mt-1">{formik.errors.gender}</p>
+                            )}
                         </div>
                     </div>
 
@@ -131,27 +130,37 @@ export default function Register({ onSwitch }) {
                             </button>
                         </label>
                     </div>
-                    <div className="flex items-center justify-center col-span-2">
-                            <button
-                        type="submit"
-                        disabled={isSubmitting || !formik.values.privacyPolicy}
-                        className="bg-[var(--button)] p-2 rounded-3xl w-1/2 text-white text-sm  text-center"
-                    >
+                    
+                    <div className="flex flex-col items-center justify-center col-span-2">
+                        <p>{error}</p>
+                        <button
+                            type="submit"
+                            disabled={isSubmitting || resendEmail}
+                            className="bg-[var(--button)] p-2 rounded-3xl w-1/2 text-white text-sm  text-center"
+                        >
                         {isSubmitting ? "Registering..." : "Register"}
-                    </button>
+                        </button>
                     </div>
                             
                 </form>
 
-                <p className="text-xs mb-3">
-                    Already have an account?{" "}
-                    <button
-                        onClick={() => onSwitch("login")}
-                        className="underline text-[var(--turquoise)] bg-transparent border-none p-0 m-0 cursor-pointer"
-                    >
-                        Log in
-                    </button>
-                </p>
+                <div className="flex flex-col">
+                    <button className="text-xs mb-3"
+                            onClick={() => setResendEmail(true)}
+                        >Resend verification email.</button>
+                    <p className="text-xs mb-3">
+                        Already have an account?{" "}
+                        <button
+                            onClick={() => onSwitch("login")}
+                            className="underline text-[var(--turquoise)] bg-transparent border-none p-0 m-0 cursor-pointer"
+                        >
+                            Log in
+                        </button>
+                    </p>
+                </div>
+                </>
+                }
+                
             </div>
 
             {showCookiesModal && (
@@ -173,4 +182,38 @@ export default function Register({ onSwitch }) {
             )}
         </section>
     );
+}
+
+
+function ResendEmailForm({email, setResendEmail}) {
+    const [error, setError] = useState("")
+
+    const handleReturn = () => setResendEmail(false)
+
+    const formik = useFormik({
+        initialValues: {
+            email: email || ""
+        }, validationSchema: Yup.object({email: Yup.string().email("Invalid email").required("Email is required"),}),
+        onSubmit: async (values) => {
+            setError("")
+            const response = await resendVerificationEmail(values)
+            setError(response?.message)
+        }
+    })
+    return (
+        <form onSubmit={formik.handleSubmit}
+            className="flex flex-col gap-3 w-full items-center justify-center">
+            <label>Email:</label>
+            <input type="text" id="email" name="email" value={formik.values.email}
+                onChange={formik.handleChange} onBlur={formik.handleBlur}
+                className="p-2 border rounded-3xl w-1/2"></input>
+            {formik.touched.email && formik.errors.email && ( <p className="text-red-500 text-xs mt-1">{formik.errors.email}</p> )}
+
+            <p>{error}</p>
+            <button type="submit"
+                className="bg-[var(--outer_space)] text-[var(--seasalt)] py-1 px-4 rounded-3xl">Resend</button>
+            <button onClick={() => handleReturn()}
+                className="text-xs">Return to register</button>
+        </form>
+    )
 }
