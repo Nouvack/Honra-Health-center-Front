@@ -49,7 +49,7 @@ export default function PatientInvoices() {
                 <td className="py-2 px-4">{inv.treatmentId?.name}</td>
                 <td className="py-2 px-4">${inv.amount}</td>
                 <td className="py-2 px-4">{inv.patientId?.DNI}</td>
-                <td className="py-2 px-4 font-mono">#{inv._id.slice(-6).toUpperCase()}</td>
+                <td className="py-2 px-4 font-mono">#{inv._id}</td>
               </tr>
             ))}
           </tbody>
