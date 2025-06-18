@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
 import { registerAPatient, resendVerificationEmail } from "./functions";
-import Cookies from "../../documents/cookies/page";
+import Data from "@/app/documents/data_protection/page";
 
 export default function Register({ onSwitch }) {
     const [showCookiesModal, setShowCookiesModal] = useState(false);
@@ -164,19 +164,20 @@ export default function Register({ onSwitch }) {
             </div>
 
             {showCookiesModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                    <div className="bg-white w-4/5 max-w-lg max-h-[80vh] overflow-y-auto rounded-lg p-6 relative">
+                <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                    <div className="bg-white w-5/6 h-5/6 overflow-y-scroll rounded-lg p-6 relative flex flex-col">
+                    <div><Data small={true} /></div>
+                        
                         <button
                             onClick={() => {
                                 setShowCookiesModal(false);
                                 setPrivacyViewed(true);
                             }}
-                            className="absolute top-2 right-2 text-gray-600 hover:text-gray-900 font-bold text-xl"
+                            className="text-gray-600 hover:text-gray-900 font-bold text-xl bg-[var(--mint_green)]"
                             aria-label="Close modal"
                         >
-                            &times;
+                            &times; CLOSE
                         </button>
-                        <Cookies />
                     </div>
                 </div>
             )}

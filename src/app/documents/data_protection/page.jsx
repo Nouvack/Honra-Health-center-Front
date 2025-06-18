@@ -3,10 +3,10 @@
 import Header from "@/app/shared_components/Header"
 import Footer from "@/app/shared_components/Footer"
 
-export default function Data() {
+export default function Data({small}) {
     return(
         <section className="w-full min-h-screen flex flex-col">
-            <Header/>
+            {!small && <Header/>}
             <div className="mt-20 p-10">
                 <p className="font-bold">Honra: Data protection</p>
                 <p className="text-xs pb-10">Effective Date: 19/05/2025</p>
@@ -58,7 +58,7 @@ export default function Data() {
 
             </div>
             
-            <Footer/>
+            {!small && <Footer/> }
         </section>
     )
 }
