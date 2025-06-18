@@ -248,12 +248,19 @@ export async function filterAppointments(appointments, search, filter) {
         if (!search && filter === "All") {
             return appointments
         }
-        let searchedData = appointments.filter((aptm) => {
-            return aptm.patientId.DNI.includes(search.toUpperCase()) ||
-            aptm.doctorId.employeeId.toLowerCase().includes(search.toLowerCase())
 
-        })
-        console.log(searchedData)
+        let searchedData = [];
+        for (const aptm of appointments) {
+            const patientDNI = aptm?.patientId?.DNI.toUpperCase() || "";
+            const doctorEmpId = aptm?.doctorId?.employeeId.toUpperCase() || "";
+
+            if (patientDNI.includes(search.toUpperCase()) ||
+                doctorEmpId.includes(search.toUpperCase())) {
+                    console.log("true")
+                    searchedData.push(aptm)
+                }
+        }
+            
         let filteredData = []
         const today = new Date()
         switch (filter) {

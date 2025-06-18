@@ -8,7 +8,7 @@ import { useState, useEffect } from "react"
 export default function Appointments() {
     const [error, setError] = useState()
     const [appointments, setAppointments] = useState([])
-    const [search, setSearch] = useState()
+    const [search, setSearch] = useState("")
     const [filteredAppointments, setFilteredAppointments] = useState([])
     const [filter, setFilter] = useState()
 
@@ -30,7 +30,7 @@ export default function Appointments() {
         const timeout = setTimeout( async() => {
             const response = await filterAppointments(appointments, search, filter)
             response ? setFilteredAppointments(response) : setError("Could not search appointments. Try again later.")
-            
+            console.log(response)
         }, 300)
         return () => clearTimeout(timeout)
     }, [search, filter])
