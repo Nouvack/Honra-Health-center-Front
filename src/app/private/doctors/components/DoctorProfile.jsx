@@ -36,8 +36,15 @@ export default function DoctorProfile({ doctor }) {
         validationSchema: doctorValidationSchema,
         onSubmit: async (values) => {
             const response = await updateDoctor(values, doctor._id)
-            if (response.data && response.picture) {
-                window.alert("Profile successfully updated.")
+            console.log(response)
+            if (response.data && response.image) {
+                window.alert("Profile data and image successfully updated.")
+                window.location.reload()
+            } else if (response.data) {
+                window.alert("Profile data successfully updated.")
+                window.location.reload()
+            } else if (response.image) {
+                window.alert("Profile image successfully updated.")
                 window.location.reload()
             } else {
                 setMsg("Something went wrong. Please try again later.")
@@ -129,6 +136,7 @@ export default function DoctorProfile({ doctor }) {
                 </div>
                 <p>{msg}</p>
                 <button type="submit">SAVE PROFILE</button>
+                <p className="text-xs">Updating image might take a while to load. Please be patient.</p>
             </form>)}
         </section>
     )

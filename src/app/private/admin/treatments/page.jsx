@@ -116,7 +116,7 @@ function TreatmentWindow({treatment, isNew}) {
     })
     return (
         <form onSubmit={formik.handleSubmit} onReset={formik.handleReset}
-            className="w-1/2 h-1/2 bg-[var(--outer_space)] shadow-[var(--mint_green)] shadow-md absolute flex flex-col items-center p-10 rounded-3xl text-[var(--seasalt)] gap-4">
+            className="w-1/2 h-5/6 bg-[var(--outer_space)] shadow-[var(--mint_green)] shadow-md absolute flex flex-col items-center p-10 rounded-3xl text-[var(--seasalt)] gap-4">
             
             <button onClick={() => window.location.reload()} className="w-10 h-10"><FontAwesomeIcon icon={faCircleXmark} className="text-2xl absolute right-10 top-8" /></button>
 

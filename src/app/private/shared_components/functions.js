@@ -126,18 +126,22 @@ export async function updateDoctor(values, id) {
                         "Authorization": `Bearer ${token}` },
             body: JSON.stringify(values)
         })
+        
+        let image = false
+        if (values.img) {
+            const formData = new FormData();
+            formData.append("image", values.img);
 
-        const formData = new FormData();
-        formData.append("image", values.img);
-
-        const image = await fetch (`${path}/doctors/img/${id}`, {
-            method: "PATCH",
-            headers: { "Authorization": `Bearer ${token}` },
-            body: formData
-        })
+            image = await fetch (`${path}/doctors/img/${id}`, {
+                method: "PATCH",
+                headers: { "Authorization": `Bearer ${token}` },
+                body: formData
+            })
+        }
 
         return {data: !!response.ok, picture: !!image.ok}
     } catch (err) {
+        console.log(err)
         return false
     }
 }
