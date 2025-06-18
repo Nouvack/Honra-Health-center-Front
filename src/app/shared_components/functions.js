@@ -1,21 +1,26 @@
 "use server"
 
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 const path = process.env.API_PATH
+import dayjs from "dayjs"
+import utc from "dayjs/plugin/utc"
+import timezone from "dayjs/plugin/timezone"
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 export async function sendAppointment(values) {
     try {
         const cookieStore = await cookies()
         const token = cookieStore.get("token")?.value
 
-        const [hour, minute] = values.hour.split(":").map(Number);
+        const datetime = dayjs.tz(values.date, "Europe/Madrid") // set date only
+            .hour(Number(values.hour.split(":")[0]))
+            .minute(Number(values.hour.split(":")[1]))
+            .second(0)
+            .millisecond(0)
 
-        // Combine date and hour
-        const fullDate = new Date(values.date);
-        fullDate.setHours(hour, minute, 0, 0); // set hour, minute, second, ms
-
-        // Now convert to ISO string
-        const isoDate = fullDate.toISOString();
+        const isoDate = datetime.toISOString()
         
         const body = {
             treatmentId: values.treatment,
@@ -29,17 +34,15 @@ export async function sendAppointment(values) {
                     "Authorization": `Bearer ${token}` },
             body: JSON.stringify(body)
         })
-        console.log(response)
         return response.ok? true : false
     }catch (err) {
         return false
     }
-    
 }
 
 export async function getAvailableHours(doctorId, date) {
     try {
-        const formattedDate = date.toLocaleDateString("en-CA");
+        const formattedDate = dayjs(date).format("YYYY-MM-DD")
         const response = await fetch(`${path}/appointments/getAvailableHours/${doctorId}?date=${formattedDate}`, {
             method: "GET"
         })
@@ -53,7 +56,7 @@ export async function filterData( doctorsList, filter ) {
     if (filter === "All") {
         return doctorsList
     }
-    return doctorsList.filter(doctor => doctor.specialty === filter)
+    return doctorsList?.filter(doctor => doctor.specialty === filter)
 }
 
 export async function getTreatments(specialty) {
