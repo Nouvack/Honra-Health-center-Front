@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEyeSlash, faEye, faUserPen } from "@fortawesome/free-solid-svg-icons";
 
-export default function PatientRows({ patient, selected, setSelected, setPatientWindow }) {
+export default function PatientRows({ patient, selected, setSelected, handleSelectPatient }) {
   const visibleName = patient.name
   const invisibleName = `${patient.name.charAt(0)}.`
   const visibleEmail = patient.email
@@ -33,10 +33,6 @@ export default function PatientRows({ patient, selected, setSelected, setPatient
   }
 
   const handleSelect = (patient) =>  setSelected(patient) 
-  const handleEdit = () => {
-    setPatientWindow(true)
-    handleSelect(patient)
-  }
 
   return (
     <tr onClick={() => handleSelect(patient)}
@@ -51,7 +47,7 @@ export default function PatientRows({ patient, selected, setSelected, setPatient
           onTouchStart={toggleVisibility}
           onTouchEnd={closeVisibility}
           >{icon}</button>
-        <button onClick={() => handleEdit(patient)}>
+        <button onClick={() => handleSelectPatient(patient)}>
           <FontAwesomeIcon icon={faUserPen} />
         </button>
       </td>

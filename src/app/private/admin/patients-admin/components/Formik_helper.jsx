@@ -17,37 +17,49 @@ export function getInitialValues (patient) {
   )
 }
 
-export const validationSchema = Yup.object({
+export const getValidationSchema = (isNew) =>
+  Yup.object({
+    phoneNumber: Yup.string()
+      .required("Phone number is required")
+      .min(8, "Must be valid phone number."),
+    
+    email: Yup.string()
+      .email("Invalid email")
+      .required("Email is required"),
+
+    password: Yup.string()
+      .min(6, "Minimum 6 characters")
+      .optional(),
+
+    ...(isNew && {
       name: Yup.string().required("Name is required"),
       surname: Yup.string().required("Surname is required"),
-      phoneNumber: Yup.string().required("Phone number is required").min(8, "Must be valid phone number."),
       birthDate: Yup.date().required("Birth date is required"),
+      gender: Yup.string().required("Gender is required"),
       DNI: Yup.string()
         .required("DNI is required")
-        .matches(/^[A-Z]?\d{7}[A-Z]$/, "DNI must be 8 digits followed by an uppercase letter")
+        .matches(/^[A-Z]?\d{8}[A-Z]$/, "DNI must be 8 digits followed by an uppercase letter")
         .test("is-valid-dni", "Invalid DNI", function (value) {
           if (!value) return false;
-            const dniLetters = "TRWAGMYFPDXBNJZSQVHLCKE";
-            let dni = value.toUpperCase();
+          const dniLetters = "TRWAGMYFPDXBNJZSQVHLCKE";
+          let dni = value.toUpperCase();
 
-            // Handle NIE (X/Y/Z prefix to 0/1/2)
-            if (/^[XYZ]/.test(dni)) {
-              const map = { X: "0", Y: "1", Z: "2" };
-              dni = dni.replace(/^[XYZ]/, c => map[c]);
-            }
+          if (/^[XYZ]/.test(dni)) {
+            const map = { X: "0", Y: "1", Z: "2" };
+            dni = dni.replace(/^[XYZ]/, (c) => map[c]);
+          }
 
-            const number = parseInt(dni.slice(0, 8), 10);
-            const letter = dni[8];
+          const number = parseInt(dni.slice(0, 8), 10);
+          const letter = dni[8];
 
-            if (isNaN(number)) return false;
-            const expectedLetter = dniLetters[number % 23];
+          if (isNaN(number)) return false;
+          const expectedLetter = dniLetters[number % 23];
 
-            return letter === expectedLetter;
-          }),
-      gender: Yup.string().required("Gender is required"),
-      email: Yup.string().email("Invalid email").required("Email is required"),
-      password: Yup.string().min(6, "Minimum 6 characters").optional(),
-    })
+          return letter === expectedLetter;
+        }),
+    }),
+  });
+
 
 export function TextInput({ label, name, type = "text", formik, autoUppercase = false }) {
   return (

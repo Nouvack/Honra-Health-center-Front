@@ -23,6 +23,12 @@ export default function PatientManager() {
       setPatientWindow(true)
   }
 
+  const handleSelectPatient = (p) => {
+    setSelected(p);
+    setPatientWindow(true);
+  };
+
+
   return (
     <div className="w-full min-h-screen flex flex-col items-center">
       <Header />
@@ -55,7 +61,7 @@ export default function PatientManager() {
                 className="font-bold hover:bg-[var(--mint_green)] w-full">+</button>
               </td>
             </tr>
-            {patients?.map((p) => ( <PatientRows patient={p} selected={selected} setSelected={setSelected} setPatientWindow={setPatientWindow} key={p._id} /> ))}
+            {patients?.map((p) => ( <PatientRows patient={p} selected={selected} setSelected={setSelected} handleSelectPatient={handleSelectPatient} key={p._id} /> ))}
           </tbody>
         </table>
       </div>

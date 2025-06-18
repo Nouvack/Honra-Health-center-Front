@@ -2,7 +2,7 @@
 
 import { useFormik } from "formik"
 import { useState } from "react"
-import { getInitialValues, validationSchema, TextInput } from "./Formik_helper"
+import { getInitialValues, getValidationSchema, TextInput } from "./Formik_helper"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { deletePatient, registerPatient, updatePatientById } from "./functions";
@@ -17,8 +17,9 @@ export default function PatientsWindow({patient, isNew, setPatientWindow}) {
     } 
 
     const formik = useFormik({
-        initialValues: getInitialValues(patient), validationSchema, 
+        initialValues: getInitialValues(patient), validationSchema: getValidationSchema(isNew), 
         onSubmit: async (patientValues) => {
+            console.log("clicked")
             let response
             if (isNew === true) {
                 response = await registerPatient(patientValues)
@@ -26,18 +27,19 @@ export default function PatientsWindow({patient, isNew, setPatientWindow}) {
                 const data = {email: patientValues.email, phoneNumber: patientValues.phoneNumber, password: patientValues.password}
                 response = await updatePatientById(patient._id, patientValues)
             }
-            if (response) {
+            console.log(response)
+            if (response.success) {
                 window.alert(response.message || "Action succcesfully done.")
                 window.location.reload()
             } else {
-                setMsg("Something went wrong.")
+                setMsg(response.message)
             }
         }
     })
 
     return (
         <form onSubmit={formik.handleSubmit} className="w-1/2 h-1/2 z-30 bg-[var(--outer_space)] shadow-[var(--mint_green)] shadow-md absolute flex flex-col items-center p-10 rounded-3xl text-[var(--seasalt)] overflow-y-auto"> 
-            <button onClick={() => setPatientWindow(false)} className="w-10 h-10"><FontAwesomeIcon icon={faCircleXmark} className="text-2xl absolute right-10 top-8" /></button>
+            <button type="button" onClick={() => setPatientWindow(false)} className="w-10 h-10"><FontAwesomeIcon icon={faCircleXmark} className="text-2xl absolute right-10 top-8" /></button>
             
             {isNew === true? <p className="text-[var(--turquoise)]">REGISTER A PATIENT</p> : <p className="text-[var(--turquoise)]">UPDATE A PATIENT</p>}
             <hr className="w-5/6 border-[var(--turquoise)] mb-10" />
@@ -75,9 +77,9 @@ export default function PatientsWindow({patient, isNew, setPatientWindow}) {
             </div>
             
             <p className="font-bold pt-5">{msg}</p>
-            <div className="col-span-full text-[var(--outer_space)] m-5 gap-2 flex flex-col">
-                <button type="submit" className={`bg-[var(--seasalt)] px-4 py-2 rounded rounded-3xl `} >
-                        <p>SUBMIT</p>
+            <div className="col-span-full text-[var(--outer_space)] m-5 gap-2 flex flex-col z-50">
+                <button type="submit" className={`bg-[var(--seasalt)] px-4 py-2 rounded rounded-3xl hover:bg-[var(--mint_green)] `} >
+                        SUBMIT
                 </button>
                 {isNew === false && 
                     <button className="text-[var(--seasalt)]" onClick={() => handleDelete()}>DELETE PATIENT</button>}

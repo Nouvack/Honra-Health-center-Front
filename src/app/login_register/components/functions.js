@@ -76,7 +76,6 @@ export async function resendVerificationEmail(values) {
       return { success: true, message: data.message };
     } else {
       const data = await response.json();
-      console.log(data)
       const error =
         Array.isArray(data.errors) && data.errors.length > 0
           ? data.errors[0].msg
@@ -85,7 +84,7 @@ export async function resendVerificationEmail(values) {
       return { success: false, message: error };
     }
   } catch (err) {
-    return false
+    return { success: false, message: err.message }
   }
 }
 
