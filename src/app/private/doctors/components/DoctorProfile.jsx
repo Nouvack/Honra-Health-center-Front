@@ -36,7 +36,6 @@ export default function DoctorProfile({ doctor }) {
         validationSchema: doctorValidationSchema,
         onSubmit: async (values) => {
             const response = await updateDoctor(values, doctor._id)
-            console.log(response)
             if (response.data && response.image) {
                 window.alert("Profile data and image successfully updated.")
                 window.location.reload()

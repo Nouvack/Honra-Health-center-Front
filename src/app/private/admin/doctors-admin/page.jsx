@@ -43,7 +43,7 @@ export default function DoctorManagement() {
           <hr className="w-5/6 border-[var(--turquoise)] mb-10" />
 
           {error && <p>{error} </p>}
-          {openWindow && <DoctorWindow rawDoctor={selectedDoctor.doctor} isNew={selectedDoctor.isNew} />}
+          {openWindow && <DoctorWindow rawDoctor={selectedDoctor.doctor} isNew={selectedDoctor.isNew} setOpenWindow={setOpenWindow}/>}
           <div className="flex flex-wrap justify-center gap-8">
             <button className="w-60 h-60 rounded-3xl border border-[var(--turquoise)] flex flex-col items-center justify-center hover:bg-[var(--mint_green)]"
                 onClick={() => handleAddNew()}>
@@ -61,7 +61,7 @@ export default function DoctorManagement() {
     );
 }
 
-function DoctorWindow({rawDoctor, isNew}) {
+function DoctorWindow({rawDoctor, isNew, setOpenWindow}) {
     
     const [doctor, setDoctor] = useState(null)
     const [msg, setMsg] = useState("")
@@ -107,11 +107,18 @@ function DoctorWindow({rawDoctor, isNew}) {
             response? setMsg("Action successfully realized.") : setMsg("Something went wrong.")
           } else {
             const response = await updateDoctor(values, doctor._id)
-              if (response.data && response.picture) {
-                setMsg("Action successfully realized.")
-              } else {
+              if (response.data && response.image) {
+                window.alert("Profile data and image successfully updated.")
+                window.location.reload()
+            } else if (response.data) {
+                window.alert("Profile data successfully updated.")
+                window.location.reload()
+            } else if (response.image) {
+                window.alert("Profile image successfully updated.")
+                window.location.reload()
+            } else {
                 setMsg("Something went wrong. Please try again later.")
-              }
+            }
           } 
         }
     })
@@ -120,7 +127,7 @@ function DoctorWindow({rawDoctor, isNew}) {
     return (
         <form onSubmit={formik.handleSubmit}
             className="w-1/2 h-3/4 z-30 bg-[var(--outer_space)] shadow-[var(--mint_green)] shadow-md absolute flex flex-col items-center p-10 rounded-3xl text-[var(--seasalt)] overflow-y-auto">
-            <button onClick={() => window.location.reload()} className="w-10 h-10"><FontAwesomeIcon icon={faCircleXmark} className="text-2xl absolute right-10 top-8" /></button>
+            <button onClick={() => setOpenWindow(false)} className="w-10 h-10"><FontAwesomeIcon icon={faCircleXmark} className="text-2xl absolute right-10 top-8" /></button>
 
             <p className="text-sm text-[var(--turquoise)]">PERSONAL DATA & CONTACT</p>
             <hr className="w-5/6 border-[var(--turquoise)]" />
@@ -207,6 +214,7 @@ function DoctorWindow({rawDoctor, isNew}) {
                 className="bg-[var(--seasalt)] text-[var(--outer_space)] rounded-3xl py-1 px-4 w-50">{isNew? "REGISTER DOCTOR": "UPDATE PROFILE"}</button>
 
             {!isNew && <button onClick={() => handleDelete()}>DELETE</button>}
+            <p className="text-xs">Updating image might take a while to load. Please be patient.</p>
 
         </form>
     )
